@@ -52,11 +52,12 @@ const IncrementalityTestingPage = () => {
       <PageHeader
         title="Incrementality Testing Dashboard"
         description="Analyze the incremental impact of marketing campaigns on business outcomes"
+        className="mb-10"
       />
       
       {/* Test Selection Dropdown */}
-      <Card className="mb-6 glass-card premium-shadow border-white/30 bg-gradient-to-r from-purple-50/80 via-violet-50/80 to-fuchsia-50/80 backdrop-blur-md">
-        <CardContent className="p-5">
+      <Card className="mb-10 glass-card premium-shadow border-white/30 bg-gradient-to-r from-purple-50/80 via-violet-50/80 to-fuchsia-50/80 backdrop-blur-md">
+        <CardContent className="p-6">
           <div className="flex items-center gap-4">
             <div className="p-2 rounded-full bg-purple-100">
               <BarChart3 className="h-5 w-5 text-purple-700" />
@@ -89,7 +90,7 @@ const IncrementalityTestingPage = () => {
         </div>
       ) : selectedTestData ? (
         <Tabs defaultValue="overview" className="w-full">
-          <TabsList className="mb-6 bg-white/70 backdrop-blur-sm border border-white/30">
+          <TabsList className="mb-10 bg-white/70 backdrop-blur-sm border border-white/30">
             <TabsTrigger value="overview" className="data-[state=active]:bg-primary/20">
               <ChartBar className="h-4 w-4 mr-2" />
               Overview of Results
@@ -100,28 +101,50 @@ const IncrementalityTestingPage = () => {
             </TabsTrigger>
           </TabsList>
           
-          {/* Tab 1: Overview of Results - Added more space between components */}
-          <TabsContent value="overview" className="space-y-10 animate-fade-in">
-            <TestSetupSummary test={selectedTestData} />
-            <UpliftChart test={selectedTestData} />
-            <ROASComparison test={selectedTestData} />
-            <MethodologyComparison test={selectedTestData} />
+          {/* Tab 1: Overview of Results - Added significantly more space between components */}
+          <TabsContent value="overview" className="space-y-20 pt-6 animate-fade-in">
+            <div className="mb-16">
+              <TestSetupSummary test={selectedTestData} />
+            </div>
+            
+            <div className="mb-16">
+              <UpliftChart test={selectedTestData} />
+            </div>
+            
+            <div className="mb-16">
+              <ROASComparison test={selectedTestData} />
+            </div>
+            
+            <div className="mb-16">
+              <MethodologyComparison test={selectedTestData} />
+            </div>
           </TabsContent>
           
-          {/* Tab 2: Context - Added more space between components */}
-          <TabsContent value="context" className="space-y-10 animate-fade-in">
-            <LearningAgenda test={selectedTestData} />
-            <BusinessQuestion test={selectedTestData} />
-            <MethodologySelection test={selectedTestData} />
-            <FinalResults test={selectedTestData} />
+          {/* Tab 2: Context - Added significantly more space between components */}
+          <TabsContent value="context" className="space-y-20 pt-6 animate-fade-in">
+            <div className="mb-16">
+              <LearningAgenda test={selectedTestData} />
+            </div>
+            
+            <div className="mb-16">
+              <BusinessQuestion test={selectedTestData} />
+            </div>
+            
+            <div className="mb-16">
+              <MethodologySelection test={selectedTestData} />
+            </div>
+            
+            <div className="mb-16">
+              <FinalResults test={selectedTestData} />
+            </div>
           </TabsContent>
         </Tabs>
       ) : (
         <Card>
-          <CardContent className="p-6 text-center">
+          <CardContent className="p-8 text-center">
             <HelpCircle className="mx-auto h-12 w-12 text-muted-foreground" />
-            <h3 className="mt-4 text-lg font-medium">No Test Selected</h3>
-            <p className="text-muted-foreground">Please select a test to view its details.</p>
+            <h3 className="mt-6 text-lg font-medium">No Test Selected</h3>
+            <p className="mt-2 text-muted-foreground">Please select a test to view its details.</p>
           </CardContent>
         </Card>
       )}

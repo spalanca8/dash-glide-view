@@ -1,21 +1,24 @@
 
 import React from "react";
+import { cn } from "@/lib/utils";
 
 type PageHeaderProps = {
   title: string;
   description?: string;
   children?: React.ReactNode;
   actions?: React.ReactNode;
+  className?: string;
 };
 
 export function PageHeader({ 
   title, 
   description, 
   children,
-  actions
+  actions,
+  className
 }: PageHeaderProps) {
   return (
-    <div className="flex flex-col gap-4 mb-8">
+    <div className={cn("flex flex-col gap-4 mb-8", className)}>
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-semibold tracking-tight text-balance">{title}</h1>

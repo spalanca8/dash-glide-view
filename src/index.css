@@ -122,6 +122,15 @@
     @apply bg-gradient-to-br from-white/90 to-white/70 border border-white/30 rounded-xl p-4 transition-all duration-300 hover:shadow-md hover:-translate-y-0.5;
   }
   
+  /* Incrementality testing specific spacing */
+  .incrementality-section {
+    @apply mb-16 pt-8;
+  }
+  
+  .incrementality-card {
+    @apply p-6 mb-12;
+  }
+  
   /* Landing page specific styles */
   .hero-gradient {
     background: linear-gradient(135deg, #1a237e 0%, #4a148c 50%, #880e4f 100%);
