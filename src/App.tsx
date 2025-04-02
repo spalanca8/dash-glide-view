@@ -16,7 +16,6 @@ import MetricsPage from "./pages/MetricsPage";
 import IncrementalPage from "./pages/IncrementalPage";
 import BudgetPage from "./pages/BudgetPage";
 import ABTestingPage from "./pages/ABTestingPage";
-import IncrementalityTestingPage from "./pages/IncrementalityTestingPage";
 import GuidePage from "./pages/GuidePage";
 import SettingsPage from "./pages/SettingsPage";
 import MethodologiesPage from "./pages/MethodologiesPage";
@@ -48,7 +47,6 @@ const App = () => (
             <Route path="/campaign" element={<CampaignPage />} />
             <Route path="/budget" element={<BudgetPage />} />
             <Route path="/ab-testing" element={<ABTestingPage />} />
-            <Route path="/incrementality-testing" element={<IncrementalityTestingPage />} />
             <Route path="/chat-ai" element={<ChatAIPage />} />
             <Route path="/recommendations" element={<RecommendationsPage />} />
             <Route path="/guide" element={<GuidePage />} />

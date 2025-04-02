@@ -1,108 +1,230 @@
+import React, { useState } from "react";
+import { Link, useLocation } from "react-router-dom";
+import { 
+  BarChart3, 
+  LineChart,
+  Radio, 
+  Layers, 
+  GitCompare, 
+  TrendingUp, 
+  PieChart, 
+  Settings, 
+  HelpCircle,
+  LayoutDashboard,
+  ChevronDown,
+  ChevronRight,
+  FileBarChart,
+  Lightbulb,
+  Home,
+  Rocket,
+  Bot,
+  Zap
+} from "lucide-react";
+import { cn } from "@/lib/utils";
 
-import React from 'react';
-import { NavLink } from 'react-router-dom';
-import { Home, BarChart2, Database, BarChart, LineChart, Target, Compass, Cpu, MessageSquare, Settings, HelpCircle, Users, PieChart, Briefcase, TestTube2 } from 'lucide-react';
-import { cn } from '@/lib/utils';
-
-type NavLinkType = {
-  href: string;
-  icon: React.ElementType;
+type NavItem = {
   title: string;
-  isExternal?: boolean;
-  subItems?: { href: string; title: string }[];
+  href?: string;
+  icon: React.ElementType;
+  children?: NavItem[];
 };
 
+const navItems: NavItem[] = [
+  {
+    title: "Getting Started",
+    href: "/getting-started",
+    icon: Rocket,
+  },
+  {
+    title: "Strategic Overview",
+    href: "/analytics",
+    icon: LayoutDashboard,
+  },
+
+  {
+    title: "Channel Analysis",
+    href: "/channels",
+    icon: Radio,
+  },
+  {
+    title: "Campaign Analysis",
+    href: "/campaign",
+    icon: BarChart3,
+  },
+  {
+    title: "Budget Optimizer",
+    href: "/budget",
+    icon: PieChart,
+  },
+  {
+    title: "A/B Testing",
+    href: "/ab-testing",
+    icon: LineChart,
+  },
+  {
+    title: "Model Metrics",
+    href: "/",
+    icon: TrendingUp,
+  },
+  {
+    title: "Quick Recommendations",
+    href: "/recommendations",
+    icon: Zap,
+  },
+  {
+    title: "Chat AI Assistant",
+    href: "/chat-ai",
+    icon: Bot,
+  },
+  {
+    title: "Data",
+    href: "/data",
+    icon: Layers,
+  },
+  {
+    title: "Documentation",
+    href: "/methodologies",
+    icon: Lightbulb,
+  },
+  {
+    title: "Help & Resources",
+    icon: HelpCircle,
+    children: [
+      {
+        title: "Pages Guide",
+        href: "/guide",
+        icon: Layers,
+      },
+      {
+        title: "Metrics Guide",
+        href: "/metrics-guide",
+        icon: FileBarChart,
+      },
+      {
+        title: "FAQ",
+        href: "/faq",
+        icon: HelpCircle,
+      },
+    ]
+  },
+  {
+    title: "Settings",
+    href: "/settings",
+    icon: Settings,
+  },
+
+  {
+    title: "Draft Folder",
+    icon: BarChart3,
+    children: [
+      {
+        title: "Draft EDA",
+        href: "/metrics",
+        icon: FileBarChart,
+      },
+      {
+        title: "Incremental Analysis THIS PAGE IN CHANNEL ANALYSIS",
+        href: "/incremental",
+        icon: TrendingUp,
+      },
+    ]
+  },
+];
+
 export function SidebarNav() {
-  const [expandedSection, setExpandedSection] = React.useState<string | null>("Analytics & Attribution");
+  const location = useLocation();
+  const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>({
+    "Overview": true,
+    "Analysis": true,
+    "Help & Resources": true
+  });
   
-  const navLinks: { section: string; items: NavLinkType[] }[] = [
-    {
-      section: "Analytics & Attribution",
-      items: [
-        { href: "/analytics", icon: Home, title: "Overview" },
-        { href: "/incremental", icon: PieChart, title: "Incremental Analysis" },
-        { href: "/channels", icon: BarChart2, title: "Channel Performance" },
-        { href: "/campaign", icon: Briefcase, title: "Campaign Analysis" },
-        { href: "/metrics", icon: LineChart, title: "Core Metrics" },
-      ]
-    },
-    {
-      section: "Testing & Experimentation",
-      items: [
-        { href: "/ab-testing", icon: Target, title: "A/B Testing" },
-        { href: "/incrementality-testing", icon: TestTube2, title: "Incrementality Testing" },
-      ]
-    },
-    {
-      section: "Planning & Optimization",
-      items: [
-        { href: "/budget", icon: BarChart, title: "Budget Optimizer" },
-        { href: "/recommendations", icon: Compass, title: "Recommendations" },
-      ]
-    },
-    {
-      section: "Data & AI",
-      items: [
-        { href: "/data", icon: Database, title: "Data Sources" },
-        { href: "/methodologies", icon: Cpu, title: "Methodologies" },
-        { href: "/chat-ai", icon: MessageSquare, title: "Marketing AI" },
-      ]
-    },
-    {
-      section: "Help & Support",
-      items: [
-        { href: "/guide", icon: HelpCircle, title: "Guide" },
-        { href: "/faq", icon: HelpCircle, title: "FAQ" },
-        { href: "/metrics-guide", icon: HelpCircle, title: "Metrics Guide" },
-        { href: "/getting-started", icon: HelpCircle, title: "Getting Started" },
-        { href: "/settings", icon: Settings, title: "Settings" },
-      ]
-    },
-  ];
-
-  const toggleSection = (section: string) => {
-    if (expandedSection === section) {
-      setExpandedSection(null);
-    } else {
-      setExpandedSection(section);
-    }
+  const toggleGroup = (groupTitle: string) => {
+    setExpandedGroups(prev => ({
+      ...prev,
+      [groupTitle]: !prev[groupTitle]
+    }));
   };
-
+  
   return (
-    <div className="flex flex-col gap-10 p-4 mt-6">
-      <div className="relative">
-        {navLinks.map(({ section, items }) => (
-          <div key={section} className="mb-4">
-            <button
-              onClick={() => toggleSection(section)}
-              className="flex items-center justify-between w-full text-left px-2 py-2 rounded-lg text-sm font-medium text-white/70 hover:text-white"
+    <div className="flex flex-col gap-1 w-full py-4">
+      {navItems.map((item, index) => {
+        // Check if item has children (is a group)
+        if (item.children) {
+          const isExpanded = expandedGroups[item.title];
+          const hasActiveChild = item.children.some(child => location.pathname === child.href);
+          
+          return (
+            <div key={index} className="mb-2">
+              <button
+                onClick={() => toggleGroup(item.title)}
+                className={cn(
+                  "w-full flex justify-between items-center px-3 py-2.5 rounded-md text-sm font-medium transition-all duration-200",
+                  hasActiveChild 
+                    ? "bg-gradient-to-r from-primary/20 to-primary/5 text-primary" 
+                    : "text-muted-foreground hover:bg-accent hover:text-primary"
+                )}
+              >
+                <div className="flex items-center">
+                  <item.icon className="h-4 w-4 mr-2.5" />
+                  <span className="text-sm font-medium">{item.title}</span>
+                </div>
+                {isExpanded ? (
+                  <ChevronDown className="h-4 w-4 opacity-70" />
+                ) : (
+                  <ChevronRight className="h-4 w-4 opacity-70" />
+                )}
+              </button>
+              
+              {isExpanded && (
+                <div className="ml-6 mt-1 flex flex-col gap-1 border-l-2 pl-3 border-border/40">
+                  {item.children.map((child, childIndex) => {
+                    const isActive = location.pathname === child.href;
+                    return (
+                      <Link
+                        key={`${index}-${childIndex}`}
+                        to={child.href || "#"}
+                        className={cn(
+                          "flex items-center gap-2.5 px-3 py-2 rounded-md text-sm transition-all duration-200",
+                          isActive 
+                            ? "bg-primary/10 text-primary font-medium" 
+                            : "text-muted-foreground hover:bg-accent/50 hover:text-primary"
+                        )}
+                      >
+                        <child.icon className="h-4 w-4" />
+                        <span className="text-sm">{child.title}</span>
+                      </Link>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          );
+        } else {
+          // Regular menu item without children
+          const isActive = location.pathname === item.href;
+          return (
+            <Link
+              key={index}
+              to={item.href || "#"}
+              className={cn(
+                "flex items-center gap-2.5 px-3 py-2.5 rounded-md text-sm font-medium transition-all duration-200",
+                isActive 
+                  ? "bg-gradient-to-r from-primary/20 to-primary/10 text-primary shadow-sm" 
+                  : "text-muted-foreground hover:bg-accent/50 hover:text-primary"
+              )}
             >
-              <span>{section}</span>
-              <span className="text-xs">{expandedSection === section ? '−' : '+'}</span>
-            </button>
-            
-            {expandedSection === section && (
-              <div className="mt-1 ml-2 space-y-1">
-                {items.map((item) => (
-                  <NavLink
-                    key={item.href}
-                    to={item.href}
-                    className={({ isActive }) => cn(
-                      "flex items-center gap-3 px-4 py-2 text-sm rounded-md transition-colors",
-                      isActive
-                        ? "text-white bg-white/10"
-                        : "text-white/60 hover:text-white hover:bg-white/5"
-                    )}
-                  >
-                    <item.icon size={16} />
-                    <span>{item.title}</span>
-                  </NavLink>
-                ))}
-              </div>
-            )}
-          </div>
-        ))}
-      </div>
+              <item.icon className="h-4 w-4" />
+              <span className="text-sm">{item.title}</span>
+              {(item.title === "Chat AI Assistant" || item.title === "Quick Recommendations") && (
+                <span className="ml-auto px-1.5 py-0.5 text-[10px] font-bold rounded-full bg-gradient-to-r from-blue-500 to-purple-600 text-white">
+                  New
+                </span>
+              )}
+            </Link>
+          );
+        }
+      })}
     </div>
   );
 }
