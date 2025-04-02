@@ -57,8 +57,8 @@ const navItems: NavItem[] = [
     icon: PieChart,
   },
   {
-    title: "A/B Testing",
-    href: "/ab-testing",
+    title: "Incrementality Testing",
+    href: "/incrementality-testing",
     icon: LineChart,
   },
   {
@@ -149,7 +149,6 @@ export function SidebarNav() {
   return (
     <div className="flex flex-col gap-1 w-full py-4">
       {navItems.map((item, index) => {
-        // Check if item has children (is a group)
         if (item.children) {
           const isExpanded = expandedGroups[item.title];
           const hasActiveChild = item.children.some(child => location.pathname === child.href);
@@ -201,7 +200,6 @@ export function SidebarNav() {
             </div>
           );
         } else {
-          // Regular menu item without children
           const isActive = location.pathname === item.href;
           return (
             <Link

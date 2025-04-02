@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 
@@ -26,8 +25,8 @@ export function HeaderBanner() {
         return "Incremental Analysis";
       case "/budget":
         return "Budget Optimizer";
-      case "/ab-testing":
-        return "A/B Testing";
+      case "/incrementality-testing":
+        return "Incrementality Testing";
       case "/guide":
         return "Guide";
       case "/settings":
@@ -62,8 +61,8 @@ export function HeaderBanner() {
         return "Measure incremental impact";
       case "/budget":
         return "Optimize budget allocation";
-      case "/ab-testing":
-        return "Test and experiment analysis";
+      case "/incrementality-testing":
+        return "Analyze the incremental impact of marketing campaigns on business outcomes";
       case "/chat-ai":
         return "AI-powered insights and recommendations";
       case "/recommendations":

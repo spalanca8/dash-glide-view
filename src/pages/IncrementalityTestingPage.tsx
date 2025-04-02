@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -31,10 +31,21 @@ import { FinalResults } from "@/components/incrementality/FinalResults";
 const IncrementalityTestingPage = () => {
   const { activeTests, completedTests, loading } = useMockABTestData();
   const allTests = [...activeTests, ...completedTests];
-  const [selectedTest, setSelectedTest] = useState<string>(allTests[0]?.id || "");
+  
+  // Find the test with "Pricing page layout test" in its name (or default to the first test)
+  const defaultTest = allTests.find(test => test.name.includes("Pricing page layout test")) || allTests[0];
+  const [selectedTest, setSelectedTest] = useState<string>(defaultTest?.id || "");
   
   // Find the selected test data
   const selectedTestData = allTests.find(test => test.id === selectedTest);
+  
+  // Set default test once data is loaded
+  useEffect(() => {
+    if (!loading && allTests.length > 0 && !selectedTest) {
+      const defaultTest = allTests.find(test => test.name.includes("Pricing page layout test")) || allTests[0];
+      setSelectedTest(defaultTest?.id || allTests[0]?.id);
+    }
+  }, [loading, allTests, selectedTest]);
   
   return (
     <div className="animate-fade-in">
