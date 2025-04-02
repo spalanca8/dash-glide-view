@@ -15,6 +15,7 @@ import { generateChannelData, generateChannelTrendsData, channelColors, channelN
 import { FilterExportControls } from "@/components/channels/FilterExportControls";
 import { ChannelDetailView } from "@/components/channels/ChannelDetailView";
 import { RoasComparisonChart } from "@/components/channels/RoasComparisonChart";
+import { IncrementalRevenueWaterfallChart } from "@/components/channels/IncrementalRevenueWaterfallChart";
 
 export default function ChannelsPage() {
   const [mainTab, setMainTab] = useState("analysis");
@@ -97,6 +98,9 @@ export default function ChannelsPage() {
 
         {/* Channel Overview Tab Content */}
         <TabsContent value="analysis" className="space-y-6 mt-6">
+          {/* New Waterfall Chart Component */}
+          <IncrementalRevenueWaterfallChart data={channelData} loading={loading} />
+          
           <Card>
             <CardHeader className="flex flex-row items-center">
               <div className="flex flex-col space-y-1.5">
