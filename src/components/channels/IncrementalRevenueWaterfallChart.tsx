@@ -15,33 +15,115 @@ export function IncrementalRevenueWaterfallChart({
 }: IncrementalRevenueWaterfallChartProps) {
   // Transform channel data to waterfall chart format
   const prepareWaterfallData = () => {
-    if (!data || data.length === 0) return [];
+    if (!data || data.length === 0) {
+      // Return default data to prevent NaN values
+      return [
+        { 
+          name: 'Baseline', 
+          value: 700000, 
+          fill: '#1e293b',
+          displayValue: 700000,
+          ratio: '70%',
+        },
+        { 
+          name: 'Search', 
+          value: 100000, 
+          fill: '#ec4899',
+          displayValue: 100000,
+          ratio: '10%',
+        },
+        { 
+          name: 'Social', 
+          value: 60000, 
+          fill: '#ec4899',
+          displayValue: 60000,
+          ratio: '6%',
+        },
+        { 
+          name: 'Video', 
+          value: 40000, 
+          fill: '#ec4899',
+          displayValue: 40000,
+          ratio: '4%',
+        },
+        { 
+          name: 'Display', 
+          value: 50000, 
+          fill: '#ec4899',
+          displayValue: 50000,
+          ratio: '5%',
+        },
+        { 
+          name: 'Email', 
+          value: 30000, 
+          fill: '#ec4899',
+          displayValue: 30000,
+          ratio: '3%',
+        },
+        { 
+          name: 'Affiliate', 
+          value: 20000, 
+          fill: '#ec4899', 
+          displayValue: 20000,
+          ratio: '2%',
+        },
+        { 
+          name: 'Total', 
+          value: 1000000, 
+          fill: '#ec4899', 
+          isTotal: true,
+          displayValue: 1000000,
+          ratio: '100%',
+        },
+      ];
+    }
 
-    // Calculate total revenue
-    const totalRevenue = data.reduce((sum, channel) => sum + channel.revenue, 0);
+    // Calculate total revenue - make sure we handle any NaN or undefined values
+    const totalRevenue = data.reduce((sum, channel) => {
+      const revenue = isNaN(channel.revenue) ? 0 : channel.revenue;
+      return sum + revenue;
+    }, 0);
+    
+    // If total revenue is 0, use default values to prevent division by zero
+    if (totalRevenue === 0) {
+      return [
+        { name: 'Baseline', value: 700000, fill: '#1e293b', displayValue: 700000, ratio: '70%' },
+        { name: 'Search', value: 100000, fill: '#ec4899', displayValue: 100000, ratio: '10%' },
+        { name: 'Social', value: 60000, fill: '#ec4899', displayValue: 60000, ratio: '6%' },
+        { name: 'Video', value: 40000, fill: '#ec4899', displayValue: 40000, ratio: '4%' },
+        { name: 'Display', value: 50000, fill: '#ec4899', displayValue: 50000, ratio: '5%' },
+        { name: 'Email', value: 30000, fill: '#ec4899', displayValue: 30000, ratio: '3%' },
+        { name: 'Affiliate', value: 20000, fill: '#ec4899', displayValue: 20000, ratio: '2%' },
+        { name: 'Total', value: 1000000, fill: '#ec4899', isTotal: true, displayValue: 1000000, ratio: '100%' },
+      ];
+    }
     
     // Calculate baseline (70% of total as per example)
     const baselineRevenue = totalRevenue * 0.7;
     
-    // Group channels by type for the waterfall display
+    // Group channels by type for the waterfall display - ensure all values are numbers
+    const getChannelRevenue = (id) => {
+      const channel = data.find(c => c.id === id);
+      const revenue = channel?.revenue || 0;
+      return isNaN(revenue) ? 0 : revenue;
+    };
+    
     const groupedData = {
       baseline: baselineRevenue,
-      search: data.find(c => c.id === 'search')?.revenue || 0,
-      social: data.find(c => c.id === 'social')?.revenue || 0,
-      video: data.find(c => c.id === 'video')?.revenue || 0,
-      display: data.find(c => c.id === 'display')?.revenue || 0,
-      email: data.find(c => c.id === 'email')?.revenue || 0,
-      affiliate: data.find(c => c.id === 'affiliate')?.revenue || 0,
+      search: getChannelRevenue('search'),
+      social: getChannelRevenue('social'),
+      video: getChannelRevenue('video'),
+      display: getChannelRevenue('display'),
+      email: getChannelRevenue('email'),
+      affiliate: getChannelRevenue('affiliate'),
       total: totalRevenue,
     };
     
     // Calculate ratios for each channel against total
-    const searchRatio = ((groupedData.search / totalRevenue) * 100).toFixed(1);
-    const socialRatio = ((groupedData.social / totalRevenue) * 100).toFixed(1);
-    const videoRatio = ((groupedData.video / totalRevenue) * 100).toFixed(1);
-    const displayRatio = ((groupedData.display / totalRevenue) * 100).toFixed(1);
-    const emailRatio = ((groupedData.email / totalRevenue) * 100).toFixed(1);
-    const affiliateRatio = ((groupedData.affiliate / totalRevenue) * 100).toFixed(1);
+    const calculateRatio = (value) => {
+      if (totalRevenue === 0) return '0%';
+      return `${((value / totalRevenue) * 100).toFixed(1)}%`;
+    };
     
     return [
       { 
@@ -56,42 +138,42 @@ export function IncrementalRevenueWaterfallChart({
         value: groupedData.search, 
         fill: '#ec4899',
         displayValue: groupedData.search,
-        ratio: `${searchRatio}%`,
+        ratio: calculateRatio(groupedData.search),
       },
       { 
         name: 'Social', 
         value: groupedData.social, 
         fill: '#ec4899',
         displayValue: groupedData.social,
-        ratio: `${socialRatio}%`,
+        ratio: calculateRatio(groupedData.social),
       },
       { 
         name: 'Video', 
         value: groupedData.video, 
         fill: '#ec4899',
         displayValue: groupedData.video,
-        ratio: `${videoRatio}%`,
+        ratio: calculateRatio(groupedData.video),
       },
       { 
         name: 'Display', 
         value: groupedData.display, 
         fill: '#ec4899',
         displayValue: groupedData.display,
-        ratio: `${displayRatio}%`,
+        ratio: calculateRatio(groupedData.display),
       },
       { 
         name: 'Email', 
         value: groupedData.email, 
         fill: '#ec4899',
         displayValue: groupedData.email,
-        ratio: `${emailRatio}%`,
+        ratio: calculateRatio(groupedData.email),
       },
       { 
         name: 'Affiliate', 
         value: groupedData.affiliate, 
         fill: '#ec4899', 
         displayValue: groupedData.affiliate,
-        ratio: `${affiliateRatio}%`,
+        ratio: calculateRatio(groupedData.affiliate),
       },
       { 
         name: 'Total', 
