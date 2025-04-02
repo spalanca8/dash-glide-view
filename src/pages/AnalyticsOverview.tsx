@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Helmet } from "react-helmet";
 import { 
@@ -7,294 +8,393 @@ import {
   CardTitle, 
   CardDescription 
 } from "@/components/ui/card";
-import { SectionNav } from "@/components/dashboard/SectionNav";
+import { MetricCard } from "@/components/dashboard/MetricCard";
+import { PerformanceChart } from "@/components/dashboard/PerformanceChart";
 import { 
-  ChevronRight, 
-  Lightbulb, 
-  Target, 
+  DollarSign, 
+  TrendingUp, 
   BarChart3, 
-  ArrowUpRight, 
-  Zap,
-  TrendingUp,
+  ArrowUpRight,
   PieChart,
-  LineChart,
-  AreaChart,
-  Users,
-  Layers,
-  HelpCircle,
-  FileBarChart
+  Calendar,
+  ArrowUp,
+  ArrowDown
 } from "lucide-react";
 import { Link } from "react-router-dom";
-// Note: We're removing the ChannelSaturationCurve import since we won't need it anymore
-import { AnalyticsOverview } from "@/components/dashboard/AnalyticsOverview";
+import { generatePerformanceData, channelColors } from "@/data/mockData";
 
-const journeySections = [
-  { id: "roi", title: "ROI Summary" },
-  { id: "revenue", title: "Revenue Trends" },
-  { id: "channel", title: "Channel Performance" },
-  { id: "attribution", title: "Attribution" },
-  { id: "optimization", title: "Optimization" },
-  { id: "forecasting", title: "Forecasting" },
-  { id: "insights", title: "Insights" }
-];
-
-const Index = () => {
-  const [activeSection, setActiveSection] = useState("roi");
-  const [progress, setProgress] = useState(0);
-  const [isLoaded, setIsLoaded] = useState(false);
-  
-  // Calculate progress based on active section
-  const journeyProgress = ((journeySections.findIndex(s => s.id === activeSection) + 1) / journeySections.length) * 100;
+const AnalyticsOverview = () => {
+  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState<any[]>([]);
+  const [timeframe, setTimeframe] = useState("30d");
   
   useEffect(() => {
-    // Animate progress on load
-    const timer = setTimeout(() => {
-      setProgress(journeyProgress);
-      setIsLoaded(true);
-    }, 300);
+    const loadData = async () => {
+      setLoading(true);
+      
+      // Simulate API call delay
+      await new Promise(resolve => setTimeout(resolve, 600));
+      
+      const days = timeframe === "7d" ? 7 : timeframe === "30d" ? 30 : 90;
+      const performanceData = generatePerformanceData(days);
+      
+      setData(performanceData);
+      setLoading(false);
+    };
     
-    return () => clearTimeout(timer);
-  }, [journeyProgress]);
+    loadData();
+  }, [timeframe]);
   
-  // Add default values for saturation curve props
-  const defaultCustomBudgets = {
-    "bau": { "social": 15000, "search": 20000, "display": 10000, "video": 5000 },
-    "cost-savings": { "social": 13500, "search": 18000, "display": 9000, "video": 4500 },
-    "revenue-uplift": { "social": 18000, "search": 24000, "display": 12000, "video": 6000 }
-  };
+  // Calculate summary metrics
+  const totalRevenue = !loading && data.length
+    ? data.reduce((sum, day) => sum + day.totalRevenue, 0)
+    : 0;
+    
+  const totalMediaSpend = !loading && data.length
+    ? data.reduce((sum, day) => sum + day.mediaCost, 0)
+    : 0;
+    
+  const totalRoas = totalMediaSpend > 0 ? (totalRevenue / totalMediaSpend).toFixed(2) : 0;
+  
+  const incrementalRevenue = totalRevenue * 0.68; // Assuming 68% of revenue is incremental based on MMM
+  
+  // Calculate week-over-week changes
+  const revenueChange = 5.8; // Mocked for now, would calculate from actual data
+  const spendChange = 3.2;   // Mocked for now, would calculate from actual data
+  const roasChange = 2.5;    // Mocked for now, would calculate from actual data
+  
+  // Prepare time series data for revenue and incremental revenue
+  const revenueTimeSeriesData = React.useMemo(() => {
+    if (loading || data.length === 0) return [];
+    
+    return data.map(day => ({
+      date: day.name,
+      revenue: day.totalRevenue,
+      incrementalRevenue: day.totalRevenue * 0.68, // 68% based on MMM model
+      baseline: day.totalRevenue * 0.32, // 32% baseline
+    }));
+  }, [data, loading]);
+  
+  // Prepare time series data for media spend and ROAS
+  const mediaTimeSeriesData = React.useMemo(() => {
+    if (loading || data.length === 0) return [];
+    
+    return data.map(day => ({
+      date: day.name,
+      spend: day.mediaCost,
+      roas: day.totalRevenue / day.mediaCost,
+    }));
+  }, [data, loading]);
   
   return (
     <div className="space-y-8">
       <Helmet>
-        <title>Analytics Dashboard - Artefact</title>
+        <title>Strategic Overview - Marketing Analytics</title>
       </Helmet>
       
-      {/* Remove the header section with progress */}
-      
-      {/* Hero Section with gradient background */}
-      <div className="bg-gradient-to-br from-blue-50 via-indigo-50/40 to-purple-50/30 rounded-2xl p-8 border border-indigo-100/50 shadow-lg animate-fade-in" style={{ animationDelay: "100ms" }}>
+      {/* Header Section with MMM highlight */}
+      <div className="bg-gradient-to-br from-blue-50 via-indigo-50/40 to-purple-50/30 rounded-2xl p-8 border border-indigo-100/50 shadow-lg">
         <div className="flex flex-col md:flex-row items-center gap-6 mb-6">
-          <div className="p-4 rounded-full bg-gradient-to-br from-primary/10 to-primary/30 animate-float shadow-sm">
-            <Target className="h-10 w-10 text-primary" />
+          <div className="p-4 rounded-full bg-gradient-to-br from-primary/10 to-primary/30 shadow-sm">
+            <BarChart3 className="h-10 w-10 text-primary" />
           </div>
           <div className="flex-1">
-            <h1 className="text-3xl font-bold text-gray-800 mb-2 tracking-tight">Marketing Analytics Dashboard</h1>
+            <h1 className="text-3xl font-bold text-gray-800 mb-2 tracking-tight">Strategic Overview</h1>
             <p className="text-muted-foreground text-balance text-lg">
-              Gain actionable insights from your marketing data with comprehensive analytics and visualizations
+              Marketing Mix Modeling (MMM) insights to understand the impact of your marketing investments
             </p>
           </div>
           <Link 
-            to="/data" 
+            to="/model-metrics" 
             className="hidden md:flex items-center gap-2 px-5 py-2.5 rounded-lg bg-primary text-white hover:bg-primary/90 transition-colors shadow-md"
           >
-            <span>View Detailed Data</span>
+            <span>View Model Metrics</span>
             <ArrowUpRight className="h-4 w-4" />
           </Link>
         </div>
-
-        {/* Analytics Overview with enhanced styling */}
-        <Card className="bg-white/90 rounded-xl shadow-md border-indigo-100/50 overflow-hidden">
-          <CardContent className="p-6">
-            <AnalyticsOverview />
-          </CardContent>
-        </Card>
       </div>
       
-      {/* Quick Insights Section */}
-      <div className="space-y-6 animate-fade-in" style={{ animationDelay: "200ms" }}>
+      {/* Section 1: Total Revenue & Media Spend */}
+      <div className="space-y-6">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center">
           <div>
-            <h2 className="text-2xl font-semibold text-gray-800 mb-1">Quick Insights</h2>
-            <p className="text-muted-foreground">Get a snapshot of your marketing performance</p>
+            <h2 className="text-2xl font-semibold text-gray-800 mb-1">Total Revenue & Media Spend</h2>
+            <p className="text-muted-foreground">Quick high-level overview of your business performance</p>
           </div>
-          <Link 
-            to="/channels" 
-            className="flex items-center text-primary font-medium hover:underline mt-2 md:mt-0"
-          >
-            View all channels <ChevronRight className="h-4 w-4 ml-1" />
-          </Link>
+          <div className="flex items-center gap-3 mt-2 md:mt-0">
+            <div className="flex items-center gap-2 text-sm">
+              <Calendar className="h-4 w-4 text-muted-foreground" />
+              <span className="font-medium">Last {timeframe === "7d" ? "7 days" : timeframe === "30d" ? "30 days" : "90 days"}</span>
+            </div>
+          </div>
         </div>
-        
-        {/* Quick Action Cards - Enhanced Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <Card className="bg-gradient-to-br from-white to-blue-50/50 border-blue-100/50 hover:shadow-md transition-all duration-300 hover:-translate-y-1">
-            <CardContent className="p-6 flex flex-col gap-3">
-              <div className="p-3 rounded-full bg-blue-50 w-fit">
-                <BarChart3 className="h-5 w-5 text-blue-600" />
-              </div>
-              <div>
-                <h3 className="font-semibold text-gray-800 mb-1">Channel Analysis</h3>
-                <p className="text-sm text-muted-foreground">Compare performance across channels</p>
-              </div>
-              <div className="mt-2 pt-2 border-t border-gray-100 flex justify-between items-center">
-                <span className="text-sm font-medium text-blue-600">4 active channels</span>
-                <ChevronRight className="h-4 w-4 text-blue-600" />
-              </div>
-            </CardContent>
-          </Card>
-          
-          <Card className="bg-gradient-to-br from-white to-green-50/50 border-green-100/50 hover:shadow-md transition-all duration-300 hover:-translate-y-1">
-            <CardContent className="p-6 flex flex-col gap-3">
-              <div className="p-3 rounded-full bg-green-50 w-fit">
-                <TrendingUp className="h-5 w-5 text-green-600" />
-              </div>
-              <div>
-                <h3 className="font-semibold text-gray-800 mb-1">Revenue Tracking</h3>
-                <p className="text-sm text-muted-foreground">Monitor trends and predictions</p>
-              </div>
-              <div className="mt-2 pt-2 border-t border-gray-100 flex justify-between items-center">
-                <span className="text-sm font-medium text-green-600">+12.5% this month</span>
-                <ChevronRight className="h-4 w-4 text-green-600" />
-              </div>
-            </CardContent>
-          </Card>
-          
-          <Card className="bg-gradient-to-br from-white to-amber-50/50 border-amber-100/50 hover:shadow-md transition-all duration-300 hover:-translate-y-1">
-            <CardContent className="p-6 flex flex-col gap-3">
-              <div className="p-3 rounded-full bg-amber-50 w-fit">
-                <Zap className="h-5 w-5 text-amber-600" />
-              </div>
-              <div>
-                <h3 className="font-semibold text-gray-800 mb-1">Quick Insights</h3>
-                <p className="text-sm text-muted-foreground">Actionable recommendations</p>
-              </div>
-              <div className="mt-2 pt-2 border-t border-gray-100 flex justify-between items-center">
-                <span className="text-sm font-medium text-amber-600">3 new insights</span>
-                <ChevronRight className="h-4 w-4 text-amber-600" />
-              </div>
-            </CardContent>
-          </Card>
-          
-          <Card className="bg-gradient-to-br from-white to-purple-50/50 border-purple-100/50 hover:shadow-md transition-all duration-300 hover:-translate-y-1">
-            <CardContent className="p-6 flex flex-col gap-3">
-              <div className="p-3 rounded-full bg-purple-50 w-fit">
-                <PieChart className="h-5 w-5 text-purple-600" />
-              </div>
-              <div>
-                <h3 className="font-semibold text-gray-800 mb-1">Budget Allocation</h3>
-                <p className="text-sm text-muted-foreground">Optimize spending distribution</p>
-              </div>
-              <div className="mt-2 pt-2 border-t border-gray-100 flex justify-between items-center">
-                <span className="text-sm font-medium text-purple-600">Budget review due</span>
-                <ChevronRight className="h-4 w-4 text-purple-600" />
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      </div>
-      
-      {/* Saturation Curve Analysis - Enhanced */}
-      
-      {/* Help & Resources Section */}
-      <div className="bg-gradient-to-br from-emerald-50/30 to-teal-50/30 rounded-2xl p-8 border border-emerald-100/50 shadow-md animate-fade-in" style={{ animationDelay: "400ms" }}>
-        <h2 className="text-2xl font-semibold text-gray-800 mb-6">Help & Resources</h2>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* Pages Guide */}
-          <Link to="/guide" className="flex flex-col gap-4 p-6 rounded-xl bg-white/80 border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1">
-            <div className="p-3 rounded-full bg-blue-50 w-fit">
-              <Layers className="h-5 w-5 text-blue-600" />
-            </div>
-            <div>
-              <h3 className="font-semibold text-gray-800 mb-1">Pages Guide</h3>
-              <p className="text-sm text-muted-foreground">
-                Explore available pages and understand their functions
-              </p>
-            </div>
-          </Link>
+          <MetricCard
+            title="Total Revenue"
+            value={!loading ? `$${totalRevenue.toLocaleString()}` : "Loading..."}
+            change={revenueChange}
+            description="vs. previous period"
+            icon={<DollarSign className="h-4 w-4" />}
+            loading={loading}
+            className="bg-white shadow-sm hover:shadow-md transition-all"
+          />
           
-          {/* Metrics Guide */}
-          <Link to="/metrics-guide" className="flex flex-col gap-4 p-6 rounded-xl bg-white/80 border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1">
-            <div className="p-3 rounded-full bg-green-50 w-fit">
-              <FileBarChart className="h-5 w-5 text-green-600" />
-            </div>
-            <div>
-              <h3 className="font-semibold text-gray-800 mb-1">Metrics Guide</h3>
-              <p className="text-sm text-muted-foreground">
-                Learn about the key metrics and how to interpret them
-              </p>
-            </div>
-          </Link>
+          <MetricCard
+            title="Total Media Spend"
+            value={!loading ? `$${totalMediaSpend.toLocaleString()}` : "Loading..."}
+            change={spendChange}
+            description="vs. previous period"
+            icon={<PieChart className="h-4 w-4" />}
+            loading={loading}
+            className="bg-white shadow-sm hover:shadow-md transition-all"
+          />
           
-          {/* FAQ */}
-          <Link to="/faq" className="flex flex-col gap-4 p-6 rounded-xl bg-white/80 border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1">
-            <div className="p-3 rounded-full bg-purple-50 w-fit">
-              <HelpCircle className="h-5 w-5 text-purple-600" />
-            </div>
-            <div>
-              <h3 className="font-semibold text-gray-800 mb-1">FAQ</h3>
-              <p className="text-sm text-muted-foreground">
-                Find answers to commonly asked questions about analytics
-              </p>
-            </div>
-          </Link>
-        </div>
-        
-        <div className="mt-6 text-center">
-          <Link
-            to="/methodologies"
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-gradient-to-r from-emerald-500 to-teal-500 text-white hover:from-emerald-600 hover:to-teal-600 transition-all duration-300 shadow-md"
-          >
-            <Lightbulb className="h-4 w-4" />
-            <span>Learn Analytics Methodologies</span>
-          </Link>
+          <Card className="bg-gradient-to-br from-blue-50 to-white border-blue-100/30 shadow-sm">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-lg font-medium flex items-center justify-between">
+                <span>Key Questions</span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ul className="space-y-2 text-sm">
+                <li className="flex items-start gap-2">
+                  <span className="text-primary mt-1">•</span>
+                  <span>What is my total revenue and total media spend?</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-primary mt-1">•</span>
+                  <span>How has my revenue changed compared to the previous period?</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-primary mt-1">•</span>
+                  <span>Is my marketing spend increasing, decreasing, or stable?</span>
+                </li>
+              </ul>
+            </CardContent>
+          </Card>
         </div>
       </div>
       
-      {/* Features Section */}
-      <div className="bg-gradient-to-br from-indigo-50/30 to-white rounded-2xl p-8 border border-indigo-100/50 shadow-md animate-fade-in" style={{ animationDelay: "500ms" }}>
-        <h2 className="text-2xl font-semibold text-gray-800 mb-6">Comprehensive Analytics Features</h2>
+      {/* Section 2: Average ROAS */}
+      <div className="space-y-6">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center">
+          <div>
+            <h2 className="text-2xl font-semibold text-gray-800 mb-1">Average ROAS</h2>
+            <p className="text-muted-foreground">Overall effectiveness of media investments</p>
+          </div>
+        </div>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="flex flex-col gap-4 p-4 rounded-xl bg-white/80 border border-gray-100 shadow-sm">
-            <div className="p-3 rounded-full bg-blue-50 w-fit">
-              <LineChart className="h-5 w-5 text-blue-600" />
-            </div>
-            <div>
-              <h3 className="font-semibold text-gray-800 mb-1">Advanced Forecasting</h3>
-              <p className="text-sm text-muted-foreground">
-                Use machine learning algorithms to predict future performance and identify trends before they emerge.
-              </p>
-            </div>
-          </div>
+          <Card className="bg-gradient-to-br from-green-50 to-white border-green-100/30 shadow-sm col-span-2">
+            <CardContent className="pt-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-muted-foreground mb-1">Return on Ad Spend</p>
+                  <div className="flex items-end gap-2">
+                    <h3 className="text-4xl font-bold">{totalRoas}x</h3>
+                    <div className={`flex items-center mb-1 ${roasChange >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                      {roasChange >= 0 ? (
+                        <ArrowUp className="h-4 w-4 mr-1" />
+                      ) : (
+                        <ArrowDown className="h-4 w-4 mr-1" />
+                      )}
+                      <span className="text-sm font-medium">{Math.abs(roasChange)}%</span>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="p-4 rounded-full bg-green-100">
+                  <TrendingUp className="h-8 w-8 text-green-600" />
+                </div>
+              </div>
+              
+              <div className="mt-6 px-2 pt-4 border-t border-green-100/50">
+                <div className="flex justify-between text-sm">
+                  <div>
+                    <p className="text-muted-foreground">Incremental Revenue</p>
+                    <p className="font-medium mt-1">${incrementalRevenue.toLocaleString()}</p>
+                  </div>
+                  <div>
+                    <p className="text-muted-foreground">Media Cost</p>
+                    <p className="font-medium mt-1">${totalMediaSpend.toLocaleString()}</p>
+                  </div>
+                  <div>
+                    <p className="text-muted-foreground">Revenue Contribution</p>
+                    <p className="font-medium mt-1">68%</p>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
           
-          <div className="flex flex-col gap-4 p-4 rounded-xl bg-white/80 border border-gray-100 shadow-sm">
-            <div className="p-3 rounded-full bg-green-50 w-fit">
-              <AreaChart className="h-5 w-5 text-green-600" />
-            </div>
-            <div>
-              <h3 className="font-semibold text-gray-800 mb-1">Multi-Channel Attribution</h3>
-              <p className="text-sm text-muted-foreground">
-                Understand the true impact of each marketing channel with sophisticated attribution modeling.
-              </p>
-            </div>
-          </div>
-          
-          <div className="flex flex-col gap-4 p-4 rounded-xl bg-white/80 border border-gray-100 shadow-sm">
-            <div className="p-3 rounded-full bg-purple-50 w-fit">
-              <Users className="h-5 w-5 text-purple-600" />
-            </div>
-            <div>
-              <h3 className="font-semibold text-gray-800 mb-1">Audience Insights</h3>
-              <p className="text-sm text-muted-foreground">
-                Gain deeper understanding of your audience segments and their behaviors across touchpoints.
-              </p>
-            </div>
+          <Card className="bg-gradient-to-br from-blue-50 to-white border-blue-100/30 shadow-sm">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-lg font-medium flex items-center justify-between">
+                <span>Key Questions</span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ul className="space-y-2 text-sm">
+                <li className="flex items-start gap-2">
+                  <span className="text-primary mt-1">•</span>
+                  <span>What is my overall ROAS?</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-primary mt-1">•</span>
+                  <span>Is my ROAS improving or declining?</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-primary mt-1">•</span>
+                  <span>What percentage of my revenue is driven by marketing?</span>
+                </li>
+              </ul>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+      
+      {/* Section 3: Incremental Revenue Over Time */}
+      <div className="space-y-6">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center">
+          <div>
+            <h2 className="text-2xl font-semibold text-gray-800 mb-1">Incremental Revenue Over Time</h2>
+            <p className="text-muted-foreground">Tracking the portion of revenue driven by media</p>
           </div>
         </div>
         
-        <div className="mt-6 text-center">
-          <Link
-            to="/guide"
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-gradient-to-r from-primary to-primary/80 text-white hover:from-primary/90 hover:to-primary/70 transition-all duration-300 shadow-md"
-          >
-            <Layers className="h-4 w-4" />
-            <span>Explore All Features</span>
-          </Link>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="md:col-span-2 bg-white p-6 rounded-xl border shadow-sm">
+            <div className="mb-4">
+              <h3 className="text-base font-semibold">Total vs Incremental Revenue</h3>
+              <p className="text-sm text-muted-foreground">Based on MMM attribution</p>
+            </div>
+            
+            <PerformanceChart
+              data={revenueTimeSeriesData}
+              lines={[
+                { dataKey: "revenue", color: "#4f46e5", label: "Total Revenue" },
+                { dataKey: "incrementalRevenue", color: "#22c55e", label: "Incremental Revenue" },
+                { dataKey: "baseline", color: "#94a3b8", label: "Baseline Revenue" }
+              ]}
+              height={320}
+            />
+          </div>
+          
+          <Card className="bg-gradient-to-br from-blue-50 to-white border-blue-100/30 shadow-sm">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-lg font-medium flex items-center justify-between">
+                <span>Key Questions</span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ul className="space-y-2 text-sm">
+                <li className="flex items-start gap-2">
+                  <span className="text-primary mt-1">•</span>
+                  <span>How does my revenue & marketing incremental revenue evolve over time?</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-primary mt-1">•</span>
+                  <span>What is the gap between total and incremental revenue?</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-primary mt-1">•</span>
+                  <span>Are there periods where marketing drives more revenue?</span>
+                </li>
+              </ul>
+            </CardContent>
+          </Card>
         </div>
       </div>
+      
+      {/* Section 4: Media Spend & ROAS Over Time */}
+      <div className="space-y-6">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center">
+          <div>
+            <h2 className="text-2xl font-semibold text-gray-800 mb-1">Media Spend & ROAS Over Time</h2>
+            <p className="text-muted-foreground">Understanding spend evolution and efficiency trends</p>
+          </div>
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <div className="md:col-span-2 bg-white p-6 rounded-xl border shadow-sm">
+            <div className="mb-4">
+              <h3 className="text-base font-semibold">Media Spend & ROAS Trends</h3>
+              <p className="text-sm text-muted-foreground">Daily evolution</p>
+            </div>
+            
+            <PerformanceChart
+              data={mediaTimeSeriesData}
+              lines={[
+                { dataKey: "spend", color: "#8b5cf6", label: "Media Spend", yAxisId: "left" },
+                { dataKey: "roas", color: "#f97316", label: "Daily ROAS", yAxisId: "right" }
+              ]}
+              height={320}
+            />
+          </div>
+          
+          <Card className="bg-gradient-to-br from-blue-50 to-white border-blue-100/30 shadow-sm">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-lg font-medium flex items-center justify-between">
+                <span>Key Questions</span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ul className="space-y-2 text-sm">
+                <li className="flex items-start gap-2">
+                  <span className="text-primary mt-1">•</span>
+                  <span>How does my media spend evolve over time?</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-primary mt-1">•</span>
+                  <span>How does my ROAS evolve over time?</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-primary mt-1">•</span>
+                  <span>Is there any correlation between spend increases and ROAS changes?</span>
+                </li>
+              </ul>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+      
+      {/* Next Steps Card */}
+      <Card className="mb-8 border-l-4 border-l-primary animate-fade-in">
+        <CardContent className="p-6">
+          <div className="flex items-start gap-4">
+            <div className="p-3 rounded-full bg-primary/10">
+              <ArrowUpRight className="h-6 w-6 text-primary" />
+            </div>
+            <div>
+              <h2 className="text-xl font-semibold mb-2">Next Steps</h2>
+              <p className="text-muted-foreground mb-4">
+                Dive deeper into specific areas of your marketing analytics:
+              </p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <Link to="/channels" className="flex items-center gap-2 rounded-lg p-3 bg-muted/50 hover:bg-muted transition-colors">
+                  <BarChart3 className="h-5 w-5 text-primary" />
+                  <span className="font-medium">Channel Analysis</span>
+                </Link>
+                <Link to="/campaign" className="flex items-center gap-2 rounded-lg p-3 bg-muted/50 hover:bg-muted transition-colors">
+                  <PieChart className="h-5 w-5 text-primary" />
+                  <span className="font-medium">Campaign Analysis</span>
+                </Link>
+                <Link to="/model-metrics" className="flex items-center gap-2 rounded-lg p-3 bg-muted/50 hover:bg-muted transition-colors">
+                  <TrendingUp className="h-5 w-5 text-primary" />
+                  <span className="font-medium">Model Metrics</span>
+                </Link>
+                <Link to="/budget" className="flex items-center gap-2 rounded-lg p-3 bg-muted/50 hover:bg-muted transition-colors">
+                  <ArrowUpRight className="h-5 w-5 text-primary" />
+                  <span className="font-medium">Budget Optimization</span>
+                </Link>
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 };
 
-export default Index;
+export default AnalyticsOverview;
