@@ -78,7 +78,8 @@ export function ROASComparison({ test }: ROASComparisonProps) {
           </Badge>
         </div>
         
-        <div className="h-[300px]">
+        {/* Increased height and adjusted margins */}
+        <div className="h-[350px]">
           <ChartContainer
             config={{
               ROAS: { color: "#8b5cf6" }
@@ -87,11 +88,11 @@ export function ROASComparison({ test }: ROASComparisonProps) {
             <ResponsiveContainer width="100%" height="100%">
               <BarChart
                 data={chartData}
-                margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
+                margin={{ top: 30, right: 30, left: 20, bottom: 30 }}
               >
                 <CartesianGrid strokeDasharray="3 3" opacity={0.2} />
                 <XAxis dataKey="name" />
-                <YAxis label={{ value: 'ROAS', angle: -90, position: 'insideLeft' }} />
+                <YAxis label={{ value: 'ROAS', angle: -90, position: 'insideLeft', offset: 10 }} />
                 <Tooltip 
                   formatter={(value, name) => [
                     name === "ROAS" ? `${value}x` : `$${value.toLocaleString()}`,
@@ -106,7 +107,8 @@ export function ROASComparison({ test }: ROASComparisonProps) {
           </ChartContainer>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+        {/* Added more vertical spacing */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8">
           <div className="bg-muted/70 backdrop-blur-sm p-4 rounded-md border border-white/20">
             <h3 className="font-medium mb-2">Revenue vs. Spend</h3>
             <div className="grid grid-cols-2 gap-2">

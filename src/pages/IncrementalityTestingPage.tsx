@@ -100,16 +100,16 @@ const IncrementalityTestingPage = () => {
             </TabsTrigger>
           </TabsList>
           
-          {/* Tab 1: Overview of Results */}
-          <TabsContent value="overview" className="space-y-6 animate-fade-in">
+          {/* Tab 1: Overview of Results - Added more space between components */}
+          <TabsContent value="overview" className="space-y-10 animate-fade-in">
             <TestSetupSummary test={selectedTestData} />
             <UpliftChart test={selectedTestData} />
             <ROASComparison test={selectedTestData} />
             <MethodologyComparison test={selectedTestData} />
           </TabsContent>
           
-          {/* Tab 2: Context */}
-          <TabsContent value="context" className="space-y-6 animate-fade-in">
+          {/* Tab 2: Context - Added more space between components */}
+          <TabsContent value="context" className="space-y-10 animate-fade-in">
             <LearningAgenda test={selectedTestData} />
             <BusinessQuestion test={selectedTestData} />
             <MethodologySelection test={selectedTestData} />

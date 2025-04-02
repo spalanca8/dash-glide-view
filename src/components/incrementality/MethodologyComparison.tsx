@@ -71,7 +71,8 @@ export function MethodologyComparison({ test }: MethodologyComparisonProps) {
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="h-[300px] mb-6">
+        {/* Adjusted height and margins */}
+        <div className="h-[350px] mb-8">
           <ChartContainer
             config={{
               uplift: { color: "#8884d8" }
@@ -80,12 +81,12 @@ export function MethodologyComparison({ test }: MethodologyComparisonProps) {
             <ResponsiveContainer width="100%" height="100%">
               <BarChart 
                 data={chartData} 
-                margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
+                margin={{ top: 30, right: 30, left: 20, bottom: 30 }}
               >
                 <CartesianGrid strokeDasharray="3 3" opacity={0.2} />
                 <XAxis dataKey="name" />
                 <YAxis 
-                  label={{ value: 'Uplift (%)', angle: -90, position: 'insideLeft' }}
+                  label={{ value: 'Uplift (%)', angle: -90, position: 'insideLeft', offset: 10 }}
                 />
                 <Tooltip formatter={(value) => [`${value}%`, 'Uplift']} />
                 <Bar 
@@ -101,7 +102,7 @@ export function MethodologyComparison({ test }: MethodologyComparisonProps) {
           </ChartContainer>
         </div>
         
-        <Table>
+        <Table className="mt-6">
           <TableHeader className="bg-muted/30">
             <TableRow>
               <TableHead className="w-[250px]">Methodology</TableHead>

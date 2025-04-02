@@ -72,7 +72,8 @@ export function UpliftChart({ test }: UpliftChartProps) {
           </Badge>
         </div>
         
-        <div className="h-[350px]">
+        {/* Added more height to prevent labels from overlapping */}
+        <div className="h-[400px]">
           <ChartContainer 
             config={{
               Control: { color: "#94a3b8" },
@@ -82,7 +83,7 @@ export function UpliftChart({ test }: UpliftChartProps) {
             <ResponsiveContainer width="100%" height="100%">
               <BarChart
                 data={chartData}
-                margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
+                margin={{ top: 30, right: 30, left: 20, bottom: 30 }}
               >
                 <CartesianGrid strokeDasharray="3 3" opacity={0.2} />
                 <XAxis dataKey="name" />
@@ -103,7 +104,7 @@ export function UpliftChart({ test }: UpliftChartProps) {
           </ChartContainer>
         </div>
         
-        <div className="mt-4 bg-muted/70 backdrop-blur-sm p-4 rounded-md border border-white/20">
+        <div className="mt-6 bg-muted/70 backdrop-blur-sm p-4 rounded-md border border-white/20">
           <h3 className="font-medium mb-2">Uplift Analysis</h3>
           <p className="text-sm text-muted-foreground">
             The test group showed a significant positive uplift of {conversionRateUplift.toFixed(1)}% in conversion rate
