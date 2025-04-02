@@ -1,0 +1,1187 @@
+
+import React from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { ChevronRight, Info } from "lucide-react";
+
+type MethodologyDetailsProps = {
+  methodology: string;
+};
+
+const MethodologyDetails: React.FC<MethodologyDetailsProps> = ({ methodology }) => {
+  if (methodology === "mmm") {
+    return <MarketingMixModelingDetails />;
+  } else if (methodology === "incrementality") {
+    return <IncrementalityTestingDetails />;
+  } else if (methodology === "mta") {
+    return <MultiTouchAttributionDetails />;
+  }
+  
+  return null;
+};
+
+const FormulaBlock = ({ formula, description }: { formula: string, description?: React.ReactNode }) => {
+  return (
+    <div className="my-4">
+      <div className="p-5 bg-gradient-to-r from-indigo-50 to-blue-50 rounded-md font-mono text-center border border-indigo-100 shadow-sm">
+        <div className="text-lg text-indigo-900 font-semibold">{formula}</div>
+      </div>
+      {description && (
+        <div className="mt-3 text-muted-foreground text-sm">
+          {description}
+        </div>
+      )}
+    </div>
+  );
+};
+
+const DefinitionList = ({ items }: { items: { term: string; definition: string }[] }) => {
+  return (
+    <div className="space-y-3 my-4">
+      {items.map((item, index) => (
+        <div key={index} className="flex gap-3 items-start border-b border-dashed border-indigo-100 pb-2">
+          <div className="font-medium text-indigo-800 w-24 flex-shrink-0">{item.term}:</div>
+          <div className="text-muted-foreground">{item.definition}</div>
+        </div>
+      ))}
+    </div>
+  );
+};
+
+const InfoBox = ({ children }: { children: React.ReactNode }) => {
+  return (
+    <div className="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-md my-4 flex gap-3">
+      <Info className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" />
+      <div className="text-blue-900 text-sm">{children}</div>
+    </div>
+  );
+};
+
+const MarketingMixModelingDetails = () => {
+  return (
+    <Card className="mb-6 border-t-4 border-t-blue-500">
+      <CardHeader className="bg-gradient-to-r from-blue-50/50 to-indigo-50/50">
+        <CardTitle className="text-2xl">Marketing Mix Modeling (MMM) - Technical Deep Dive</CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-6 pt-6">
+        <Tabs defaultValue="overview">
+          <TabsList className="bg-slate-100 p-1 rounded-lg mb-2 w-full grid grid-cols-4">
+            <TabsTrigger value="overview" className="rounded-md">Overview</TabsTrigger>
+            <TabsTrigger value="mathematics" className="rounded-md">Mathematical Foundation</TabsTrigger>
+            <TabsTrigger value="implementation" className="rounded-md">Implementation</TabsTrigger>
+            <TabsTrigger value="advanced" className="rounded-md">Advanced Techniques</TabsTrigger>
+          </TabsList>
+          
+          <TabsContent value="overview" className="space-y-6 mt-6 animate-fade-in">
+            <div>
+              <h3 className="text-lg font-semibold mb-2 text-blue-700 flex items-center gap-2">
+                <span className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-700">1</span>
+                Technical Definition
+              </h3>
+              <p className="leading-relaxed">Marketing Mix Modeling (MMM) is a statistical analysis technique used to quantify the impact of various marketing tactics on sales or other KPIs. It uses time-series regression analysis to establish a relationship between marketing activities and business outcomes, accounting for external factors.</p>
+            </div>
+            
+            <div>
+              <h3 className="text-lg font-semibold mb-3 text-blue-700 flex items-center gap-2">
+                <span className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-700">2</span>
+                Core Components
+              </h3>
+              <div className="grid md:grid-cols-2 gap-4">
+                <ul className="list-none space-y-2">
+                  <li className="flex gap-3 items-start">
+                    <div className="w-6 h-6 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center shrink-0 font-medium">•</div>
+                    <div>
+                      <span className="font-medium text-blue-800">Base Sales:</span>
+                      <p className="text-muted-foreground text-sm">Predicted sales without any marketing spend</p>
+                    </div>
+                  </li>
+                  <li className="flex gap-3 items-start">
+                    <div className="w-6 h-6 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center shrink-0 font-medium">•</div>
+                    <div>
+                      <span className="font-medium text-blue-800">Incremental Sales:</span>
+                      <p className="text-muted-foreground text-sm">Additional sales generated by marketing activities</p>
+                    </div>
+                  </li>
+                  <li className="flex gap-3 items-start">
+                    <div className="w-6 h-6 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center shrink-0 font-medium">•</div>
+                    <div>
+                      <span className="font-medium text-blue-800">Decay Factors:</span>
+                      <p className="text-muted-foreground text-sm">How long the effect of marketing lasts</p>
+                    </div>
+                  </li>
+                </ul>
+                <ul className="list-none space-y-2">
+                  <li className="flex gap-3 items-start">
+                    <div className="w-6 h-6 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center shrink-0 font-medium">•</div>
+                    <div>
+                      <span className="font-medium text-blue-800">Adstock Effects:</span>
+                      <p className="text-muted-foreground text-sm">Carryover effects from previous marketing periods</p>
+                    </div>
+                  </li>
+                  <li className="flex gap-3 items-start">
+                    <div className="w-6 h-6 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center shrink-0 font-medium">•</div>
+                    <div>
+                      <span className="font-medium text-blue-800">Synergy Effects:</span>
+                      <p className="text-muted-foreground text-sm">Interaction between different marketing channels</p>
+                    </div>
+                  </li>
+                  <li className="flex gap-3 items-start">
+                    <div className="w-6 h-6 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center shrink-0 font-medium">•</div>
+                    <div>
+                      <span className="font-medium text-blue-800">Control Variables:</span>
+                      <p className="text-muted-foreground text-sm">External factors like seasonality, competitors, pricing</p>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            
+            <div>
+              <h3 className="text-lg font-semibold mb-3 text-blue-700 flex items-center gap-2">
+                <span className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-700">3</span>
+                Data Requirements
+              </h3>
+              <div className="bg-slate-50 rounded-xl p-5 border border-slate-200">
+                <ul className="list-none grid md:grid-cols-2 gap-4">
+                  <li className="flex gap-3 items-start">
+                    <div className="w-6 h-6 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center shrink-0 font-medium">1</div>
+                    <div>
+                      <span className="font-medium">Time-series data</span>
+                      <p className="text-sm text-muted-foreground">(typically 2-3 years of weekly or monthly data)</p>
+                    </div>
+                  </li>
+                  <li className="flex gap-3 items-start">
+                    <div className="w-6 h-6 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center shrink-0 font-medium">2</div>
+                    <div>
+                      <span className="font-medium">Marketing spend by channel</span>
+                    </div>
+                  </li>
+                  <li className="flex gap-3 items-start">
+                    <div className="w-6 h-6 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center shrink-0 font-medium">3</div>
+                    <div>
+                      <span className="font-medium">Sales or other KPI data</span>
+                    </div>
+                  </li>
+                  <li className="flex gap-3 items-start">
+                    <div className="w-6 h-6 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center shrink-0 font-medium">4</div>
+                    <div>
+                      <span className="font-medium">External factors</span>
+                      <p className="text-sm text-muted-foreground">(seasons, holidays, promotions, competitor activities)</p>
+                    </div>
+                  </li>
+                  <li className="flex gap-3 items-start">
+                    <div className="w-6 h-6 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center shrink-0 font-medium">5</div>
+                    <div>
+                      <span className="font-medium">Pricing information</span>
+                    </div>
+                  </li>
+                  <li className="flex gap-3 items-start">
+                    <div className="w-6 h-6 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center shrink-0 font-medium">6</div>
+                    <div>
+                      <span className="font-medium">Macroeconomic indicators</span>
+                      <p className="text-sm text-muted-foreground">(if relevant)</p>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </TabsContent>
+          
+          <TabsContent value="mathematics" className="space-y-6 mt-6 animate-fade-in">
+            <div>
+              <h3 className="text-xl font-semibold mb-4 text-blue-700 border-b pb-2 border-blue-100">Mathematical Foundation of MMM</h3>
+              
+              <div className="bg-white rounded-xl shadow-sm border p-6 space-y-6">
+                <div>
+                  <h4 className="text-lg font-semibold mb-3 text-blue-800">Basic Regression Model</h4>
+                  <p className="mb-3">At its core, MMM uses a multiple regression model of the form:</p>
+                  
+                  <FormulaBlock 
+                    formula="Y = β₀ + β₁X₁ + β₂X₂ + ... + βₙXₙ + ε" 
+                    description={
+                      <DefinitionList items={[
+                        { term: "Y", definition: "Target variable (sales, conversions, etc.)" },
+                        { term: "β₀", definition: "Baseline (sales without marketing)" },
+                        { term: "β₁...βₙ", definition: "Coefficients representing effectiveness of each channel" },
+                        { term: "X₁...Xₙ", definition: "Marketing spending or activity in each channel" },
+                        { term: "ε", definition: "Error term" }
+                      ]} />
+                    }
+                  />
+                </div>
+                
+                <div>
+                  <h4 className="text-lg font-semibold mb-3 text-blue-800">Adstock Transformation</h4>
+                  <p className="mb-3">Adstock accounts for lagged and diminishing effects of advertising over time:</p>
+                  
+                  <FormulaBlock 
+                    formula="A_t = X_t + λ·A_{t-1}" 
+                    description={
+                      <DefinitionList items={[
+                        { term: "A_t", definition: "Adstock at time t" },
+                        { term: "X_t", definition: "Marketing spend at time t" },
+                        { term: "λ", definition: "Decay rate (0 to 1)" },
+                        { term: "A_{t-1}", definition: "Previous period's adstock" }
+                      ]} />
+                    }
+                  />
+                  
+                  <InfoBox>
+                    The adstock transformation captures how advertising continues to have an effect after the initial exposure, 
+                    gradually diminishing over time. Higher λ values mean longer-lasting effects.
+                  </InfoBox>
+                </div>
+                
+                <div>
+                  <h4 className="text-lg font-semibold mb-3 text-blue-800">Saturation Effects (Diminishing Returns)</h4>
+                  <p className="mb-3">Often modeled using a Hill function or similar S-curve:</p>
+                  
+                  <FormulaBlock 
+                    formula="S(A_t) = A_t^α / (K^α + A_t^α)" 
+                    description={
+                      <DefinitionList items={[
+                        { term: "S(A_t)", definition: "Saturated response" },
+                        { term: "A_t", definition: "Adstock value" },
+                        { term: "α", definition: "Shape parameter" },
+                        { term: "K", definition: "Half-saturation constant" }
+                      ]} />
+                    }
+                  />
+                  
+                  <div className="mt-4 flex gap-4 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg">
+                    <div className="w-32 h-32 bg-white rounded-md border border-blue-200 flex items-center justify-center p-2">
+                      <svg viewBox="0 0 100 100" className="w-full h-full">
+                        <path d="M10,90 C10,90 10,50 10,50 C10,20 30,10 50,10 C70,10 90,20 90,50 C90,50 90,90 90,90" fill="none" stroke="#4F46E5" strokeWidth="2" />
+                        <line x1="10" y1="90" x2="90" y2="90" stroke="#6B7280" strokeWidth="1" />
+                        <line x1="10" y1="10" x2="10" y2="90" stroke="#6B7280" strokeWidth="1" />
+                        <text x="95" y="90" fontSize="8" fill="#6B7280">Investment</text>
+                        <text x="5" y="5" fontSize="8" fill="#6B7280">Return</text>
+                      </svg>
+                    </div>
+                    <div className="flex-1">
+                      <h5 className="font-medium text-blue-800 mb-1">Diminishing Returns Curve</h5>
+                      <p className="text-sm text-muted-foreground">
+                        This S-curve shows how marketing effectiveness diminishes as spend increases. 
+                        Initially, more spend yields proportionally large returns, but eventually 
+                        additional spending produces smaller and smaller incremental effects as the market saturates.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                
+                <div>
+                  <h4 className="text-lg font-semibold mb-3 text-blue-800">Complete Multiplicative Model</h4>
+                  <p className="mb-3">A full MMM might look like:</p>
+                  
+                  <FormulaBlock 
+                    formula="Y_t = β₀·∏(1 + S_i(A_{i,t}))·∏(1 + Control_j) + ε_t" 
+                    description={
+                      <p>This multiplicative form captures interactions between variables better than additive models,
+                      allowing for synergistic effects between channels and controlling factors.</p>
+                    }
+                  />
+                </div>
+              </div>
+            </div>
+          </TabsContent>
+          
+          <TabsContent value="implementation" className="space-y-4 mt-6 animate-fade-in">
+            <div>
+              <h3 className="text-lg font-semibold mb-4 text-blue-700 border-b pb-2 border-blue-100">Implementation Process</h3>
+              
+              <div className="bg-white p-6 rounded-xl shadow-sm border">
+                <ol className="list-none space-y-4">
+                  {[
+                    { title: "Data collection and cleaning", desc: "Gather all relevant data sources and prepare them for analysis" },
+                    { title: "Feature engineering", desc: "Create adstock transformations, seasonality components, and other derived variables" },
+                    { title: "Model selection", desc: "Choose between linear, multiplicative, or hierarchical model structures" },
+                    { title: "Parameter estimation", desc: "Use OLS, MLE, or Bayesian methods to fit model parameters" },
+                    { title: "Validation", desc: "Test model accuracy using cross-validation and hold-out testing" },
+                    { title: "Interpretation", desc: "Decompose effects to understand channel contributions" },
+                    { title: "Optimization", desc: "Use model outputs to recommend optimal budget allocations" }
+                  ].map((step, index) => (
+                    <li key={index} className="flex gap-4">
+                      <div className="w-12 h-12 rounded-full bg-blue-100 text-blue-800 flex items-center justify-center font-semibold shrink-0">
+                        {index + 1}
+                      </div>
+                      <div>
+                        <h4 className="font-medium text-blue-900">{step.title}</h4>
+                        <p className="text-muted-foreground">{step.desc}</p>
+                      </div>
+                    </li>
+                  ))}
+                </ol>
+              </div>
+            </div>
+            
+            <div className="grid md:grid-cols-2 gap-6 mt-6">
+              <div>
+                <h3 className="text-lg font-semibold mb-3 text-blue-700">Common Statistical Packages</h3>
+                <div className="bg-slate-50 rounded-lg p-4 border border-slate-200 h-full">
+                  <ul className="list-none space-y-3">
+                    <li className="flex gap-3 items-center">
+                      <div className="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center shrink-0 font-medium">R</div>
+                      <div>
+                        <span className="font-medium">R packages</span>
+                        <p className="text-sm text-muted-foreground">Robyn (Facebook's MMM package)</p>
+                      </div>
+                    </li>
+                    <li className="flex gap-3 items-center">
+                      <div className="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center shrink-0 font-medium">Py</div>
+                      <div>
+                        <span className="font-medium">Python</span>
+                        <p className="text-sm text-muted-foreground">LightweightMMM, PyMC3 for Bayesian models</p>
+                      </div>
+                    </li>
+                    <li className="flex gap-3 items-center">
+                      <div className="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center shrink-0 font-medium">C</div>
+                      <div>
+                        <span className="font-medium">Commercial tools</span>
+                        <p className="text-sm text-muted-foreground">Nielsen, IRI, Google 360</p>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              
+              <div>
+                <h3 className="text-lg font-semibold mb-3 text-blue-700">Validation Techniques</h3>
+                <div className="bg-slate-50 rounded-lg p-4 border border-slate-200 h-full">
+                  <ul className="grid grid-cols-2 gap-3">
+                    <li className="flex gap-2 items-center">
+                      <div className="w-2 h-2 rounded-full bg-blue-500 shrink-0"></div>
+                      <div className="text-sm">Adjusted R-squared</div>
+                    </li>
+                    <li className="flex gap-2 items-center">
+                      <div className="w-2 h-2 rounded-full bg-blue-500 shrink-0"></div>
+                      <div className="text-sm">Root Mean Square Error (RMSE)</div>
+                    </li>
+                    <li className="flex gap-2 items-center">
+                      <div className="w-2 h-2 rounded-full bg-blue-500 shrink-0"></div>
+                      <div className="text-sm">Mean Absolute Percentage Error</div>
+                    </li>
+                    <li className="flex gap-2 items-center">
+                      <div className="w-2 h-2 rounded-full bg-blue-500 shrink-0"></div>
+                      <div className="text-sm">Holdout sample testing</div>
+                    </li>
+                    <li className="flex gap-2 items-center">
+                      <div className="w-2 h-2 rounded-full bg-blue-500 shrink-0"></div>
+                      <div className="text-sm">Backtesting on historical data</div>
+                    </li>
+                    <li className="flex gap-2 items-center">
+                      <div className="w-2 h-2 rounded-full bg-blue-500 shrink-0"></div>
+                      <div className="text-sm">Comparison with experiments</div>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </TabsContent>
+          
+          <TabsContent value="advanced" className="space-y-6 mt-6 animate-fade-in">
+            <div className="grid md:grid-cols-2 gap-6">
+              {[
+                {
+                  title: "Bayesian MMM",
+                  desc: "Bayesian approaches use prior distributions for model parameters and produce posterior distributions rather than point estimates. They better handle uncertainty and can incorporate business knowledge as priors."
+                },
+                {
+                  title: "Hierarchical Models",
+                  desc: "Allow modeling at multiple levels (e.g., national and regional) simultaneously, sharing information between levels while allowing for local differences."
+                },
+                {
+                  title: "Automated MMM",
+                  desc: "Recent approaches use neural networks and automated machine learning to estimate marketing effects, often incorporating raw data like creatives, keywords, etc."
+                },
+                {
+                  title: "Geo-based MMM",
+                  desc: "Uses variations in marketing activity across geographic regions to identify causal effects, similar to a quasi-experimental design."
+                }
+              ].map((technique, index) => (
+                <div key={index} className="bg-gradient-to-br from-white to-blue-50 rounded-xl p-6 border border-blue-100 shadow-sm">
+                  <h3 className="text-lg font-semibold mb-3 text-blue-700">{technique.title}</h3>
+                  <p className="text-muted-foreground">{technique.desc}</p>
+                </div>
+              ))}
+            </div>
+            
+            <div className="bg-gradient-to-br from-indigo-50 to-blue-50 rounded-xl p-6 border border-indigo-100 mt-6">
+              <h3 className="text-lg font-semibold mb-4 text-indigo-800">Integration with Other Methods</h3>
+              <p className="mb-4">Modern approaches integrate MMM with other measurement techniques to create unified frameworks:</p>
+              
+              <div className="grid grid-cols-3 gap-4">
+                <div className="bg-white rounded-lg p-4 shadow-sm">
+                  <div className="text-center mb-3">
+                    <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center mx-auto">
+                      <span className="font-bold text-blue-700">MMM</span>
+                    </div>
+                  </div>
+                  <p className="text-sm text-center">Strategic channel planning</p>
+                </div>
+                
+                <div className="bg-white rounded-lg p-4 shadow-sm">
+                  <div className="text-center mb-3">
+                    <div className="w-12 h-12 rounded-full bg-purple-100 flex items-center justify-center mx-auto">
+                      <span className="font-bold text-purple-700">MTA</span>
+                    </div>
+                  </div>
+                  <p className="text-sm text-center">Customer journey insights</p>
+                </div>
+                
+                <div className="bg-white rounded-lg p-4 shadow-sm">
+                  <div className="text-center mb-3">
+                    <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center mx-auto">
+                      <span className="font-bold text-green-700">Inc</span>
+                    </div>
+                  </div>
+                  <p className="text-sm text-center">Causal validation</p>
+                </div>
+              </div>
+              
+              <div className="mt-4 text-sm text-indigo-800 text-center font-medium">
+                Unified measurement frameworks leverage the strengths of each method to provide a complete view of marketing performance
+              </div>
+            </div>
+          </TabsContent>
+        </Tabs>
+      </CardContent>
+    </Card>
+  );
+};
+
+// Expanded Incrementality Testing details
+const IncrementalityTestingDetails = () => {
+  return (
+    <Card className="mb-6 border-t-4 border-t-purple-500">
+      <CardHeader className="bg-gradient-to-r from-purple-50/50 to-indigo-50/50">
+        <CardTitle className="text-2xl">Incrementality Testing - Technical Deep Dive</CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-6 pt-6">
+        <Tabs defaultValue="overview">
+          <TabsList className="bg-slate-100 p-1 rounded-lg mb-2 w-full grid grid-cols-4">
+            <TabsTrigger value="overview" className="rounded-md">Overview</TabsTrigger>
+            <TabsTrigger value="mathematics" className="rounded-md">Mathematical Foundation</TabsTrigger>
+            <TabsTrigger value="implementation" className="rounded-md">Implementation</TabsTrigger>
+            <TabsTrigger value="advanced" className="rounded-md">Advanced Techniques</TabsTrigger>
+          </TabsList>
+          
+          <TabsContent value="overview" className="space-y-6 mt-6 animate-fade-in">
+            <div>
+              <h3 className="text-lg font-semibold mb-2 text-purple-700 flex items-center gap-2">
+                <span className="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center text-purple-700">1</span>
+                Technical Definition
+              </h3>
+              <p className="leading-relaxed">Incrementality testing is an experimental approach to measure the causal impact of marketing interventions by comparing outcomes between treatment and control groups. It aims to isolate the true lift attributable to a specific marketing activity.</p>
+            </div>
+            
+            <div>
+              <h3 className="text-lg font-semibold mb-3 text-purple-700 flex items-center gap-2">
+                <span className="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center text-purple-700">2</span>
+                Core Components
+              </h3>
+              <div className="grid md:grid-cols-2 gap-4">
+                <ul className="list-none space-y-2">
+                  <li className="flex gap-3 items-start">
+                    <div className="w-6 h-6 rounded-full bg-purple-100 text-purple-700 flex items-center justify-center shrink-0 font-medium">•</div>
+                    <div>
+                      <span className="font-medium text-purple-800">Treatment Group:</span>
+                      <p className="text-muted-foreground text-sm">Users exposed to the marketing activity</p>
+                    </div>
+                  </li>
+                  <li className="flex gap-3 items-start">
+                    <div className="w-6 h-6 rounded-full bg-purple-100 text-purple-700 flex items-center justify-center shrink-0 font-medium">•</div>
+                    <div>
+                      <span className="font-medium text-purple-800">Control Group:</span>
+                      <p className="text-muted-foreground text-sm">Similar users not exposed to the activity</p>
+                    </div>
+                  </li>
+                  <li className="flex gap-3 items-start">
+                    <div className="w-6 h-6 rounded-full bg-purple-100 text-purple-700 flex items-center justify-center shrink-0 font-medium">•</div>
+                    <div>
+                      <span className="font-medium text-purple-800">Randomization:</span>
+                      <p className="text-muted-foreground text-sm">Process of assigning users to groups</p>
+                    </div>
+                  </li>
+                </ul>
+                <ul className="list-none space-y-2">
+                  <li className="flex gap-3 items-start">
+                    <div className="w-6 h-6 rounded-full bg-purple-100 text-purple-700 flex items-center justify-center shrink-0 font-medium">•</div>
+                    <div>
+                      <span className="font-medium text-purple-800">Lift Measurement:</span>
+                      <p className="text-muted-foreground text-sm">Calculation of the difference in outcomes</p>
+                    </div>
+                  </li>
+                  <li className="flex gap-3 items-start">
+                    <div className="w-6 h-6 rounded-full bg-purple-100 text-purple-700 flex items-center justify-center shrink-0 font-medium">•</div>
+                    <div>
+                      <span className="font-medium text-purple-800">Statistical Significance:</span>
+                      <p className="text-muted-foreground text-sm">Confidence that results are not due to chance</p>
+                    </div>
+                  </li>
+                  <li className="flex gap-3 items-start">
+                    <div className="w-6 h-6 rounded-full bg-purple-100 text-purple-700 flex items-center justify-center shrink-0 font-medium">•</div>
+                    <div>
+                      <span className="font-medium text-purple-800">Sample Size:</span>
+                      <p className="text-muted-foreground text-sm">Number of users needed for reliable results</p>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            
+            <div>
+              <h3 className="text-lg font-semibold mb-3 text-purple-700 flex items-center gap-2">
+                <span className="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center text-purple-700">3</span>
+                Experimental Designs
+              </h3>
+              <div className="bg-slate-50 rounded-xl p-5 border border-slate-200">
+                <ul className="list-none grid md:grid-cols-2 gap-4">
+                  <li className="flex gap-3 items-start">
+                    <div className="w-6 h-6 rounded-full bg-purple-100 text-purple-700 flex items-center justify-center shrink-0 font-medium">1</div>
+                    <div>
+                      <span className="font-medium">PSA Tests</span>
+                      <p className="text-sm text-muted-foreground">Compare real ads to public service announcements</p>
+                    </div>
+                  </li>
+                  <li className="flex gap-3 items-start">
+                    <div className="w-6 h-6 rounded-full bg-purple-100 text-purple-700 flex items-center justify-center shrink-0 font-medium">2</div>
+                    <div>
+                      <span className="font-medium">Ghost Ads</span>
+                      <p className="text-sm text-muted-foreground">Tag potential impressions without showing ads</p>
+                    </div>
+                  </li>
+                  <li className="flex gap-3 items-start">
+                    <div className="w-6 h-6 rounded-full bg-purple-100 text-purple-700 flex items-center justify-center shrink-0 font-medium">3</div>
+                    <div>
+                      <span className="font-medium">Intent-to-Treat</span>
+                      <p className="text-sm text-muted-foreground">Analyze by assignment, not actual exposure</p>
+                    </div>
+                  </li>
+                  <li className="flex gap-3 items-start">
+                    <div className="w-6 h-6 rounded-full bg-purple-100 text-purple-700 flex items-center justify-center shrink-0 font-medium">4</div>
+                    <div>
+                      <span className="font-medium">Geo-based Experiments</span>
+                      <p className="text-sm text-muted-foreground">Vary exposure by geographic region</p>
+                    </div>
+                  </li>
+                  <li className="flex gap-3 items-start">
+                    <div className="w-6 h-6 rounded-full bg-purple-100 text-purple-700 flex items-center justify-center shrink-0 font-medium">5</div>
+                    <div>
+                      <span className="font-medium">Holdout Tests</span>
+                      <p className="text-sm text-muted-foreground">Exclude a portion of audience from campaigns</p>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </TabsContent>
+          
+          <TabsContent value="mathematics" className="space-y-6 mt-6 animate-fade-in">
+            <div>
+              <h3 className="text-xl font-semibold mb-4 text-purple-700 border-b pb-2 border-purple-100">Mathematical Foundation of Incrementality Testing</h3>
+              
+              <div className="bg-white rounded-xl shadow-sm border p-6 space-y-6">
+                <div>
+                  <h4 className="text-lg font-semibold mb-3 text-purple-800">Average Treatment Effect (ATE)</h4>
+                  <p className="mb-3">The fundamental metric in incrementality testing is the Average Treatment Effect:</p>
+                  
+                  <FormulaBlock 
+                    formula="ATE = E[Y(1) - Y(0)]" 
+                    description={
+                      <DefinitionList items={[
+                        { term: "Y(1)", definition: "Outcome for an individual if treated" },
+                        { term: "Y(0)", definition: "Outcome for the same individual if not treated" },
+                        { term: "E[...]", definition: "Expected value (average) of the difference" }
+                      ]} />
+                    }
+                  />
+                  
+                  <InfoBox>
+                    The fundamental problem in causal inference is that we cannot observe both Y(1) and Y(0) for the same individual. 
+                    Randomization allows us to estimate this difference by comparing groups.
+                  </InfoBox>
+                </div>
+                
+                <div>
+                  <h4 className="text-lg font-semibold mb-3 text-purple-800">Calculating Lift</h4>
+                  <p className="mb-3">Lift is typically calculated as:</p>
+                  
+                  <FormulaBlock 
+                    formula="Lift = (Outcome_treatment - Outcome_control) / Outcome_control" 
+                    description={
+                      <p>This gives the percentage increase in the outcome due to the treatment.</p>
+                    }
+                  />
+                </div>
+                
+                <div>
+                  <h4 className="text-lg font-semibold mb-3 text-purple-800">Statistical Significance</h4>
+                  <p className="mb-3">To determine if results are not due to random chance, we use hypothesis testing:</p>
+                  
+                  <FormulaBlock 
+                    formula="t = \frac{(\bar{X}_1 - \bar{X}_2)}{\sqrt{\frac{s_1^2}{n_1} + \frac{s_2^2}{n_2}}}" 
+                    description={
+                      <DefinitionList items={[
+                        { term: "t", definition: "t-statistic" },
+                        { term: "X̄₁, X̄₂", definition: "Mean outcomes in treatment and control groups" },
+                        { term: "s₁², s₂²", definition: "Variances of outcomes in each group" },
+                        { term: "n₁, n₂", definition: "Sample sizes of each group" }
+                      ]} />
+                    }
+                  />
+                  
+                  <p className="mt-3 mb-3">The p-value is derived from this t-statistic and compared against a significance level (typically 0.05) to determine if the difference is statistically significant.</p>
+                </div>
+                
+                <div>
+                  <h4 className="text-lg font-semibold mb-3 text-purple-800">Sample Size Determination</h4>
+                  <p className="mb-3">To achieve statistical significance, sample size is calculated as:</p>
+                  
+                  <FormulaBlock 
+                    formula="n = \frac{2(z_{\alpha/2} + z_{\beta})^2 \sigma^2}{\Delta^2}" 
+                    description={
+                      <DefinitionList items={[
+                        { term: "n", definition: "Required sample size per group" },
+                        { term: "zα/2", definition: "Z-score for desired confidence level" },
+                        { term: "zβ", definition: "Z-score for desired statistical power" },
+                        { term: "σ²", definition: "Variance of the outcome measure" },
+                        { term: "Δ", definition: "Minimum detectable effect size" }
+                      ]} />
+                    }
+                  />
+                </div>
+              </div>
+            </div>
+          </TabsContent>
+          
+          <TabsContent value="implementation" className="space-y-6 mt-6 animate-fade-in">
+            <div>
+              <h3 className="text-lg font-semibold mb-4 text-purple-700 border-b pb-2 border-purple-100">Implementation Process</h3>
+              
+              <div className="bg-white p-6 rounded-xl shadow-sm border">
+                <ol className="list-none space-y-4">
+                  {[
+                    { title: "Define objectives and metrics", desc: "Clearly specify what KPIs will determine success" },
+                    { title: "Determine sample size", desc: "Calculate required participants for statistical validity" },
+                    { title: "Create randomization strategy", desc: "Design how users will be assigned to groups" },
+                    { title: "Set up technical implementation", desc: "Configure measurement and group assignment" },
+                    { title: "Run the experiment", desc: "Collect data for a predetermined time period" },
+                    { title: "Analyze results", desc: "Calculate lift, significance, and confidence intervals" },
+                    { title: "Document and act", desc: "Share findings and implement learnings" }
+                  ].map((step, index) => (
+                    <li key={index} className="flex gap-4">
+                      <div className="w-12 h-12 rounded-full bg-purple-100 text-purple-800 flex items-center justify-center font-semibold shrink-0">
+                        {index + 1}
+                      </div>
+                      <div>
+                        <h4 className="font-medium text-purple-900">{step.title}</h4>
+                        <p className="text-muted-foreground">{step.desc}</p>
+                      </div>
+                    </li>
+                  ))}
+                </ol>
+              </div>
+            </div>
+            
+            <div className="grid md:grid-cols-2 gap-6 mt-6">
+              <div>
+                <h3 className="text-lg font-semibold mb-3 text-purple-700">Common Implementation Tools</h3>
+                <div className="bg-slate-50 rounded-lg p-4 border border-slate-200 h-full">
+                  <ul className="list-none space-y-3">
+                    <li className="flex gap-3 items-center">
+                      <div className="w-8 h-8 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center shrink-0 font-medium">P</div>
+                      <div>
+                        <span className="font-medium">Platform tools</span>
+                        <p className="text-sm text-muted-foreground">Google Ads, Facebook Lift, Display & Video 360</p>
+                      </div>
+                    </li>
+                    <li className="flex gap-3 items-center">
+                      <div className="w-8 h-8 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center shrink-0 font-medium">C</div>
+                      <div>
+                        <span className="font-medium">Custom solutions</span>
+                        <p className="text-sm text-muted-foreground">Server-side randomization engines</p>
+                      </div>
+                    </li>
+                    <li className="flex gap-3 items-center">
+                      <div className="w-8 h-8 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center shrink-0 font-medium">S</div>
+                      <div>
+                        <span className="font-medium">Statistical packages</span>
+                        <p className="text-sm text-muted-foreground">R, Python's SciPy, CausalML, etc.</p>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              
+              <div>
+                <h3 className="text-lg font-semibold mb-3 text-purple-700">Potential Challenges</h3>
+                <div className="bg-slate-50 rounded-lg p-4 border border-slate-200 h-full">
+                  <ul className="grid grid-rows-3 gap-3">
+                    <li className="flex gap-2 items-center">
+                      <div className="w-2 h-2 rounded-full bg-purple-500 shrink-0"></div>
+                      <div className="text-sm">Insufficient sample size leading to inconclusive results</div>
+                    </li>
+                    <li className="flex gap-2 items-center">
+                      <div className="w-2 h-2 rounded-full bg-purple-500 shrink-0"></div>
+                      <div className="text-sm">Contamination between test/control groups</div>
+                    </li>
+                    <li className="flex gap-2 items-center">
+                      <div className="w-2 h-2 rounded-full bg-purple-500 shrink-0"></div>
+                      <div className="text-sm">Measurement challenges across multiple channels</div>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </TabsContent>
+          
+          <TabsContent value="advanced" className="space-y-6 mt-6 animate-fade-in">
+            <div className="grid md:grid-cols-2 gap-6">
+              {[
+                {
+                  title: "Heterogeneous Treatment Effects",
+                  desc: "Analyzing how treatment effects vary across different subgroups to identify audience segments where marketing is most effective."
+                },
+                {
+                  title: "Multi-Cell Experiments",
+                  desc: "Testing multiple variations simultaneously to optimize creative, frequency, or other campaign parameters."
+                },
+                {
+                  title: "Sequential Testing",
+                  desc: "Using adaptive experimental designs that can conclude early when significant effects are detected."
+                },
+                {
+                  title: "Uplift Modeling",
+                  desc: "Building predictive models to target individuals most likely to respond positively to specific marketing interventions."
+                }
+              ].map((technique, index) => (
+                <div key={index} className="bg-gradient-to-br from-white to-purple-50 rounded-xl p-6 border border-purple-100 shadow-sm">
+                  <h3 className="text-lg font-semibold mb-3 text-purple-700">{technique.title}</h3>
+                  <p className="text-muted-foreground">{technique.desc}</p>
+                </div>
+              ))}
+            </div>
+            
+            <div className="bg-gradient-to-br from-purple-50 to-indigo-50 rounded-xl p-6 border border-purple-100 mt-6">
+              <h3 className="text-lg font-semibold mb-4 text-purple-800">Integration with Other Methodologies</h3>
+              <p className="mb-4">Incrementality testing works best when integrated with other measurement approaches:</p>
+              
+              <div className="grid grid-cols-2 gap-4">
+                <div className="bg-white rounded-lg p-4 shadow-sm">
+                  <h4 className="font-medium text-purple-800 mb-2">Validation for MMM</h4>
+                  <p className="text-sm text-muted-foreground">
+                    Incrementality tests can validate and calibrate MMM model coefficients by providing
+                    causal estimates for specific channels or tactics.
+                  </p>
+                </div>
+                
+                <div className="bg-white rounded-lg p-4 shadow-sm">
+                  <h4 className="font-medium text-purple-800 mb-2">Enhancement for MTA</h4>
+                  <p className="text-sm text-muted-foreground">
+                    By establishing true causal baselines, incrementality testing helps
+                    correct attribution models that might overestimate touchpoint contributions.
+                  </p>
+                </div>
+              </div>
+              
+              <div className="mt-4 text-sm text-purple-800 text-center font-medium">
+                The controlled experimental nature of incrementality testing provides ground truth
+                that can strengthen the entire measurement ecosystem.
+              </div>
+            </div>
+          </TabsContent>
+        </Tabs>
+      </CardContent>
+    </Card>
+  );
+};
+
+// Multi-Touch Attribution details component
+const MultiTouchAttributionDetails = () => {
+  return (
+    <Card className="mb-6 border-t-4 border-t-green-500">
+      <CardHeader className="bg-gradient-to-r from-green-50/50 to-teal-50/50">
+        <CardTitle className="text-2xl">Multi-Touch Attribution (MTA) - Technical Deep Dive</CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-6 pt-6">
+        <Tabs defaultValue="overview">
+          <TabsList className="bg-slate-100 p-1 rounded-lg mb-2 w-full grid grid-cols-4">
+            <TabsTrigger value="overview" className="rounded-md">Overview</TabsTrigger>
+            <TabsTrigger value="mathematics" className="rounded-md">Mathematical Foundation</TabsTrigger>
+            <TabsTrigger value="implementation" className="rounded-md">Implementation</TabsTrigger>
+            <TabsTrigger value="advanced" className="rounded-md">Advanced Techniques</TabsTrigger>
+          </TabsList>
+          
+          <TabsContent value="overview" className="space-y-6 mt-6 animate-fade-in">
+            <div>
+              <h3 className="text-lg font-semibold mb-2 text-green-700 flex items-center gap-2">
+                <span className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center text-green-700">1</span>
+                Technical Definition
+              </h3>
+              <p className="leading-relaxed">Multi-Touch Attribution (MTA) is a methodology that assigns credit to various marketing touchpoints along the customer journey, determining their relative impact on conversion events. It analyzes user-level path-to-conversion data to optimize tactical marketing decisions.</p>
+            </div>
+            
+            <div>
+              <h3 className="text-lg font-semibold mb-3 text-green-700 flex items-center gap-2">
+                <span className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center text-green-700">2</span>
+                Core Components
+              </h3>
+              <div className="grid md:grid-cols-2 gap-4">
+                <ul className="list-none space-y-2">
+                  <li className="flex gap-3 items-start">
+                    <div className="w-6 h-6 rounded-full bg-green-100 text-green-700 flex items-center justify-center shrink-0 font-medium">•</div>
+                    <div>
+                      <span className="font-medium text-green-800">User Identification:</span>
+                      <p className="text-muted-foreground text-sm">Methods to recognize unique users across touchpoints</p>
+                    </div>
+                  </li>
+                  <li className="flex gap-3 items-start">
+                    <div className="w-6 h-6 rounded-full bg-green-100 text-green-700 flex items-center justify-center shrink-0 font-medium">•</div>
+                    <div>
+                      <span className="font-medium text-green-800">Touchpoint Collection:</span>
+                      <p className="text-muted-foreground text-sm">Capturing all marketing interactions per user</p>
+                    </div>
+                  </li>
+                  <li className="flex gap-3 items-start">
+                    <div className="w-6 h-6 rounded-full bg-green-100 text-green-700 flex items-center justify-center shrink-0 font-medium">•</div>
+                    <div>
+                      <span className="font-medium text-green-800">Attribution Models:</span>
+                      <p className="text-muted-foreground text-sm">Rules/algorithms for credit allocation</p>
+                    </div>
+                  </li>
+                </ul>
+                <ul className="list-none space-y-2">
+                  <li className="flex gap-3 items-start">
+                    <div className="w-6 h-6 rounded-full bg-green-100 text-green-700 flex items-center justify-center shrink-0 font-medium">•</div>
+                    <div>
+                      <span className="font-medium text-green-800">Conversion Tracking:</span>
+                      <p className="text-muted-foreground text-sm">Identifying completed target actions</p>
+                    </div>
+                  </li>
+                  <li className="flex gap-3 items-start">
+                    <div className="w-6 h-6 rounded-full bg-green-100 text-green-700 flex items-center justify-center shrink-0 font-medium">•</div>
+                    <div>
+                      <span className="font-medium text-green-800">Path Analysis:</span>
+                      <p className="text-muted-foreground text-sm">Evaluating sequences of interactions</p>
+                    </div>
+                  </li>
+                  <li className="flex gap-3 items-start">
+                    <div className="w-6 h-6 rounded-full bg-green-100 text-green-700 flex items-center justify-center shrink-0 font-medium">•</div>
+                    <div>
+                      <span className="font-medium text-green-800">Data Integration:</span>
+                      <p className="text-muted-foreground text-sm">Combining data across marketing platforms</p>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            
+            <div>
+              <h3 className="text-lg font-semibold mb-3 text-green-700 flex items-center gap-2">
+                <span className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center text-green-700">3</span>
+                Attribution Models
+              </h3>
+              <div className="bg-slate-50 rounded-xl p-5 border border-slate-200">
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div>
+                    <h4 className="font-medium text-green-800 mb-2">Rule-Based Models</h4>
+                    <ul className="list-none space-y-2">
+                      <li className="flex gap-3 items-start">
+                        <div className="w-6 h-6 rounded-full bg-green-100 text-green-700 flex items-center justify-center shrink-0 font-medium">1</div>
+                        <div>
+                          <span className="font-medium">Last Touch</span>
+                          <p className="text-sm text-muted-foreground">Attributes 100% to final touchpoint</p>
+                        </div>
+                      </li>
+                      <li className="flex gap-3 items-start">
+                        <div className="w-6 h-6 rounded-full bg-green-100 text-green-700 flex items-center justify-center shrink-0 font-medium">2</div>
+                        <div>
+                          <span className="font-medium">First Touch</span>
+                          <p className="text-sm text-muted-foreground">Attributes 100% to initial touchpoint</p>
+                        </div>
+                      </li>
+                      <li className="flex gap-3 items-start">
+                        <div className="w-6 h-6 rounded-full bg-green-100 text-green-700 flex items-center justify-center shrink-0 font-medium">3</div>
+                        <div>
+                          <span className="font-medium">Linear</span>
+                          <p className="text-sm text-muted-foreground">Equal credit to all touchpoints</p>
+                        </div>
+                      </li>
+                      <li className="flex gap-3 items-start">
+                        <div className="w-6 h-6 rounded-full bg-green-100 text-green-700 flex items-center justify-center shrink-0 font-medium">4</div>
+                        <div>
+                          <span className="font-medium">Time Decay</span>
+                          <p className="text-sm text-muted-foreground">More credit to recent touchpoints</p>
+                        </div>
+                      </li>
+                      <li className="flex gap-3 items-start">
+                        <div className="w-6 h-6 rounded-full bg-green-100 text-green-700 flex items-center justify-center shrink-0 font-medium">5</div>
+                        <div>
+                          <span className="font-medium">Position-Based</span>
+                          <p className="text-sm text-muted-foreground">Emphasizes first and last touchpoints</p>
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+                  
+                  <div>
+                    <h4 className="font-medium text-green-800 mb-2">Algorithmic Models</h4>
+                    <ul className="list-none space-y-2">
+                      <li className="flex gap-3 items-start">
+                        <div className="w-6 h-6 rounded-full bg-green-100 text-green-700 flex items-center justify-center shrink-0 font-medium">1</div>
+                        <div>
+                          <span className="font-medium">Shapley Value</span>
+                          <p className="text-sm text-muted-foreground">Based on game theory principles</p>
+                        </div>
+                      </li>
+                      <li className="flex gap-3 items-start">
+                        <div className="w-6 h-6 rounded-full bg-green-100 text-green-700 flex items-center justify-center shrink-0 font-medium">2</div>
+                        <div>
+                          <span className="font-medium">Markov Chains</span>
+                          <p className="text-sm text-muted-foreground">Based on transition probabilities</p>
+                        </div>
+                      </li>
+                      <li className="flex gap-3 items-start">
+                        <div className="w-6 h-6 rounded-full bg-green-100 text-green-700 flex items-center justify-center shrink-0 font-medium">3</div>
+                        <div>
+                          <span className="font-medium">Machine Learning</span>
+                          <p className="text-sm text-muted-foreground">Neural networks, regression models</p>
+                        </div>
+                      </li>
+                      <li className="flex gap-3 items-start">
+                        <div className="w-6 h-6 rounded-full bg-green-100 text-green-700 flex items-center justify-center shrink-0 font-medium">4</div>
+                        <div>
+                          <span className="font-medium">Probabilistic Models</span>
+                          <p className="text-sm text-muted-foreground">Bayesian approaches to credit assignment</p>
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </TabsContent>
+          
+          <TabsContent value="mathematics" className="space-y-6 mt-6 animate-fade-in">
+            <div>
+              <h3 className="text-xl font-semibold mb-4 text-green-700 border-b pb-2 border-green-100">Mathematical Foundation of MTA</h3>
+              
+              <div className="bg-white rounded-xl shadow-sm border p-6 space-y-6">
+                <div>
+                  <h4 className="text-lg font-semibold mb-3 text-green-800">Shapley Value Approach</h4>
+                  <p className="mb-3">The Shapley value from cooperative game theory provides a fair way to distribute value among players (touchpoints):</p>
+                  
+                  <FormulaBlock 
+                    formula="φ_i(v) = \sum_{S \subseteq N \setminus \{i\}} \frac{|S|!(|N|-|S|-1)!}{|N|!} [v(S \cup \{i\}) - v(S)]" 
+                    description={
+                      <DefinitionList items={[
+                        { term: "φᵢ(v)", definition: "Shapley value for touchpoint i" },
+                        { term: "N", definition: "Set of all touchpoints" },
+                        { term: "S", definition: "Subset of touchpoints excluding i" },
+                        { term: "v(S)", definition: "Value function for subset S" }
+                      ]} />
+                    }
+                  />
+                  
+                  <InfoBox>
+                    Shapley values calculate the marginal contribution of each touchpoint across all possible
+                    orderings of touchpoints, ensuring a fair distribution of credit.
+                  </InfoBox>
+                </div>
+                
+                <div>
+                  <h4 className="text-lg font-semibold mb-3 text-green-800">Markov Chain Model</h4>
+                  <p className="mb-3">Markov models view the customer journey as a sequence of states with transition probabilities:</p>
+                  
+                  <FormulaBlock 
+                    formula="R_i = \sum_{j \in States} \frac{(P_j - P_j^{-i})}{P_j} \times Conv_j" 
+                    description={
+                      <DefinitionList items={[
+                        { term: "Rᵢ", definition: "Removal effect of touchpoint i" },
+                        { term: "Pⱼ", definition: "Probability of conversion from state j" },
+                        { term: "P^{-i}ⱼ", definition: "Conversion probability when touchpoint i is removed" },
+                        { term: "Convⱼ", definition: "Number of conversions from state j" }
+                      ]} />
+                    }
+                  />
+                  
+                  <p className="mt-3 mb-3">The attribution for touchpoint i is then calculated as:</p>
+                  
+                  <FormulaBlock 
+                    formula="Attribution_i = \frac{R_i}{\sum_{k \in Touchpoints} R_k} \times Total Conversions" 
+                  />
+                </div>
+                
+                <div>
+                  <h4 className="text-lg font-semibold mb-3 text-green-800">Logistic Regression Approach</h4>
+                  <p className="mb-3">Machine learning models can estimate conversion probability as a function of touchpoints:</p>
+                  
+                  <FormulaBlock 
+                    formula="P(conversion) = \frac{1}{1 + e^{-(\beta_0 + \beta_1 X_1 + \beta_2 X_2 + ... + \beta_n X_n)}}" 
+                    description={
+                      <DefinitionList items={[
+                        { term: "P(conversion)", definition: "Probability of conversion" },
+                        { term: "βᵢ", definition: "Coefficient for touchpoint i" },
+                        { term: "Xᵢ", definition: "Variable representing exposure to touchpoint i" }
+                      ]} />
+                    }
+                  />
+                  
+                  <p className="mt-3">The coefficients β can be used to determine relative importance of touchpoints and calculate attribution.</p>
+                </div>
+              </div>
+            </div>
+          </TabsContent>
+          
+          <TabsContent value="implementation" className="space-y-6 mt-6 animate-fade-in">
+            <div>
+              <h3 className="text-lg font-semibold mb-4 text-green-700 border-b pb-2 border-green-100">Implementation Process</h3>
+              
+              <div className="bg-white p-6 rounded-xl shadow-sm border">
+                <ol className="list-none space-y-4">
+                  {[
+                    { title: "Data Collection Setup", desc: "Implement tracking pixels, SDKs, and API connections" },
+                    { title: "User Identity Resolution", desc: "Establish cross-device and cross-channel identification methods" },
+                    { title: "Data Processing Pipeline", desc: "Create ETL processes for touchpoint and conversion data" },
+                    { title: "Model Selection & Calibration", desc: "Choose and configure attribution model" },
+                    { title: "Analysis & Visualization", desc: "Develop dashboards and reporting tools" },
+                    { title: "Integration with Marketing Platforms", desc: "Connect attribution insights to activation systems" },
+                    { title: "Ongoing Model Maintenance", desc: "Update models as channels and customer behavior change" }
+                  ].map((step, index) => (
+                    <li key={index} className="flex gap-4">
+                      <div className="w-12 h-12 rounded-full bg-green-100 text-green-800 flex items-center justify-center font-semibold shrink-0">
+                        {index + 1}
+                      </div>
+                      <div>
+                        <h4 className="font-medium text-green-900">{step.title}</h4>
+                        <p className="text-muted-foreground">{step.desc}</p>
+                      </div>
+                    </li>
+                  ))}
+                </ol>
+              </div>
+            </div>
+            
+            <div className="grid md:grid-cols-2 gap-6 mt-6">
+              <div>
+                <h3 className="text-lg font-semibold mb-3 text-green-700">Technical Requirements</h3>
+                <div className="bg-slate-50 rounded-lg p-4 border border-slate-200 h-full">
+                  <ul className="list-none space-y-3">
+                    <li className="flex gap-3 items-center">
+                      <div className="w-8 h-8 rounded-full bg-green-100 text-green-600 flex items-center justify-center shrink-0 font-medium">ID</div>
+                      <div>
+                        <span className="font-medium">Identity solution</span>
+                        <p className="text-sm text-muted-foreground">Cookies, device IDs, login systems, etc.</p>
+                      </div>
+                    </li>
+                    <li className="flex gap-3 items-center">
+                      <div className="w-8 h-8 rounded-full bg-green-100 text-green-600 flex items-center justify-center shrink-0 font-medium">DB</div>
+                      <div>
+                        <span className="font-medium">Data storage</span>
+                        <p className="text-sm text-muted-foreground">Large-scale data warehouses, customer data platforms</p>
+                      </div>
+                    </li>
+                    <li className="flex gap-3 items-center">
+                      <div className="w-8 h-8 rounded-full bg-green-100 text-green-600 flex items-center justify-center shrink-0 font-medium">ML</div>
+                      <div>
+                        <span className="font-medium">Computation resources</span>
+                        <p className="text-sm text-muted-foreground">Distributed computing for algorithmic models</p>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              
+              <div>
+                <h3 className="text-lg font-semibold mb-3 text-green-700">Key Challenges</h3>
+                <div className="bg-slate-50 rounded-lg p-4 border border-slate-200 h-full">
+                  <ul className="list-none space-y-3">
+                    <li className="flex gap-2 items-start">
+                      <div className="w-2 h-2 rounded-full bg-green-500 shrink-0 mt-2"></div>
+                      <div className="text-sm">
+                        <span className="font-medium">Identity resolution limitations</span>
+                        <p className="text-muted-foreground">Cookie deprecation, privacy regulations, walled gardens</p>
+                      </div>
+                    </li>
+                    <li className="flex gap-2 items-start">
+                      <div className="w-2 h-2 rounded-full bg-green-500 shrink-0 mt-2"></div>
+                      <div className="text-sm">
+                        <span className="font-medium">Offline-online connection</span>
+                        <p className="text-muted-foreground">Integrating traditional media with digital touchpoints</p>
+                      </div>
+                    </li>
+                    <li className="flex gap-2 items-start">
+                      <div className="w-2 h-2 rounded-full bg-green-500 shrink-0 mt-2"></div>
+                      <div className="text-sm">
+                        <span className="font-medium">Data quality issues</span>
+                        <p className="text-muted-foreground">Inconsistent tracking, missing touchpoints</p>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </TabsContent>
+          
+          <TabsContent value="advanced" className="space-y-6 mt-6 animate-fade-in">
+            <div className="grid md:grid-cols-2 gap-6">
+              {[
+                {
+                  title: "Reinforcement Learning MTA",
+                  desc: "Using RL techniques to dynamically adapt attribution based on observed outcomes and marketing experiments."
+                },
+                {
+                  title: "Unified Data Model",
+                  desc: "Integrating MTA with MMM and incrementality testing to create a comprehensive measurement framework."
+                },
+                {
+                  title: "Attention-Based Attribution",
+                  desc: "Using neural attention mechanisms to model complex interactions between touchpoints and conversion propensity."
+                },
+                {
+                  title: "Privacy-Preserving MTA",
+                  desc: "Developing techniques that maintain attribution capabilities while respecting privacy regulations and cookie restrictions."
+                }
+              ].map((technique, index) => (
+                <div key={index} className="bg-gradient-to-br from-white to-green-50 rounded-xl p-6 border border-green-100 shadow-sm">
+                  <h3 className="text-lg font-semibold mb-3 text-green-700">{technique.title}</h3>
+                  <p className="text-muted-foreground">{technique.desc}</p>
+                </div>
+              ))}
+            </div>
+            
+            <div className="bg-gradient-to-br from-green-50 to-teal-50 rounded-xl p-6 border border-green-100 mt-6">
+              <h3 className="text-lg font-semibold mb-4 text-green-800">Future Direction: Probabilistic MTA</h3>
+              <p className="mb-4">As traditional deterministic approaches face increasing challenges, probabilistic methods are emerging:</p>
+              
+              <div className="grid grid-cols-2 gap-4">
+                <div className="bg-white rounded-lg p-4 shadow-sm">
+                  <h4 className="font-medium text-green-800 mb-2">Federated Learning</h4>
+                  <p className="text-sm text-muted-foreground">
+                    Training attribution models across decentralized devices without centralizing user data,
+                    preserving privacy while maintaining measurement capabilities.
+                  </p>
+                </div>
+                
+                <div className="bg-white rounded-lg p-4 shadow-sm">
+                  <h4 className="font-medium text-green-800 mb-2">Transfer Learning</h4>
+                  <p className="text-sm text-muted-foreground">
+                    Leveraging patterns from data-rich environments to improve attribution
+                    in environments with limited visibility or tracking restrictions.
+                  </p>
+                </div>
+              </div>
+              
+              <div className="mt-4 text-sm text-green-800 text-center font-medium">
+                As the industry adapts to privacy changes, MTA methodologies continue to evolve
+                to provide valuable tactical marketing insights while respecting user privacy.
+              </div>
+            </div>
+          </TabsContent>
+        </Tabs>
+      </CardContent>
+    </Card>
+  );
+};
+
+export default MethodologyDetails;
