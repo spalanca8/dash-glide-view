@@ -72,7 +72,11 @@ export function MethodologyComparison({ test }: MethodologyComparisonProps) {
       </CardHeader>
       <CardContent>
         <div className="h-[300px] mb-6">
-          <ChartContainer>
+          <ChartContainer
+            config={{
+              uplift: { color: "#8884d8" }
+            }}
+          >
             <ResponsiveContainer width="100%" height="100%">
               <BarChart 
                 data={chartData} 

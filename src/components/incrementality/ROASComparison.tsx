@@ -79,7 +79,11 @@ export function ROASComparison({ test }: ROASComparisonProps) {
         </div>
         
         <div className="h-[300px]">
-          <ChartContainer>
+          <ChartContainer
+            config={{
+              ROAS: { color: "#8b5cf6" }
+            }}
+          >
             <ResponsiveContainer width="100%" height="100%">
               <BarChart
                 data={chartData}
