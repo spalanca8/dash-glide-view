@@ -45,6 +45,26 @@ export interface ABTest {
   confidenceLevel?: number;
   geoDistribution?: GeoDistribution[];
   methodologiesComparison?: Methodology[];
+  learningAgenda?: {
+    team: string;
+    description: string;
+    stakeholders: string[];
+  };
+  businessQuestion?: {
+    question: string;
+    implication: string;
+    keyMetrics: string[];
+  };
+  methodologySelection?: {
+    reason: string;
+    alternatives: string[];
+  };
+  finalResults?: {
+    summary: string;
+    implications: string[];
+    financialImpact: string;
+    nextSteps: string[];
+  };
 }
 
 export function useMockABTestData() {
@@ -54,7 +74,6 @@ export function useMockABTestData() {
   const [completedTests, setCompletedTests] = useState<ABTest[]>([]);
 
   useEffect(() => {
-    // Simulate API loading delay
     const timer = setTimeout(() => {
       const mockCompletedTests: ABTest[] = [
         {
@@ -103,6 +122,26 @@ export function useMockABTestData() {
             { name: "Australia", isTestGroup: false, visitors: 1500, conversions: 75 },
             { name: "Germany", isTestGroup: true, visitors: 1500, conversions: 105 },
             { name: "France", isTestGroup: false, visitors: 1500, conversions: 75 }
+          ],
+          methodologiesComparison: [
+            {
+              name: "Synthetic Control",
+              uplift: 38.2,
+              confidence: 97.5,
+              description: "Constructs a synthetic version of the test group using control group data to estimate causal effects."
+            },
+            {
+              name: "Bayesian Causal Inference",
+              uplift: 39.6,
+              confidence: 98.7,
+              description: "Uses Bayesian statistics to model the causal relationship between intervention and outcome."
+            },
+            {
+              name: "Potential Outcomes Framework",
+              uplift: 40.0,
+              confidence: 99.8,
+              description: "Based on the Rubin Causal Model, calculates treatment effect by comparing potential outcomes."
+            }
           ]
         },
         {
@@ -148,6 +187,26 @@ export function useMockABTestData() {
             { name: "North America", isTestGroup: true, visitors: 5000, conversions: 210 },
             { name: "Europe", isTestGroup: false, visitors: 5000, conversions: 150 },
             { name: "Asia Pacific", isTestGroup: true, visitors: 5000, conversions: 210 }
+          ],
+          methodologiesComparison: [
+            {
+              name: "Synthetic Control",
+              uplift: 38.5,
+              confidence: 97.2,
+              description: "Constructs a synthetic version of the test group using control group data to estimate causal effects."
+            },
+            {
+              name: "Bayesian Causal Inference",
+              uplift: 39.8,
+              confidence: 98.4,
+              description: "Uses Bayesian statistics to model the causal relationship between intervention and outcome."
+            },
+            {
+              name: "Potential Outcomes Framework",
+              uplift: 40.0,
+              confidence: 99.5,
+              description: "Based on the Rubin Causal Model, calculates treatment effect by comparing potential outcomes."
+            }
           ]
         },
         {
@@ -196,6 +255,26 @@ export function useMockABTestData() {
             { name: "Latin America", isTestGroup: false, visitors: 10000, conversions: 2000 },
             { name: "Asia", isTestGroup: true, visitors: 5000, conversions: 1250 },
             { name: "Oceania", isTestGroup: false, visitors: 5000, conversions: 1000 }
+          ],
+          methodologiesComparison: [
+            {
+              name: "Synthetic Control",
+              uplift: 24.2,
+              confidence: 98.8,
+              description: "Constructs a synthetic version of the test group using control group data to estimate causal effects."
+            },
+            {
+              name: "Bayesian Causal Inference",
+              uplift: 24.7,
+              confidence: 99.4,
+              description: "Uses Bayesian statistics to model the causal relationship between intervention and outcome."
+            },
+            {
+              name: "Potential Outcomes Framework",
+              uplift: 25.0,
+              confidence: 99.9,
+              description: "Based on the Rubin Causal Model, calculates treatment effect by comparing potential outcomes."
+            }
           ]
         }
       ];
@@ -241,6 +320,26 @@ export function useMockABTestData() {
             { name: "Canada", isTestGroup: false, visitors: 1600, conversions: 96 },
             { name: "United Kingdom", isTestGroup: true, visitors: 1580, conversions: 111 },
             { name: "Australia", isTestGroup: false, visitors: 1580, conversions: 95 }
+          ],
+          methodologiesComparison: [
+            {
+              name: "Synthetic Control",
+              uplift: 15.9,
+              confidence: 91.2,
+              description: "Constructs a synthetic version of the test group using control group data to estimate causal effects."
+            },
+            {
+              name: "Bayesian Causal Inference",
+              uplift: 16.4,
+              confidence: 91.9,
+              description: "Uses Bayesian statistics to model the causal relationship between intervention and outcome."
+            },
+            {
+              name: "Potential Outcomes Framework",
+              uplift: 16.7,
+              confidence: 92.3,
+              description: "Based on the Rubin Causal Model, calculates treatment effect by comparing potential outcomes."
+            }
           ]
         }
       ];
@@ -257,7 +356,6 @@ export function useMockABTestData() {
   return { testScenarios, activeTests, completedTests, loading };
 }
 
-// Helper function to generate time series data
 function generateTimeSeriesData(
   days: number, 
   totalVisitors: number, 
@@ -272,7 +370,6 @@ function generateTimeSeriesData(
     const date = new Date(today);
     date.setDate(date.getDate() - (days - i));
     
-    // Add some randomness to make the data look more realistic
     const randomFactor = 0.8 + Math.random() * 0.4; // between 0.8 and 1.2
     const visitors = Math.round(avgVisitorsPerDay * randomFactor);
     const conversions = Math.round(avgConversionsPerDay * randomFactor);

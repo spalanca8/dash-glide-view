@@ -24,6 +24,7 @@ import MetricsGuidePage from "./pages/MetricsGuidePage";
 import GettingStartedPage from "./pages/GettingStartedPage";
 import ChatAIPage from "./pages/ChatAIPage";
 import RecommendationsPage from "./pages/RecommendationsPage";
+import IncrementalityTestingPage from "./pages/IncrementalityTestingPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -47,6 +48,7 @@ const App = () => (
             <Route path="/campaign" element={<CampaignPage />} />
             <Route path="/budget" element={<BudgetPage />} />
             <Route path="/ab-testing" element={<ABTestingPage />} />
+            <Route path="/incrementality-testing" element={<IncrementalityTestingPage />} />
             <Route path="/chat-ai" element={<ChatAIPage />} />
             <Route path="/recommendations" element={<RecommendationsPage />} />
             <Route path="/guide" element={<GuidePage />} />
