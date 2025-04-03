@@ -4,25 +4,24 @@ import { Card, CardContent } from "@/components/ui/card";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import * as RechartsPrimitive from "recharts";
 import { Skeleton } from "@/components/ui/skeleton";
-import { channelColors } from "@/data/mockData";
 
-interface RoasComparisonChartProps {
+interface CostRevenueComparisonChartProps {
   channelData: any[];
   loading: boolean;
   height?: number;
 }
 
-export function RoasComparisonChart({ 
+export function CostRevenueComparisonChart({ 
   channelData, 
   loading, 
   height = 400 
-}: RoasComparisonChartProps) {
+}: CostRevenueComparisonChartProps) {
   if (loading) {
     return <Skeleton className="w-full h-[400px]" />;
   }
 
-  // Sort channels by ROAS for better visualization
-  const sortedData = [...channelData].sort((a, b) => b.roas - a.roas);
+  // Sort channels by revenue for better visualization
+  const sortedData = [...channelData].sort((a, b) => b.revenue - a.revenue);
 
   return (
     <Card className="overflow-hidden border-border/40 shadow-sm">
@@ -31,9 +30,13 @@ export function RoasComparisonChart({
           <div className="absolute inset-0">
             <ChartContainer 
               config={{
-                roas: {
-                  label: "ROAS",
-                  color: "#8B5CF6"
+                cost: {
+                  label: "Cost",
+                  color: "rgb(147, 197, 253, 0.7)"
+                },
+                incremental: {
+                  label: "Incremental Outcome",
+                  color: "rgb(74, 222, 128, 0.7)"
                 }
               }}
             >
@@ -52,7 +55,7 @@ export function RoasComparisonChart({
                   <RechartsPrimitive.YAxis
                     stroke="#94a3b8"
                     label={{ 
-                      value: 'ROAS (x)', 
+                      value: 'Amount ($)', 
                       angle: -90, 
                       position: 'insideLeft',
                       style: { textAnchor: 'middle', fontSize: 11, fill: '#94a3b8' }
@@ -60,32 +63,16 @@ export function RoasComparisonChart({
                   />
                   <RechartsPrimitive.CartesianGrid strokeDasharray="3 3" opacity={0.5} />
                   <RechartsPrimitive.Bar 
-                    dataKey="roas" 
-                    name="ROAS"
+                    dataKey="cost" 
+                    fill="rgb(147, 197, 253, 0.7)" 
+                    name="Cost"
                     barSize={30}
-                    radius={[4, 4, 0, 0]}
-                    shape={(props) => {
-                      const { x, y, width, height, payload } = props;
-                      const channelId = payload.id;
-                      const color = channelColors[channelId as keyof typeof channelColors] || "#8B5CF6";
-                      
-                      return (
-                        <rect 
-                          x={x} 
-                          y={y} 
-                          width={width} 
-                          height={height} 
-                          fill={color}
-                          rx={4}
-                          ry={4}
-                        />
-                      );
-                    }}
-                    label={{
-                      position: 'top',
-                      formatter: (value: number) => `${value.toFixed(1)}x`,
-                      style: { fontSize: 10, fill: '#8B5CF6', fontWeight: 'bold' }
-                    }}
+                  />
+                  <RechartsPrimitive.Bar 
+                    dataKey="incremental" 
+                    fill="rgb(74, 222, 128, 0.7)" 
+                    name="Incremental Outcome"
+                    barSize={30}
                   />
                   <ChartTooltip
                     cursor={{ strokeDasharray: "3 3" }}

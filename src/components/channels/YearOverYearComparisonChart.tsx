@@ -105,7 +105,7 @@ export function YearOverYearComparisonChart({
             radius={[4, 4, 4, 4]}
             animationDuration={1500}
             isAnimationActive={true}
-            fill={({ value }) => (value >= 0 ? "#4361ee" : "#ef476f")}
+            fill="#4361ee"
             shape={(props) => {
               // Extract the data entry from the props
               const { x, y, width, height, payload } = props;

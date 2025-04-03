@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -14,6 +15,7 @@ import { generateChannelData, generateChannelTrendsData, channelColors, channelN
 import { FilterExportControls } from "@/components/channels/FilterExportControls";
 import { ChannelDetailView } from "@/components/channels/ChannelDetailView";
 import { RoasComparisonChart } from "@/components/channels/RoasComparisonChart";
+import { CostRevenueComparisonChart } from "@/components/channels/CostRevenueComparisonChart";
 import { IncrementalRevenueWaterfallChart } from "@/components/channels/IncrementalRevenueWaterfallChart";
 import { YearOverYearComparisonChart } from "@/components/channels/YearOverYearComparisonChart";
 
@@ -189,9 +191,17 @@ export default function ChannelsPage() {
               </div>
               
               <div className="mb-6">
+                <h3 className="text-lg font-medium mb-3">Revenue and Cost by Channel</h3>
+                <p className="text-sm text-muted-foreground mb-4">
+                  Compare both cost and incremental revenue across your marketing channels.
+                </p>
+                <CostRevenueComparisonChart channelData={channelData} loading={loading} />
+              </div>
+              
+              <div className="mb-6">
                 <h3 className="text-lg font-medium mb-3">ROAS by Channel</h3>
                 <p className="text-sm text-muted-foreground mb-4">
-                  Compare the return on ad spend across your marketing channels. Higher values indicate more efficient spending.
+                  Compare return on ad spend across your marketing channels. Higher values indicate more efficient spending.
                 </p>
                 <RoasComparisonChart channelData={channelData} loading={loading} />
               </div>
@@ -242,7 +252,11 @@ export default function ChannelsPage() {
                   <ChannelBreakdownChart 
                     data={channelData} 
                     loading={loading} 
-                    bars={["revenue", "cost", "roas"]} 
+                    bars={[
+                      { dataKey: "revenue", color: "#4361ee", label: "Revenue" },
+                      { dataKey: "cost", color: "#f72585", label: "Cost" },
+                      { dataKey: "roas", color: "#8B5CF6", label: "ROAS" }
+                    ]} 
                   />
                 </TabsContent>
                 <TabsContent value="trends" className="border-none p-0 pt-4">
