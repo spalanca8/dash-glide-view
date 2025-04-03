@@ -86,7 +86,7 @@ export default function ChannelsPage() {
       <ChannelMetricsOverview data={channelData} loading={loading} />
       
       {/* Main Tabs */}
-      <Tabs value={mainTab} onValueChange={setMainTab} className="space-y-6">
+      <Tabs value={mainTab} onValueChange={setMainTab} defaultValue="overview" className="space-y-6">
         <TabsList className="justify-start">
           <TabsTrigger value="overview" className="flex items-center gap-2">
             <BarChart className="h-4 w-4" /> Overview

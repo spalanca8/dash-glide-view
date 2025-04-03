@@ -1,7 +1,7 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowRight, BarChart2, CheckCircle, Clock, FileBarChart, Settings, Zap, TrendingUp, LineChart, DollarSign, TargetIcon, Target } from "lucide-react";
+import { ArrowRight, BarChart2, CheckCircle, Clock, FileBarChart, Settings, Zap, TrendingUp, LineChart, DollarSign, TargetIcon, Target, Scale } from "lucide-react";
 import { Link } from "react-router-dom";
 import { FlowingBackground } from "@/components/ui/FlowingBackground";
 
@@ -9,22 +9,22 @@ const GettingStartedPage = () => {
   return (
     <div className="space-y-8 relative">
       <FlowingBackground className="opacity-20" />
-      
       {/* Hero section with value proposition */}
-      <div className="bg-gradient-to-br from-blue-50 via-indigo-50/40 to-purple-50/30 rounded-2xl p-8 border border-indigo-100/50 shadow-lg">
-        <div className="space-y-6 max-w-3xl mx-auto">
-          <div className="flex justify-center mb-6">
-            <div className="p-4 rounded-full bg-gradient-to-br from-primary/10 to-primary/30 shadow-sm">
-              <BarChart2 className="h-12 w-12 text-primary" />
-            </div>
+      <div className="bg-gradient-to-br from-blue-50 via-indigo-50/40 to-purple-50/30 rounded-2xl p-12 border border-indigo-100/50 shadow-lg">
+        <div className="space-y-8 max-w-4xl mx-auto">
+          <div className="flex justify-center mb-8">
+            <img 
+              src="/lovable-uploads/artefact obj 3.png" 
+              alt="Artefact Logo" 
+              className="h-20 w-20 object-contain"
+            />
           </div>
-          <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-center">Welcome to Your Marketing Intelligence Platform</h1>
-          <p className="text-lg text-muted-foreground text-center">
+          <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-center">Welcome to Your Marketing Intelligence Platform</h1>
+          <p className="text-xl text-muted-foreground text-center">
             Transform raw marketing data into actionable insights to drive revenue growth and optimize marketing ROI
           </p>
         </div>
       </div>
-      
       {/* Business Impact Section */}
       <Card>
         <CardHeader>
@@ -65,29 +65,6 @@ const GettingStartedPage = () => {
               </p>
             </div>
           </div>
-        </CardContent>
-      </Card>
-
-      {/* The Platform Story */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-2xl">The Story Behind This Platform</CardTitle>
-          <CardDescription>
-            How we built a solution to solve the most challenging marketing problems
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="prose prose-slate max-w-none">
-          <p>
-            In today's complex marketing landscape, teams struggle with disconnected data sources, unclear attribution, and difficulty measuring true ROI. This platform was built to solve these exact challenges.
-          </p>
-          
-          <p>
-            Working with marketing leaders across industries, we identified the critical need for a unified view of marketing performance that goes beyond basic metrics to reveal genuine business impact. Our solution combines multi-touch attribution, incremental measurement, and predictive analytics to give you both a comprehensive view and actionable insights.
-          </p>
-          
-          <p>
-            What makes this platform different is how it connects marketing activities directly to business outcomes, helping you understand not just what happened, but why it happened and what to do next.
-          </p>
         </CardContent>
       </Card>
 
@@ -138,6 +115,30 @@ const GettingStartedPage = () => {
                   </p>
                 </div>
               </div>
+
+              <div className="flex items-start gap-4">
+                <div className="mt-0.5">
+                  <CheckCircle className="h-5 w-5 text-muted-foreground" />
+                </div>
+                <div>
+                  <p className="font-medium">Analyze and visualize data</p>
+                  <p className="text-sm text-muted-foreground">
+                    Explore insights through interactive dashboards and data visualizations
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-4">
+                <div className="mt-0.5">
+                  <CheckCircle className="h-5 w-5 text-muted-foreground" />
+                </div>
+                <div>
+                  <p className="font-medium">Export reports and figures</p>
+                  <p className="text-sm text-muted-foreground">
+                    Download graphs, charts, and reports for presentations and decision-making
+                  </p>
+                </div>
+              </div>
               
               <div className="mt-6">
                 <Button asChild>
@@ -166,7 +167,7 @@ const GettingStartedPage = () => {
                   <FileBarChart className="h-5 w-5 text-primary group-hover:text-primary" />
                 </div>
                 <div>
-                  <p className="font-medium group-hover:text-primary">Analytics Overview</p>
+                  <p className="font-medium group-hover:text-primary">Strategic Overview</p>
                   <p className="text-sm text-muted-foreground">
                     A high-level view of all marketing performance with real-time metrics and trends
                   </p>
@@ -180,19 +181,31 @@ const GettingStartedPage = () => {
                 <div>
                   <p className="font-medium group-hover:text-primary">Channel Analysis</p>
                   <p className="text-sm text-muted-foreground">
-                    Compare performance across channels, identify optimization opportunities and ROI improvements
+                    Deep dive into individual marketing channels to understand performance and optimize spend
                   </p>
                 </div>
               </Link>
               
-              <Link to="/incremental" className="flex items-start gap-4 group hover:bg-muted p-2 rounded-lg transition-colors">
+              <Link to="/campaign" className="flex items-start gap-4 group hover:bg-muted p-2 rounded-lg transition-colors">
                 <div className="mt-0.5">
-                  <TrendingUp className="h-5 w-5 text-primary group-hover:text-primary" />
+                  <BarChart2 className="h-5 w-5 text-primary group-hover:text-primary" />
                 </div>
                 <div>
-                  <p className="font-medium group-hover:text-primary">Incremental Analysis</p>
+                  <p className="font-medium group-hover:text-primary">Campaign Performance</p>
                   <p className="text-sm text-muted-foreground">
-                    Measure the true incremental impact of marketing activities beyond baseline performance
+                    Track and analyze the effectiveness of individual marketing campaigns across all channels
+                  </p>
+                </div>
+              </Link>
+              
+              <Link to="/incrementality-testing" className="flex items-start gap-4 group hover:bg-muted p-2 rounded-lg transition-colors">
+                <div className="mt-0.5">
+                  <Scale className="h-5 w-5 text-primary group-hover:text-primary" />
+                </div>
+                <div>
+                  <p className="font-medium group-hover:text-primary">Incrementality Testing</p>
+                  <p className="text-sm text-muted-foreground">
+                    Measure the true incremental impact of your marketing campaigns using A/B testing and control group analysis
                   </p>
                 </div>
               </Link>

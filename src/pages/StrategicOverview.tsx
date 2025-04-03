@@ -26,7 +26,7 @@ import { generatePerformanceData, channelColors } from "@/data/mockData";
 const AnalyticsOverview = () => {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState<any[]>([]);
-  const [timeframe, setTimeframe] = useState("30d");
+  const [timeframe, setTimeframe] = useState(30); // Default to 30 days
   
   useEffect(() => {
     const loadData = async () => {
@@ -35,9 +35,8 @@ const AnalyticsOverview = () => {
       // Simulate API call delay
       await new Promise(resolve => setTimeout(resolve, 600));
       
-      const days = timeframe === "7d" ? 7 : timeframe === "30d" ? 30 : 90;
+      const days = timeframe; // Directly use the number of days
       const performanceData = generatePerformanceData(days);
-      
       setData(performanceData);
       setLoading(false);
     };
@@ -165,7 +164,7 @@ const AnalyticsOverview = () => {
           <div className="flex items-center gap-3 mt-2 md:mt-0">
             <div className="flex items-center gap-2 text-sm">
               <Calendar className="h-4 w-4 text-muted-foreground" />
-              <span className="font-medium">Last {timeframe === "7d" ? "7 days" : timeframe === "30d" ? "30 days" : "90 days"}</span>
+              <span className="font-medium">Last {timeframe === 7 ? "7 days" : timeframe === 30 ? "30 days" : "90 days"}</span>
             </div>
           </div>
         </div>
@@ -229,7 +228,7 @@ const AnalyticsOverview = () => {
                   <p className="text-sm text-muted-foreground mb-1">Return on Ad Spend</p>
                   <div className="flex items-end gap-2">
                     <h3 className="text-4xl font-bold">
-                      {totalRoas === 0 ? ((Math.floor(Math.random() * (7 - 3 + 1)) + 3).toFixed(2)) : totalRoas.toFixed(2)}x
+                      {totalRoas === 0 ? ((Math.floor(Math.random() * (7 - 3 + 1)) + 3).toString()) : parseFloat(totalRoas).toFixed(2)}x
                     </h3>
                     <div className={`flex items-center mb-1 ${roasChange >= 0 ? 'text-green-600' : 'text-red-600'}`}>
                       {roasChange >= 0 ? (

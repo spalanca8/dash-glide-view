@@ -51,11 +51,11 @@ const IncrementalityTestingPage = () => {
       <PageHeader
         title="Incrementality Testing Dashboard"
         description="Analyze the incremental impact of marketing campaigns on business outcomes"
-        className="mb-10"
+        className="mb-6"
       />
       
       {/* Test Selection Dropdown */}
-      <Card className="mb-10 glass-card premium-shadow border-white/30 bg-gradient-to-r from-purple-50/80 via-violet-50/80 to-fuchsia-50/80 backdrop-blur-md">
+      <Card className="mb-6 glass-card premium-shadow border-white/30 bg-gradient-to-r from-purple-50/80 via-violet-50/80 to-fuchsia-50/80 backdrop-blur-md">
         <CardContent className="p-6">
           <div className="flex items-center gap-4">
             <div className="p-2 rounded-full bg-purple-100">
@@ -84,12 +84,12 @@ const IncrementalityTestingPage = () => {
       
       {/* Main Content with Tabs */}
       {loading ? (
-        <div className="space-y-6">
+        <div className="space-y-4">
           <Skeleton className="h-[500px] w-full" />
         </div>
       ) : selectedTestData ? (
         <Tabs defaultValue="overview" className="w-full">
-          <TabsList className="mb-10 bg-white/70 backdrop-blur-sm border border-white/30">
+          <TabsList className="mb-6 bg-white/70 backdrop-blur-sm border border-white/30">
             <TabsTrigger value="overview" className="data-[state=active]:bg-primary/20">
               <ChartBar className="h-4 w-4 mr-2" />
               Overview of Results
@@ -100,40 +100,41 @@ const IncrementalityTestingPage = () => {
             </TabsTrigger>
           </TabsList>
           
-          {/* Tab 1: Overview of Results - Added significantly more space between components */}
-          <TabsContent value="overview" className="space-y-20 pt-6 animate-fade-in">
-            <div className="mb-16">
+          {/* Tab 1: Overview of Results */}
+          <TabsContent value="overview" className="space-y-8 pt-4 animate-fade-in">
+            <div className="mb-8">
               <TestSetupSummary test={selectedTestData} />
             </div>
             
-            <div className="mb-32">  {/* Increased margin-bottom from mb-16 to mb-32 */}
-              <UpliftChart test={selectedTestData} />
+            <div className="mb-8 grid grid-cols-2 gap-4">
+              <div>
+                <UpliftChart test={selectedTestData} />
+              </div>
+              <div>
+                <ROASComparison test={selectedTestData} />
+              </div>
             </div>
             
-            <div className="mb-32">
-              <ROASComparison test={selectedTestData} />
-            </div>
-            
-            <div className="mb-32">
+            <div className="mb-8">
               <MethodologyComparison test={selectedTestData} />
             </div>
           </TabsContent>
           
-          {/* Tab 2: Context - Added significantly more space between components */}
-          <TabsContent value="context" className="space-y-20 pt-6 animate-fade-in">
-            <div className="mb-32">
+          {/* Tab 2: Context */}
+          <TabsContent value="context" className="space-y-8 pt-4 animate-fade-in">
+            <div className="mb-8">
               <LearningAgenda test={selectedTestData} />
             </div>
             
-            <div className="mb-32">
+            <div className="mb-8">
               <BusinessQuestion test={selectedTestData} />
             </div>
             
-            <div className="mb-32">
+            <div className="mb-8">
               <MethodologySelection test={selectedTestData} />
             </div>
             
-            <div className="mb-32">
+            <div className="mb-8">
               <FinalResults test={selectedTestData} />
             </div>
           </TabsContent>

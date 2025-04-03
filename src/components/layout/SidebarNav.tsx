@@ -16,6 +16,7 @@ import {
   FileBarChart,
   Lightbulb,
   Home,
+  Scale,
   Rocket,
   Bot,
   Zap
@@ -90,7 +91,7 @@ const navItems: NavItem[] = [
   },
   {
     title: "Incrementality Testing",
-    icon: LineChart,
+    icon: Scale,
     children: [
       {
         title: "Overview",
@@ -107,7 +108,7 @@ const navItems: NavItem[] = [
 
   {
     title: "Model Metrics",
-    href: "/",
+    href: "/model-metrics",
     icon: TrendingUp,
   },
   {

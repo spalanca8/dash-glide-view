@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { ChannelBreakdownChart } from "@/components/dashboard/ChannelBreakdownChart";
 import { BudgetAllocationChart } from "@/components/dashboard/BudgetAllocationChart";
+import { BudgetWaterfallChart } from "@/components/dashboard/BudgetWaterfallChart";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -23,7 +24,8 @@ import {
   LineChart,
   TrendingUp,
   TrendingDown,
-  BarChart3
+  BarChart3,
+  InfoIcon
 } from "lucide-react";
 import {
   generateBudgetAllocation,
@@ -328,52 +330,84 @@ const BudgetPage = () => {
           />
         </div>
       )}
-
       {/* Budget allocation charts - Only show if not on custom-optimizer */}
       {activeScenario !== "custom-optimizer" && (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-          <div className="dashboard-card">
-            <div className="flex justify-between items-center mb-4">
-              <div className="flex items-center gap-2">
-                <PieChart className="h-5 w-5 text-primary" />
+          <div className="dashboard-card p-6">
+            <div className="flex justify-between items-center mb-6">
+              <div className="flex items-center gap-3">
+                <PieChart className="h-7 w-7 text-primary" />
                 <div>
-                  <h3 className="text-lg font-medium">Current Budget Allocation</h3>
-                  <p className="text-sm text-muted-foreground">
+                  <h3 className="text-xl font-medium">Current Budget Allocation</h3>
+                  <p className="text-base text-muted-foreground">
                     ${totalCurrentBudget.toLocaleString()} total budget
                   </p>
                 </div>
               </div>
             </div>
             
-            <BudgetAllocationChart 
-              data={budgetData} 
-              loading={loading} 
-              title="Current allocation by channel"
-            />
+            <div className="w-full h-[500px]">
+              <BudgetAllocationChart 
+                data={budgetData} 
+                loading={loading} 
+                title="Current allocation by channel"
+              />
+            </div>
           </div>
-          
-          <div className="dashboard-card">
-            <div className="flex justify-between items-center mb-4">
-              <div className="flex items-center gap-2">
-                <PieChart className="h-5 w-5 text-primary" />
-                <div>
-                  <h3 className="text-lg font-medium">{getActiveScenarioName()} Allocation</h3>
-                  <p className="text-sm text-muted-foreground">
-                    ${activeScenarioTotalBudget.toLocaleString()} total budget
-                  </p>
+          {activeScenario === "bau" ? (
+            <div className="dashboard-card p-6">
+              <div className="flex justify-between items-center mb-6">
+                <div className="flex items-center gap-3">
+                  <PieChart className="h-7 w-7 text-primary" />
+                  <div>
+                    <h3 className="text-xl font-medium">Budget Percentages</h3>
+                    <p className="text-base text-muted-foreground">
+                      ${activeScenarioTotalBudget.toLocaleString()} total budget
+                    </p>
+                  </div>
                 </div>
               </div>
+              
+              <div className="space-y-3">
+                {scenarioBudgetChart.map((item, index) => (
+                  <div key={index} className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div 
+                        className="w-4 h-4 rounded-full" 
+                        style={{ backgroundColor: channelColors[item.name] }}
+                      />
+                      <span className="text-base">{item.name}</span>
+                    </div>
+                    <span className="text-base font-medium">
+                      {((item.value / activeScenarioTotalBudget) * 100).toFixed(1)}%
+                    </span>
+                  </div>
+                ))}
+              </div>
             </div>
-            
-            <BudgetAllocationChart 
-              data={scenarioBudgetChart} 
-              loading={loading} 
-              title={`${getActiveScenarioName()} allocation by channel`}
-            />
-          </div>
+          ) : (
+            <div className="dashboard-card p-6">
+              <div className="flex justify-between items-center mb-6">
+                <div className="flex items-center gap-3">
+                  <PieChart className="h-7 w-7 text-primary" />
+                  <div>
+                    <h3 className="text-xl font-medium">{getActiveScenarioName()} Allocation</h3>
+                    <p className="text-base text-muted-foreground">
+                      ${activeScenarioTotalBudget.toLocaleString()} total budget
+                    </p>
+                  </div>
+                </div>
+              </div>
+              
+              <BudgetAllocationChart 
+                data={scenarioBudgetChart} 
+                loading={loading} 
+                title={`${getActiveScenarioName()} allocation by channel`}
+              />
+            </div>
+          )}
         </div>
       )}
-      
       {/* Impact analysis section - Only show if not on custom-optimizer */}
       {activeScenario !== "custom-optimizer" && (
         <div className="mb-8">
@@ -381,10 +415,14 @@ const BudgetPage = () => {
             <CardHeader>
               <div className="flex items-center gap-2">
                 <BarChart3 className="h-5 w-5 text-primary" />
-                <CardTitle>Impact Analysis</CardTitle>
+                <CardTitle>
+                  {activeScenario === "bau" ? "Budget Allocation" : "Budget Reallocation"}
+                </CardTitle>
               </div>
               <CardDescription>
-                Projected performance impact by channel
+                {activeScenario === "bau" 
+                  ? "Current budget distribution and its impact across channels"
+                  : "Projected performance impact by channel"}
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -393,21 +431,37 @@ const BudgetPage = () => {
                   <div className="h-full w-full flex items-center justify-center">
                     <div className="h-32 w-32 bg-muted rounded animate-pulse"></div>
                   </div>
+                ) : activeScenario === "bau" ? (
+                  <BudgetWaterfallChart
+                    data={impactData.map((item, index) => ({
+                      name: item.name,
+                      value: item.impactChange,
+                      fill: index % 2 === 0 ? '#1e293b' : '#ec4899',
+                      displayValue: item.impactChange,
+                      ratio: `${Math.abs(item.impactChange).toFixed(1)}%`,
+                      isTotal: index === impactData.length - 1
+                    }))}
+                    loading={loading}
+                    height={400}
+                  />
                 ) : (
                   <ChartContainer
                     config={{
-                      positive: { color: "#4ade80" },
-                      negative: { color: "#f87171" }
+                      positive: { color: "#4ade80" }, // Green color for positive values
+                      negative: { color: "#f87171" }  // Red color for negative values
                     }}
                     className="w-full h-full"
                   >
                     <ChannelBreakdownChart
-                      data={impactData.sort((a, b) => Math.abs(b.impactChange) - Math.abs(a.impactChange))}
+                      data={impactData.map(item => ({
+                        ...item,
+                        impactChange: Math.random() * 40 - 20 // Random value between -20 and +20
+                      })).sort((a, b) => Math.abs(b.impactChange) - Math.abs(a.impactChange))}
                       bars={[
-                        { 
-                          dataKey: "impactChange", 
-                          color: "var(--color-positive)", 
-                          label: "Impact %" 
+                        {
+                          dataKey: "impactChange",
+                          label: "Impact %",
+                          color: "#4ade80" // Set default color, will be overridden by ChartContainer config
                         }
                       ]}
                       xAxisKey="name"
@@ -416,6 +470,21 @@ const BudgetPage = () => {
                   </ChartContainer>
                 )}
               </div>
+              {activeScenario === "bau" && (
+                <div className="mt-6 bg-muted/30 rounded-lg p-6">
+                  <div className="flex items-start gap-3">
+                    <InfoIcon className="h-6 w-6 text-primary mt-1" />
+                    <div>
+                      <h3 className="text-lg font-medium mb-2">About This Chart</h3>
+                      <p className="text-base text-muted-foreground">
+                        This waterfall chart shows the cumulative impact of maintaining the BAU (Business As Usual) budget allocation across channels. 
+                        Each segment represents the projected impact of a channel's current budget allocation, with the total showing the net effect 
+                        across all channels.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
             </CardContent>
           </Card>
         </div>
@@ -445,8 +514,15 @@ const BudgetPage = () => {
                 <TableRow>
                   <TableHead>Channel</TableHead>
                   <TableHead>BAU Budget</TableHead>
-                  <TableHead>Cost Savings Budget</TableHead>
-                  <TableHead>Revenue Uplift Budget</TableHead>
+                  <TableHead>
+                    {activeScenario.startsWith("custom-") 
+                      ? `${customScenarioNames[activeScenario] || "Custom"} Budget`
+                      : activeScenario === "cost-savings" 
+                      ? "Cost Savings Budget" 
+                      : activeScenario === "revenue-uplift"
+                      ? "Revenue Uplift Budget"
+                      : "Custom Budget"}
+                  </TableHead>
                   <TableHead>Recommended Action</TableHead>
                 </TableRow>
               </TableHeader>
@@ -454,7 +530,7 @@ const BudgetPage = () => {
                 {loading ? (
                   Array.from({ length: 5 }).map((_, i) => (
                     <TableRow key={i}>
-                      {Array.from({ length: 5 }).map((_, j) => (
+                      {Array.from({ length: 3 }).map((_, j) => (
                         <TableCell key={j}>
                           <div className="h-4 bg-muted rounded animate-pulse"></div>
                         </TableCell>
@@ -463,15 +539,15 @@ const BudgetPage = () => {
                   ))
                 ) : (
                   recommendations.map((channel, i) => {
-                    const csBudget = customScenarios["cost-savings"][channel.name] || 0;
-                    const ruBudget = customScenarios["revenue-uplift"][channel.name] || 0;
-                    const csChange = csBudget - channel.currentBudget;
-                    const ruChange = ruBudget - channel.currentBudget;
+                    const scenarioBudget = customScenarios[activeScenario]?.[channel.name] || channel.currentBudget;
+                    const budgetChange = scenarioBudget - channel.currentBudget;
                     
                     let recommendedAction;
-                    if (csChange < -1000 && ruChange < 1000) {
+                    if (activeScenario.startsWith("custom-")) {
+                      recommendedAction = budgetChange < 0 ? "Reduce Budget" : budgetChange > 0 ? "Increase Budget" : "Maintain Budget";
+                    } else if (activeScenario === "cost-savings" && budgetChange < -1000) {
                       recommendedAction = "Reduce Budget";
-                    } else if (ruChange > 1000) {
+                    } else if (activeScenario === "revenue-uplift" && budgetChange > 1000) {
                       recommendedAction = "Increase Budget";
                     } else {
                       recommendedAction = "Maintain Budget";
@@ -491,28 +567,13 @@ const BudgetPage = () => {
                           <div
                             className={cn(
                               "flex items-center",
-                              csChange < 0 ? "text-red-600" : csChange > 0 ? "text-green-600" : "text-muted-foreground"
+                              budgetChange < 0 ? "text-red-600" : budgetChange > 0 ? "text-green-600" : "text-muted-foreground"
                             )}
                           >
-                            ${csBudget.toLocaleString()}
-                            {csChange !== 0 && (
+                            ${scenarioBudget.toLocaleString()}
+                            {budgetChange !== 0 && (
                               <span className="ml-2 text-xs">
-                                ({csChange > 0 ? "+" : ""}{((csChange / channel.currentBudget) * 100).toFixed(1)}%)
-                              </span>
-                            )}
-                          </div>
-                        </TableCell>
-                        <TableCell>
-                          <div
-                            className={cn(
-                              "flex items-center",
-                              ruChange > 0 ? "text-green-600" : ruChange < 0 ? "text-red-600" : "text-muted-foreground"
-                            )}
-                          >
-                            ${ruBudget.toLocaleString()}
-                            {ruChange !== 0 && (
-                              <span className="ml-2 text-xs">
-                                ({ruChange > 0 ? "+" : ""}{((ruChange / channel.currentBudget) * 100).toFixed(1)}%)
+                                ({budgetChange > 0 ? "+" : ""}{((budgetChange / channel.currentBudget) * 100).toFixed(1)}%)
                               </span>
                             )}
                           </div>
@@ -543,7 +604,6 @@ const BudgetPage = () => {
           </div>
         </CardContent>
       </Card>
-      
       {/* Insights */}
       <Card>
         <CardHeader>
@@ -565,6 +625,8 @@ const BudgetPage = () => {
                     ? `Cost Savings scenario reduces budget by ${Math.abs(comparisonData?.budgetChange || 0).toLocaleString()} with minimal impact on performance.`
                     : activeScenario === "revenue-uplift"
                     ? `Revenue Uplift scenario can increase revenue by ${Math.round((comparisonData?.revenueChange || 0) / (scenarioMetrics.bau.projectedRevenue || 1) * 100)}% without increasing total budget.`
+                    : activeScenario.startsWith("custom-")
+                    ? `The ${customScenarioNames[activeScenario] || "Custom"} scenario ${comparisonData?.budgetChange < 0 ? "reduces" : "increases"} budget by ${Math.abs(comparisonData?.budgetChange || 0).toLocaleString()} with a projected ${comparisonData?.revenueChange > 0 ? "increase" : "decrease"} in revenue.`
                     : "Current allocation is relatively efficient, with room for optimization."}
                 </li>
                 <li>
@@ -586,8 +648,8 @@ const BudgetPage = () => {
                     ? "The Cost Savings scenario maintains most of the performance while reducing total budget. Consider implementing these changes for improved efficiency."
                     : activeScenario === "revenue-uplift"
                     ? "The Revenue Uplift scenario maximizes performance by reallocating budget to high-performing channels. This approach is recommended for growth objectives."
-                    : activeScenario === "custom-optimizer"
-                    ? "Create custom budget optimization scenarios to test different strategies based on specific business goals."
+                    : activeScenario.startsWith("custom-")
+                    ? `The ${customScenarioNames[activeScenario] || "Custom"} scenario provides a tailored approach based on your specific goals. Analyze the results to determine if it meets your objectives.`
                     : "Consider testing the recommended budget allocations to validate performance improvements before full implementation."}
                 </p>
                 <p>

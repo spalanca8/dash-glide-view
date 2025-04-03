@@ -575,63 +575,10 @@ const ChannelDetailsPage = () => {
                   </ul>
                 </div>
               </div>
-
               {/* Key metrics */}
-              <h3 className="text-sm font-medium mb-6 flex items-center gap-2">
-                <ChevronRight className="h-4 w-4 text-primary" /> 
-                Channel Contribution Analysis
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                <MetricCard
-                  title="Attributed Revenue"
-                  value={loading ? "-" : `$${totalRevenue.toLocaleString()}`}
-                  change={5.2}
-                  description="vs. previous period"
-                  icon={<DollarSign className="h-4 w-4" />}
-                  loading={loading}
-                />
-                <MetricCard
-                  title="Attributed Conversions"
-                  value={loading ? "-" : totalConversions.toLocaleString()}
-                  change={3.8}
-                  description="vs. previous period"
-                  icon={<Users className="h-4 w-4" />}
-                  loading={loading}
-                />
-                <MetricCard
-                  title="Average Order Value"
-                  value={loading ? "-" : `$${avgOrderValue.toFixed(2)}`}
-                  change={1.5}
-                  description="vs. previous period"
-                  icon={<BarChart3 className="h-4 w-4" />}
-                  loading={loading}
-                />
-                <MetricCard
-                  title="Conversion Rate"
-                  value={loading ? "-" : `${conversionRate}%`}
-                  change={0.3}
-                  description="vs. previous period"
-                  icon={<LineChart className="h-4 w-4" />}
-                  loading={loading}
-                />
-              </div>
 
               {/* Attribution chart */}
-              <div className="bg-white p-5 rounded-xl border border-border/40 shadow-sm">
-                {loading ? (
-                  <Skeleton className="w-full h-[400px]" />
-                ) : (
-                  <div className="h-[400px]">
-                    <AttributionChart data={channelContribution} />
-                  </div>
-                )}
-                <div className="mt-4 text-sm text-muted-foreground border-t border-border/30 pt-4">
-                  <p className="flex items-center gap-2">
-                    <Info className="h-4 w-4 text-primary" /> 
-                    Showing data-driven attribution results from neural network models trained on your marketing data.
-                  </p>
-                </div>
-              </div>
+
             </CardContent>
           </Card>
 
@@ -671,11 +618,11 @@ const ChannelDetailsPage = () => {
               </CardHeader>
               <CardContent>
                 <Select
-                  value={selectedCampaign}
+                  value={selectedCampaign || campaigns[0]?.id}
                   onValueChange={handleCampaignChange}
                 >
                   <SelectTrigger className="w-full md:w-[320px] border-border/60">
-                    <SelectValue placeholder="Select campaign" />
+                    <SelectValue placeholder={campaigns[0]?.name || "Select campaign"} />
                   </SelectTrigger>
                   <SelectContent>
                     {campaigns.map((campaign) => (
@@ -688,16 +635,14 @@ const ChannelDetailsPage = () => {
               </CardContent>
             </Card>
 
-            {/* Campaign Breakdown - Only shown when a specific campaign is selected */}
-            {selectedCampaign !== "all" && (
-              <div className="mt-6">
-                <CampaignBreakdownTab 
-                  campaignData={campaignData} 
-                  loading={loading} 
-                  campaign={campaigns.find(c => c.id === selectedCampaign) || { id: "", name: "" }}
-                />
-              </div>
-            )}
+            {/* Campaign Breakdown - Show first campaign by default */}
+            <div className="mt-6">
+              <CampaignBreakdownTab 
+                campaignData={campaignData} 
+                loading={loading} 
+                campaign={campaigns.find(c => c.id === (selectedCampaign || campaigns[0]?.id)) || { id: "", name: "" }}
+              />
+            </div>
           </div>
         </TabsContent>
 

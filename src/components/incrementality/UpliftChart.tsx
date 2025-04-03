@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ABTest } from "@/hooks/useMockABTestData";
@@ -17,15 +16,15 @@ export function UpliftChart({ test }: UpliftChartProps) {
   
   if (!controlVariant || !testVariant) {
     return (
-      <Card className="glass-card premium-shadow border-white/30">
+      <Card className="glass-card premium-shadow border-white/30 w-full max-w-[50%]">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <TrendingUp className="h-5 w-5 text-primary" />
-            Uplift from Test vs Control
+            <TrendingUp className="h-4 w-4 text-primary" />
+            <span className="text-lg">Uplift from Test vs Control</span>
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-muted-foreground">Insufficient data to calculate uplift.</p>
+          <p className="text-muted-foreground text-sm">Insufficient data to calculate uplift.</p>
         </CardContent>
       </Card>
     );
@@ -45,34 +44,33 @@ export function UpliftChart({ test }: UpliftChartProps) {
     },
     {
       name: "Revenue",
-      Control: controlVariant.revenue / 1000, // Dividing by 1000 for better visualization
+      Control: controlVariant.revenue / 1000,
       Test: testVariant.revenue / 1000,
       uplift: revenueUplift.toFixed(1)
     }
   ];
   
   return (
-    <Card className="glass-card premium-shadow border-white/30">
+    <Card className="glass-card premium-shadow border-white/30 w-full max-w-[600px]">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          <TrendingUp className="h-5 w-5 text-primary" />
-          Uplift from Test vs Control
+          <TrendingUp className="h-4 w-4 text-primary" />
+          <span className="text-lg">Uplift from Test vs Control</span>
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="mb-4 flex items-center gap-3 justify-end">
-          <Badge className="bg-green-100 text-green-800 flex items-center gap-1">
+        <div className="mb-3 flex items-center gap-2 justify-end">
+          <Badge className="bg-green-100 text-green-800 flex items-center gap-1 text-xs">
             <ArrowUp className="h-3 w-3" />
             {conversionRateUplift.toFixed(1)}% Conversion Rate Uplift
           </Badge>
-          <Badge className="bg-green-100 text-green-800 flex items-center gap-1">
+          <Badge className="bg-green-100 text-green-800 flex items-center gap-1 text-xs">
             <ArrowUp className="h-3 w-3" />
             {revenueUplift.toFixed(1)}% Revenue Uplift
           </Badge>
         </div>
         
-        {/* Reduced height of chart container */}
-        <div className="h-[650px] mb-6">
+        <div className="h-[300px] w-[500px] mb-4">
           <ChartContainer 
             config={{
               Control: { color: "#94a3b8" },
@@ -82,30 +80,30 @@ export function UpliftChart({ test }: UpliftChartProps) {
             <ResponsiveContainer width="100%" height="100%">
               <BarChart
                 data={chartData}
-                margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
+                margin={{ top: 10, right: 20, left: 10, bottom: 10 }}
               >
                 <CartesianGrid strokeDasharray="3 3" opacity={0.2} />
-                <XAxis dataKey="name" />
-                <YAxis />
+                <XAxis dataKey="name" fontSize={12} />
+                <YAxis fontSize={12} />
                 <Tooltip
                   formatter={(value, name, props) => [
                     name === "uplift" ? `${value}%` : value,
                     name
                   ]}
                 />
-                <Legend />
-                <Bar name="Control" dataKey="Control" fill="#94a3b8" radius={[4, 4, 0, 0]} />
-                <Bar name="Test" dataKey="Test" fill="#8b5cf6" radius={[4, 4, 0, 0]}>
-                  <LabelList dataKey="uplift" position="top" formatter={(v: string) => `+${v}%`} />
+                <Legend wrapperStyle={{ fontSize: '12px' }} />
+                <Bar name="Control" dataKey="Control" fill="#94a3b8" radius={[3, 3, 0, 0]} />
+                <Bar name="Test" dataKey="Test" fill="#8b5cf6" radius={[3, 3, 0, 0]}>
+                  <LabelList dataKey="uplift" position="top" formatter={(v: string) => `+${v}%`} fontSize={12} />
                 </Bar>
               </BarChart>
             </ResponsiveContainer>
           </ChartContainer>
         </div>
         
-        <div className="bg-muted/70 backdrop-blur-sm p-4 rounded-md border border-white/20">
-          <h3 className="font-medium mb-2">Uplift Analysis</h3>
-          <p className="text-sm text-muted-foreground">
+        <div className="bg-muted/70 backdrop-blur-sm p-3 rounded-md border border-white/20 text-sm">
+          <h3 className="font-medium mb-1">Uplift Analysis</h3>
+          <p className="text-muted-foreground">
             The test group showed a significant positive uplift of {conversionRateUplift.toFixed(1)}% in conversion rate
             and {revenueUplift.toFixed(1)}% in revenue compared to the control group, with a confidence level of {test.confidenceLevel || 95}%.
           </p>

@@ -18,7 +18,6 @@ import { cn } from "@/lib/utils";
 
 // Gradient color palette with rounded corners
 const categoryColors = {
-  baseline: "url(#baselineGradient)",  // Purple gradient
   googleads: "url(#googleadsGradient)",
   facebookads: "url(#facebookadsGradient)",
   youtubeads: "url(#youtubeadsGradient)",
@@ -53,7 +52,7 @@ type EnhancedWaterfallChartProps = {
 
 const getRandomValue = () => Math.floor(Math.random() * 1000000) + 100000;
 
-export function EnhancedWaterfallChart({
+export function BudgetWaterfallChart({
   data,
   loading = false,
   height = 400,
@@ -72,21 +71,20 @@ export function EnhancedWaterfallChart({
     
     const latestData = data[data.length - 1];
     const unsortedValues = {
-      baseline: latestData.baseline || getRandomValue()+10000000,
       googleads: latestData.googleads || getRandomValue(),
       facebookads: latestData.facebookads || getRandomValue(),
       youtubeads: latestData.youtubeads || getRandomValue(),
       tiktokads: latestData.tiktokads || getRandomValue(),
+      videoadvertising: latestData.videoadvertising || getRandomValue(),
+      socialmedia: latestData.socialmedia || getRandomValue(),
+      searchadvertising: latestData.searchadvertising || getRandomValue(),
+      displayadvertising: latestData.displayadvertising || getRandomValue(),
+      organicsearch: latestData.organicsearch || getRandomValue(),
+      organicsocial: latestData.organicsocial || getRandomValue(),
       emailmarketing: latestData.emailmarketing || getRandomValue(),
       affiliatemarketing: latestData.affiliatemarketing || getRandomValue(),
       directtraffic: latestData.directtraffic || getRandomValue(),
       referraltraffic: latestData.referraltraffic || getRandomValue(),
-      organicsearch: latestData.organicsearch || getRandomValue(),
-      organicsocial: latestData.organicsocial || getRandomValue(),
-      searchadvertising: latestData.searchadvertising || getRandomValue(),
-      socialmedia: latestData.socialmedia || getRandomValue(),
-      displayadvertising: latestData.displayadvertising || getRandomValue(),
-      videoadvertising: latestData.videoadvertising || getRandomValue(),
     };
     
     // Convert to array, sort in descending order, then convert back to object
@@ -180,11 +178,7 @@ export function EnhancedWaterfallChart({
             barCategoryGap={10}
           >
             <defs>
-              <linearGradient id="baselineGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#7C3AED" stopOpacity={0.8} />
-                <stop offset="50%" stopColor="#6D28D9" stopOpacity={0.8} />
-                <stop offset="100%" stopColor="#5B21B6" stopOpacity={0.8} />
-              </linearGradient>
+
               <linearGradient id="googleadsGradient" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="0%" stopColor="#4285F4" stopOpacity={0.8} />
                 <stop offset="50%" stopColor="#2B7DE9" stopOpacity={0.8} />

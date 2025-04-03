@@ -8,7 +8,7 @@ export function HeaderBanner() {
   const getPageTitle = () => {
     switch (location.pathname) {
       case "/analytics":
-        return "Analytics Overview";
+        return "Strategic Overview";
       case "/data":
         return "Data Overview";
       case "/channels":
@@ -46,9 +46,9 @@ export function HeaderBanner() {
   const getPageDescription = () => {
     switch (location.pathname) {
       case "/analytics":
-        return "Analytics Dashboard";
+        return "Marketing Strategy Insights";
       case "/channels":
-        return "Analyze campaign performance by channel";
+        return "Analyze performance per channel";
       case "/metrics":
         return "Explore data patterns and distributions";
       case "/data":

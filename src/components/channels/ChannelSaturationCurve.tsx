@@ -1,4 +1,3 @@
-
 import React from "react";
 import { 
   LineChart, 
@@ -12,11 +11,18 @@ import {
   ScatterChart,
   ReferenceArea,
   ReferenceLine,
-  TooltipProps
+  TooltipProps,
 } from "recharts";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card, CardContent } from "@/components/ui/card";
-import { Info } from "lucide-react";
+import { Info, Circle } from "lucide-react";
+
+// Helper function to calculate ROAS with diminishing returns
+const calculateRoas = (spend: number, maxRoas: number, saturationPoint: number) => {
+  if (spend === 0) return 0;
+  // Diminishing returns formula
+  return maxRoas * Math.exp(-Math.pow(spend - (saturationPoint * 0.5), 2) / (2 * Math.pow(saturationPoint, 2))) + 1;
+};
 
 // Generate saturation curve data for a channel
 const generateSaturationData = (channelId: string, activeScenario: string, customBudgets: Record<string, Record<string, number>>) => {
@@ -60,14 +66,16 @@ const generateSaturationData = (channelId: string, activeScenario: string, custo
   
   // Points for the curve - create a hill shape curve
   for (let spend = 0; spend <= baseSpend * 3.5; spend += baseSpend / 15) {
-    const roas = calculateRoas(spend, maxRoas, saturationPoint);
-    const incrementalOutcome = calculateIncrementalOutcome(spend, maxRoas, saturationPoint);
+    // Calculate ROAS with a logistic function that asymptotically approaches 0
+    const roas = maxRoas / (1 + Math.exp(0.0001 * (spend - saturationPoint)));
+    // Calculate incremental outcome that approaches 0
+    const incrementalOutcome = (maxRoas * 20000) / (1 + Math.exp(0.0001 * (spend - saturationPoint)));
     
     points.push({
       spend,
-      roas,
-      incrementalOutcome,
-      revenue: spend * roas,
+      roas: maxRoas - roas, // Mirror the ROAS curve by subtracting from max
+      incrementalOutcome: maxRoas * 20000 - incrementalOutcome, // Mirror the outcome curve
+      revenue: spend * (maxRoas - roas), // Calculate revenue with mirrored ROAS
       // Mark the points
       isCurrent: Math.abs(spend - currentSpend) < baseSpend / 20,
       isBau: Math.abs(spend - bauSpend) < baseSpend / 20,
@@ -75,27 +83,38 @@ const generateSaturationData = (channelId: string, activeScenario: string, custo
       isMaxSaturation: Math.abs(spend - maxSaturationSpend) < baseSpend / 20
     });
   }
-  
   return { 
     points, 
-    currentPoint: { roas: currentRoas, spend: currentSpend, revenue: currentRevenue, incrementalOutcome: calculateIncrementalOutcome(currentSpend, maxRoas, saturationPoint) },
-    bauPoint: { roas: bauRoas, spend: bauSpend, revenue: bauRevenue, incrementalOutcome: calculateIncrementalOutcome(bauSpend, maxRoas, saturationPoint) },
-    newPoint: { roas: newRoas, spend: newSpend, revenue: newRevenue, incrementalOutcome: calculateIncrementalOutcome(newSpend, maxRoas, saturationPoint) },
-    maxSaturationPoint: { roas: maxSaturationRoas, spend: maxSaturationSpend, revenue: maxSaturationRevenue, incrementalOutcome: calculateIncrementalOutcome(maxSaturationSpend, maxRoas, saturationPoint) }
+    maxSaturationPoint: { 
+      roas: maxRoas / (1 + Math.exp(0.0001 * (maxSaturationSpend - saturationPoint))), 
+      spend: maxSaturationSpend, 
+      revenue: maxSaturationSpend * (maxRoas / (1 + Math.exp(0.0001 * (maxSaturationSpend - saturationPoint)))),
+      incrementalOutcome: (maxRoas * 20000) / (1 + Math.exp(0.0001 * (maxSaturationSpend - saturationPoint)))
+    },
+    newPoint: { 
+      roas: maxRoas / (1 + Math.exp(0.0001 * (newSpend - saturationPoint))), 
+      spend: newSpend, 
+      revenue: newSpend * (maxRoas / (1 + Math.exp(0.0001 * (newSpend - saturationPoint)))),
+      incrementalOutcome: (maxRoas * 20000) / (1 + Math.exp(0.0001 * (newSpend - saturationPoint)))
+    },
+    bauPoint: { 
+      roas: maxRoas / (1 + Math.exp(0.0001 * (bauSpend - saturationPoint))), 
+      spend: bauSpend, 
+      revenue: bauSpend * (maxRoas / (1 + Math.exp(0.0001 * (bauSpend - saturationPoint)))),
+      incrementalOutcome: (maxRoas * 20000) / (1 + Math.exp(0.0001 * (bauSpend - saturationPoint)))
+    },
+    currentPoint: { 
+      roas: maxRoas / (1 + Math.exp(0.0001 * (currentSpend - saturationPoint))), 
+      spend: currentSpend, 
+      revenue: currentSpend * (maxRoas / (1 + Math.exp(0.0001 * (currentSpend - saturationPoint)))),
+      incrementalOutcome: (maxRoas * 20000) / (1 + Math.exp(0.0001 * (currentSpend - saturationPoint)))
+    }
   };
-};
-
-// Helper function to calculate ROAS with diminishing returns
-const calculateRoas = (spend: number, maxRoas: number, saturationPoint: number) => {
-  if (spend === 0) return 0;
-  // Diminishing returns formula
-  return maxRoas * Math.exp(-Math.pow(spend - (saturationPoint * 0.5), 2) / (2 * Math.pow(saturationPoint, 2))) + 1;
 };
 
 // Helper function to calculate incremental outcome (hill shape)
 const calculateIncrementalOutcome = (spend: number, maxRoas: number, saturationPoint: number) => {
   if (spend === 0) return 0;
-  
   // Create a hill-shaped curve that peaks at the saturation point and then declines
   const hill = Math.exp(-Math.pow(spend - saturationPoint, 2) / (2 * Math.pow(saturationPoint * 0.6, 2)));
   return hill * maxRoas * 20000; // Scale the outcome for visualization
@@ -143,7 +162,14 @@ export function ChannelSaturationCurve({
   customBudgets
 }: ChannelSaturationCurveProps) {
   // Generate data for the curve
-  const { points, currentPoint, bauPoint, newPoint, maxSaturationPoint } = generateSaturationData(channelId, activeScenario, customBudgets);
+  const { points, currentPoint, bauPoint, maxSaturationPoint } = generateSaturationData(channelId, activeScenario, customBudgets);
+  
+  // Create new point that's 10k more than current
+  const newPoint = {
+    ...currentPoint,
+    spend: currentPoint.spend + 10000,
+    incrementalOutcome: calculateIncrementalOutcome(currentPoint.spend + 10000, maxSaturationPoint.roas, maxSaturationPoint.spend)
+  };
 
   // Calculate difference between BAU and active scenario
   const isBauActive = activeScenario === "bau";
@@ -193,99 +219,35 @@ export function ChannelSaturationCurve({
                   activeDot={{ r: 8 }}
                 />
                 
-                {/* Current point marker - Enhanced visibility with larger size */}
+                {/* Current Spend Point */}
                 <Scatter
                   yAxisId="left"
-                  data={[{ 
-                    spend: currentPoint.spend, 
-                    incrementalOutcome: currentPoint.incrementalOutcome 
-                  }]}
-                  fill="#FF8C00"  // Bright orange
-                  stroke="#FFFFFF"
-                  strokeWidth={2}
-                  shape="circle"
-                  name="Current Spend"
-                >
-                  <svg width={20} height={20}>
-                    <circle cx={10} cy={10} r={10} fill="#FF8C00" stroke="#FFFFFF" strokeWidth={2} />
-                  </svg>
-                </Scatter>
+                  data={[currentPoint]}
+                  fill="#f97316"
+                  shape={<Circle r={20} />}
+                />
                 
-                {/* Business As Usual point marker */}
+                {/* New Spend Point */}
                 <Scatter
                   yAxisId="left"
-                  data={[{ 
-                    spend: bauPoint.spend, 
-                    incrementalOutcome: bauPoint.incrementalOutcome 
-                  }]}
-                  fill="#3B82F6"  // Blue
-                  stroke="#FFFFFF"
-                  strokeWidth={2}
-                  shape="circle"
-                  name="BAU Spend"
-                >
-                  <svg width={20} height={20}>
-                    <circle cx={10} cy={10} r={10} fill="#3B82F6" stroke="#FFFFFF" strokeWidth={2} />
-                  </svg>
-                </Scatter>
+                  data={[newPoint]}
+                  fill="#22c55e"
+                  shape={<Circle r={6} />}
+                />
                 
-                {/* New point marker - Enhanced visibility with larger size and different shape */}
+                {/* Max Saturation Point */}
                 <Scatter
                   yAxisId="left"
-                  data={[{ 
-                    spend: newPoint.spend, 
-                    incrementalOutcome: newPoint.incrementalOutcome 
-                  }]}
-                  fill="#4CAF50"  // Bright green
-                  stroke="#FFFFFF"
-                  strokeWidth={2}
-                  shape="diamond"
-                  name="New Spend"
-                >
-                  <svg width={24} height={24}>
-                    <polygon points="12,2 22,12 12,22 2,12" fill="#4CAF50" stroke="#FFFFFF" strokeWidth={2} />
-                  </svg>
-                </Scatter>
-                
-                {/* Max saturation point marker - Enhanced visibility with larger size and different shape */}
-                <Scatter
-                  yAxisId="left"
-                  data={[{ 
-                    spend: maxSaturationPoint.spend, 
-                    incrementalOutcome: maxSaturationPoint.incrementalOutcome 
-                  }]}
-                  fill="#9C27B0"  // Bright purple
-                  stroke="#FFFFFF"
-                  strokeWidth={2}
-                  shape="star"
-                  name="Max Saturation"
-                >
-                  <svg width={24} height={24}>
-                    <polygon points="12,2 14,10 22,10 16,15 18,23 12,19 6,23 8,15 2,10 10,10" fill="#9C27B0" stroke="#FFFFFF" strokeWidth={2} />
-                  </svg>
-                </Scatter>
-                
+                  data={[maxSaturationPoint]}
+                  fill="#9333ea"
+                  shape={<Circle r={6} />}
+                />
                 {/* Reference lines for key points */}
-                <ReferenceLine x={bauPoint.spend} yAxisId="left" stroke="#3B82F6" strokeDasharray="3 3" />
-                <ReferenceLine x={newPoint.spend} yAxisId="left" stroke="#4CAF50" strokeDasharray="3 3" />
-                
-                {/* Show the change between BAU and scenario with colored area */}
-                {!isBauActive && (
-                  <ReferenceArea 
-                    x1={bauPoint.spend} 
-                    x2={newPoint.spend} 
-                    yAxisId="left"
-                    y1={0}
-                    y2={Math.max(bauPoint.incrementalOutcome, newPoint.incrementalOutcome)}
-                    stroke={isPositiveChange ? "#4CAF50" : "#ef4444"}
-                    strokeOpacity={0.3}
-                    fill={isPositiveChange ? "rgba(76, 175, 80, 0.1)" : "rgba(239, 68, 68, 0.1)"}
-                  />
-                )}
+                <ReferenceLine x={bauPoint.spend} yAxisId="left" stroke="#3B82F6" strokeDasharray="3 3" strokeWidth={2} />
+                <ReferenceLine x={newPoint.spend} yAxisId="left" stroke="#4CAF50" strokeDasharray="3 3" strokeWidth={2} />
               </LineChart>
             </ResponsiveContainer>
           </div>
-          
           <div className="mt-4 flex flex-wrap gap-6 text-sm">
             <div className="flex items-center gap-2">
               <div className="h-3 w-3 rounded-full" style={{ backgroundColor: color }}></div>

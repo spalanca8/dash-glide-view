@@ -66,7 +66,7 @@ export function ChannelBreakdownChart({
             tick={{ fontSize: 12 }}
             tickLine={false}
             axisLine={false}
-            tickFormatter={(value) => `$${value}`}
+            tickFormatter={(value) => `${value}%`}
           />
           <Tooltip
             contentStyle={{
@@ -76,7 +76,7 @@ export function ChannelBreakdownChart({
               border: "none",
               padding: "8px 12px",
             }}
-            formatter={(value: number) => [`$${value.toLocaleString()}`, ""]}
+            formatter={(value: number) => [`${value.toFixed(1)}%`, ""]}
           />
           <Legend 
             formatter={(value, entry, index) => <span className="text-sm">{bars[index]?.label || value}</span>}

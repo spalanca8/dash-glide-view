@@ -8,7 +8,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { MainLayout } from "./components/layout/MainLayout";
 import LandingPage from "./pages/LandingPage";
 import LoginPage from "./pages/LoginPage";
-import AnalyticsOverview from "./pages/AnalyticsOverview";
+import StrategicOverview from "./pages/StrategicOverview";
 import DataPage from "./pages/DataPage";
 import ChannelsPage from "./pages/ChannelsPage";
 import CampaignPage from "./pages/CampaignPage";
@@ -24,6 +24,7 @@ import GettingStartedPage from "./pages/GettingStartedPage";
 import ChatAIPage from "./pages/ChatAIPage";
 import RecommendationsPage from "./pages/RecommendationsPage";
 import IncrementalityTestingPage from "./pages/IncrementalityTestingPage";
+import ModelMetricsPage from "./pages/ModelMetricsPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -38,7 +39,7 @@ const App = () => (
           <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route element={<MainLayout />}>
-            <Route path="/analytics" element={<AnalyticsOverview />} />
+            <Route path="/analytics" element={<StrategicOverview />} />
             <Route path="/methodologies" element={<MethodologiesPage />} />
             <Route path="/data" element={<DataPage />} />
             <Route path="/metrics" element={<MetricsPage />} />
@@ -47,6 +48,7 @@ const App = () => (
             <Route path="/campaign" element={<CampaignPage />} />
             <Route path="/budget" element={<BudgetPage />} />
             <Route path="/incrementality-testing" element={<IncrementalityTestingPage />} />
+            <Route path="/model-metrics" element={<ModelMetricsPage />} />
             <Route path="/chat-ai" element={<ChatAIPage />} />
             <Route path="/recommendations" element={<RecommendationsPage />} />
             <Route path="/guide" element={<GuidePage />} />

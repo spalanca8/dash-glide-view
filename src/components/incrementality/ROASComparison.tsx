@@ -6,7 +6,6 @@ import { ChartContainer } from "@/components/ui/chart";
 import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis, ReferenceLine } from "recharts";
 import { DollarSign } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-
 interface ROASComparisonProps {
   test: ABTest;
 }
@@ -18,7 +17,7 @@ export function ROASComparison({ test }: ROASComparisonProps) {
   
   if (!controlVariant || !testVariant) {
     return (
-      <Card className="glass-card premium-shadow border-white/30">
+      <Card className="glass-card premium-shadow border-white/30 w-[400px]">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <DollarSign className="h-5 w-5 text-primary" />
@@ -58,7 +57,7 @@ export function ROASComparison({ test }: ROASComparisonProps) {
   ];
   
   return (
-    <Card className="glass-card premium-shadow border-white/30">
+    <Card className="glass-card premium-shadow border-white/30 w-[600px]">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <DollarSign className="h-5 w-5 text-primary" />
@@ -78,60 +77,72 @@ export function ROASComparison({ test }: ROASComparisonProps) {
           </Badge>
         </div>
         
-        {/* Increased height and adjusted margins */}
-        <div className="h-[650px]">
+        {/* Reduced height and adjusted margins */}
+        <div className="h-[300px]">
           <ChartContainer
             config={{
               ROAS: { color: "#8b5cf6" }
             }}
           >
-            <ResponsiveContainer width="50%" height="50%">
+            <ResponsiveContainer width="100%" height="100%">
               <BarChart
                 data={chartData}
-                margin={{ top: 30, right: 30, left: 20, bottom: 30 }}
+                margin={{ top: 20, right: 20, left: 10, bottom: 20 }}
               >
                 <CartesianGrid strokeDasharray="3 3" opacity={0.2} />
-                <XAxis dataKey="name" />
-                <YAxis label={{ value: 'ROAS', angle: -90, position: 'insideLeft', offset: 10 }} />
+                <XAxis dataKey="name" fontSize={12} />
+                <YAxis fontSize={12} label={{ value: 'ROAS', angle: -90, position: 'insideLeft', offset: 10 }} />
                 <Tooltip 
                   formatter={(value, name) => [
                     name === "ROAS" ? `${value}x` : `$${value.toLocaleString()}`,
                     name
                   ]}
                 />
-                <Legend />
-                <Bar dataKey="ROAS" name="ROAS" fill="#8b5cf6" radius={[4, 4, 0, 0]} />
-                <ReferenceLine y={1} stroke="#ff0000" strokeDasharray="3 3" label="Break-even" />
+                <Legend wrapperStyle={{ fontSize: '12px' }} />
+                <Bar dataKey="ROAS" name="ROAS" fill="#8b5cf6" radius={[3, 3, 0, 0]} />
+                <ReferenceLine 
+                  y={1} 
+                  stroke="#ff0000" 
+                  strokeWidth={2}
+                  strokeDasharray="5 5"
+                  label={{
+                    value: 'Break-even', 
+                    position: 'insideBottomRight',
+                    fill: '#ff0000',
+                    fontSize: 12,
+                    offset: 10
+                  }}
+                />
+                <ReferenceLine 
+                  y={1} 
+                  stroke="#ff0000" 
+                  strokeWidth={0.5}
+                  strokeOpacity={0.3}
+                  ifOverflow="extendDomain"
+                />
               </BarChart>
             </ResponsiveContainer>
           </ChartContainer>
         </div>
         
-        {/* Added more vertical spacing */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8">
-          <div className="bg-muted/70 backdrop-blur-sm p-4 rounded-md border border-white/20">
-            <h3 className="font-medium mb-2">Revenue vs. Spend</h3>
-            <div className="grid grid-cols-2 gap-2">
+        {/* Adjusted vertical spacing and padding */}
+        <div className="grid grid-cols-1 gap-3 mt-6">
+          <div className="bg-muted/70 backdrop-blur-sm p-3 rounded-md border border-white/20">
+            <h3 className="font-medium mb-1 text-sm">Revenue vs. Spend</h3>
+            <div className="grid grid-cols-2 gap-1">
               <div>
                 <p className="text-xs text-muted-foreground">Control Group:</p>
-                <p className="text-sm">Revenue: ${controlVariant.revenue.toLocaleString()}</p>
-                <p className="text-sm">Ad Spend: ${controlAdSpend.toLocaleString()}</p>
+                <p className="text-xs">Revenue: ${controlVariant.revenue.toLocaleString()}</p>
+                <p className="text-xs">Ad Spend: ${controlAdSpend.toLocaleString()}</p>
               </div>
               <div>
                 <p className="text-xs text-muted-foreground">Test Group:</p>
-                <p className="text-sm">Revenue: ${testVariant.revenue.toLocaleString()}</p>
-                <p className="text-sm">Ad Spend: ${testAdSpend.toLocaleString()}</p>
+                <p className="text-xs">Revenue: ${testVariant.revenue.toLocaleString()}</p>
+                <p className="text-xs">Ad Spend: ${testAdSpend.toLocaleString()}</p>
               </div>
             </div>
           </div>
           
-          <div className="bg-muted/70 backdrop-blur-sm p-4 rounded-md border border-white/20">
-            <h3 className="font-medium mb-2">ROAS Interpretation</h3>
-            <p className="text-sm text-muted-foreground">
-              The test group achieved a ROAS of {testROAS.toFixed(2)}x, representing a {roasImprovement.toFixed(1)}% 
-              {roasImprovement >= 0 ? " improvement" : " decrease"} compared to the control group's ROAS of {controlROAS.toFixed(2)}x.
-            </p>
-          </div>
         </div>
       </CardContent>
     </Card>
