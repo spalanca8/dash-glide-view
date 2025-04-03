@@ -14,7 +14,10 @@ import {
   Percent, 
   BarChart4, 
   LineChart,
-  Globe 
+  Globe,
+  Image,
+  Video,
+  MessageSquare
 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { FilterExportControls } from "@/components/channels/FilterExportControls";
@@ -72,6 +75,14 @@ export const CampaignBreakdownTab: React.FC<CampaignBreakdownTabProps> = ({
       cpv
     };
   });
+
+  // Define more descriptive creative examples with appropriate icons
+  const creativeTypesIcons = {
+    "video": <Video className="h-4 w-4 text-primary" />,
+    "image": <Image className="h-4 w-4 text-primary" />,
+    "carousel": <BarChart4 className="h-4 w-4 text-primary" />,
+    "message": <MessageSquare className="h-4 w-4 text-primary" />
+  };
 
   return (
     <div className="space-y-6">
@@ -154,7 +165,7 @@ export const CampaignBreakdownTab: React.FC<CampaignBreakdownTabProps> = ({
         loading={loading}
       />
       
-      {/* Creative performance */}
+      {/* Creative performance with improved naming and details */}
       <Card>
         <CardHeader>
           <CardTitle>Top Performing Creatives</CardTitle>
@@ -162,37 +173,104 @@ export const CampaignBreakdownTab: React.FC<CampaignBreakdownTabProps> = ({
         </CardHeader>
         <CardContent>
           <div className="space-y-6">
-            {campaignData.topCreatives.map((creative: any, index: number) => (
-              <div key={index} className="space-y-2">
-                <div className="flex justify-between">
-                  <span className="font-medium">{creative.name}</span>
-                  <span className="text-sm">Performance Score: {creative.performance}/100</span>
+            <div className="space-y-2">
+              <div className="flex justify-between">
+                <div className="flex items-center gap-2">
+                  {creativeTypesIcons.video}
+                  <span className="font-medium">Product Demo Video</span>
                 </div>
-                <div className="grid grid-cols-3 gap-4 text-sm">
-                  <div className="flex gap-2 items-center">
-                    <BarChart4 className="h-4 w-4 text-muted-foreground" />
-                    <span className="text-muted-foreground">Impressions:</span>
-                    <span className="font-medium">{creative.impressions.toLocaleString()}</span>
-                  </div>
-                  <div className="flex gap-2 items-center">
-                    <Users className="h-4 w-4 text-muted-foreground" />
-                    <span className="text-muted-foreground">Clicks:</span>
-                    <span className="font-medium">{creative.clicks.toLocaleString()}</span>
-                  </div>
-                  <div className="flex gap-2 items-center">
-                    <Percent className="h-4 w-4 text-muted-foreground" />
-                    <span className="text-muted-foreground">CTR:</span>
-                    <span className="font-medium">{creative.ctr}%</span>
-                  </div>
+                <span className="text-sm">Performance Score: 92/100</span>
+              </div>
+              <div className="grid grid-cols-3 gap-4 text-sm">
+                <div className="flex gap-2 items-center">
+                  <BarChart4 className="h-4 w-4 text-muted-foreground" />
+                  <span className="text-muted-foreground">Impressions:</span>
+                  <span className="font-medium">348,259</span>
                 </div>
-                <div className="w-full bg-gray-200 rounded-full h-2.5">
-                  <div
-                    className="h-2.5 rounded-full bg-primary"
-                    style={{ width: `${creative.performance}%` }}
-                  ></div>
+                <div className="flex gap-2 items-center">
+                  <Users className="h-4 w-4 text-muted-foreground" />
+                  <span className="text-muted-foreground">Clicks:</span>
+                  <span className="font-medium">14,732</span>
+                </div>
+                <div className="flex gap-2 items-center">
+                  <Percent className="h-4 w-4 text-muted-foreground" />
+                  <span className="text-muted-foreground">CTR:</span>
+                  <span className="font-medium">4.2%</span>
                 </div>
               </div>
-            ))}
+              <div className="w-full bg-gray-200 rounded-full h-2.5">
+                <div
+                  className="h-2.5 rounded-full bg-primary"
+                  style={{ width: "92%" }}
+                ></div>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <div className="flex justify-between">
+                <div className="flex items-center gap-2">
+                  {creativeTypesIcons.carousel}
+                  <span className="font-medium">Customer Testimonial Carousel</span>
+                </div>
+                <span className="text-sm">Performance Score: 87/100</span>
+              </div>
+              <div className="grid grid-cols-3 gap-4 text-sm">
+                <div className="flex gap-2 items-center">
+                  <BarChart4 className="h-4 w-4 text-muted-foreground" />
+                  <span className="text-muted-foreground">Impressions:</span>
+                  <span className="font-medium">286,427</span>
+                </div>
+                <div className="flex gap-2 items-center">
+                  <Users className="h-4 w-4 text-muted-foreground" />
+                  <span className="text-muted-foreground">Clicks:</span>
+                  <span className="font-medium">11,457</span>
+                </div>
+                <div className="flex gap-2 items-center">
+                  <Percent className="h-4 w-4 text-muted-foreground" />
+                  <span className="text-muted-foreground">CTR:</span>
+                  <span className="font-medium">4.0%</span>
+                </div>
+              </div>
+              <div className="w-full bg-gray-200 rounded-full h-2.5">
+                <div
+                  className="h-2.5 rounded-full bg-primary"
+                  style={{ width: "87%" }}
+                ></div>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <div className="flex justify-between">
+                <div className="flex items-center gap-2">
+                  {creativeTypesIcons.image}
+                  <span className="font-medium">Limited-Time Offer Banner</span>
+                </div>
+                <span className="text-sm">Performance Score: 76/100</span>
+              </div>
+              <div className="grid grid-cols-3 gap-4 text-sm">
+                <div className="flex gap-2 items-center">
+                  <BarChart4 className="h-4 w-4 text-muted-foreground" />
+                  <span className="text-muted-foreground">Impressions:</span>
+                  <span className="font-medium">192,845</span>
+                </div>
+                <div className="flex gap-2 items-center">
+                  <Users className="h-4 w-4 text-muted-foreground" />
+                  <span className="text-muted-foreground">Clicks:</span>
+                  <span className="font-medium">6,750</span>
+                </div>
+                <div className="flex gap-2 items-center">
+                  <Percent className="h-4 w-4 text-muted-foreground" />
+                  <span className="text-muted-foreground">CTR:</span>
+                  <span className="font-medium">3.5%</span>
+                </div>
+              </div>
+              <div className="w-full bg-gray-200 rounded-full h-2.5">
+                <div
+                  className="h-2.5 rounded-full bg-primary"
+                  style={{ width: "76%" }}
+                ></div>
+              </div>
+            </div>
           </div>
         </CardContent>
       </Card>
