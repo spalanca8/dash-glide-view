@@ -72,7 +72,7 @@ export function MethodologyComparison({ test }: MethodologyComparisonProps) {
       </CardHeader>
       <CardContent>
         {/* Adjusted height and margins */}
-        <div className="h-[350px] mb-8">
+        <div className="h-[600px] mb-8">
           <ChartContainer
             config={{
               uplift: { color: "#8884d8" }

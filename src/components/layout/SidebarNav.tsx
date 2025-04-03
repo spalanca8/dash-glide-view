@@ -43,13 +43,45 @@ const navItems: NavItem[] = [
 
   {
     title: "Channel Analysis",
-    href: "/channels",
     icon: Radio,
+    children: [
+      {
+        title: "Overview",
+        href: "/channels",
+        icon: FileBarChart,
+      },
+      {
+        title: "Detailed Analysis",
+        href: "/channels",
+        icon: GitCompare,
+      },
+      {
+        title: "Year-over-Year",
+        href: "/channels",
+        icon: TrendingUp,
+      }
+    ]
   },
   {
-    title: "Campaign Analysis",
-    href: "/campaign",
+    title: "Campaign Insights",
     icon: BarChart3,
+    children: [
+      {
+        title: "Overview",
+        href: "/campaign",
+        icon: FileBarChart,
+      },
+      {
+        title: "Detailed Analysis",
+        href: "/campaign",
+        icon: GitCompare,
+      },
+      {
+        title: "Promotional Analytics",
+        href: "/campaign",
+        icon: TrendingUp,
+      }
+    ]
   },
   {
     title: "Budget Optimizer",
@@ -58,9 +90,21 @@ const navItems: NavItem[] = [
   },
   {
     title: "Incrementality Testing",
-    href: "/incrementality-testing",
     icon: LineChart,
+    children: [
+      {
+        title: "Overview",
+        href: "/incrementality-testing",
+        icon: FileBarChart,
+      },
+      {
+        title: "Context",
+        href: "/incrementality-testing",
+        icon: TrendingUp,
+      },
+    ]
   },
+
   {
     title: "Model Metrics",
     href: "/",

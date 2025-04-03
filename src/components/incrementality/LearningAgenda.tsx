@@ -50,7 +50,7 @@ export function LearningAgenda({ test }: LearningAgendaProps) {
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="space-y-6">
+        <div className="space-y-3">
           <div className="bg-muted/70 backdrop-blur-sm p-4 rounded-md border border-white/20">
             <div className="flex items-start gap-3">
               <Building className="h-5 w-5 text-primary" />

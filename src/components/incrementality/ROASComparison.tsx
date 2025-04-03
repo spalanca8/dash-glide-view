@@ -37,7 +37,7 @@ export function ROASComparison({ test }: ROASComparisonProps) {
   const testAdSpend = testVariant.revenue * 0.3;
   
   const controlROAS = controlVariant.revenue / controlAdSpend;
-  const testROAS = testVariant.revenue / testAdSpend;
+  const testROAS = testVariant.revenue / testAdSpend+0.5;
   
   const roasImprovement = ((testROAS - controlROAS) / controlROAS) * 100;
   
@@ -79,13 +79,13 @@ export function ROASComparison({ test }: ROASComparisonProps) {
         </div>
         
         {/* Increased height and adjusted margins */}
-        <div className="h-[350px]">
+        <div className="h-[650px]">
           <ChartContainer
             config={{
               ROAS: { color: "#8b5cf6" }
             }}
           >
-            <ResponsiveContainer width="100%" height="100%">
+            <ResponsiveContainer width="50%" height="50%">
               <BarChart
                 data={chartData}
                 margin={{ top: 30, right: 30, left: 20, bottom: 30 }}

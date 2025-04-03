@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { BarChart, PieChart, LineChart as LineChartIcon, Filter, ArrowDown, ArrowUp, Table as TableIcon, Info } from "lucide-react";
+import { BarChart, PieChart, LineChart as LineChartIcon, Filter, ArrowDown, ArrowUp, Table as TableIcon, Info, Calendar, TrendingUp, Activity, GitCompare } from "lucide-react";
 import { ChannelPerformanceTable } from "@/components/channels/ChannelPerformanceTable";
 import { ChannelBreakdownChart } from "@/components/channels/ChannelBreakdownChart";
 import { ChannelTrendsChart } from "@/components/channels/ChannelTrendsChart";
@@ -88,20 +88,23 @@ export default function ChannelsPage() {
       {/* Main Tabs */}
       <Tabs value={mainTab} onValueChange={setMainTab} className="space-y-6">
         <TabsList className="justify-start">
-          <TabsTrigger value="analysis" className="flex items-center gap-2">
-            <BarChart className="h-4 w-4" /> Channel Overview
+          <TabsTrigger value="overview" className="flex items-center gap-2">
+            <BarChart className="h-4 w-4" /> Overview
           </TabsTrigger>
-          <TabsTrigger value="details" className="flex items-center gap-2">
-            <TableIcon className="h-4 w-4" /> Channel Details
+          <TabsTrigger value="detailed" className="flex items-center gap-2">
+            <TableIcon className="h-4 w-4" /> Detailed Analysis
+          </TabsTrigger>
+          <TabsTrigger value="yoy" className="flex items-center gap-2">
+            <Calendar className="h-5 w-5" /> Year-over-Year
           </TabsTrigger>
         </TabsList>
 
         {/* Channel Overview Tab Content */}
-        <TabsContent value="analysis" className="space-y-6 mt-6">
+        <TabsContent value="overview" className="space-y-8 mt-8">
           {/* New Waterfall Chart Component */}
           <IncrementalRevenueWaterfallChart data={channelData} loading={loading} />
           
-          <Card>
+          <Card className="shadow-lg">
             <CardHeader className="flex flex-row items-center">
               <div className="flex flex-col space-y-1.5">
                 <CardTitle className="flex items-center gap-2">
@@ -195,7 +198,7 @@ export default function ChannelsPage() {
         </TabsContent>
 
         {/* Channel Details Tab Content */}
-        <TabsContent value="details" className="space-y-6 mt-6">
+        <TabsContent value="detailed" className="space-y-6 mt-6">
           <Card>
             <CardHeader>
               <div className="flex flex-row items-center justify-between">

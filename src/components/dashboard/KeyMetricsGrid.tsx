@@ -108,7 +108,7 @@ export function KeyMetricsGrid({
             <CardContent className="p-6">
               <div className="flex justify-between items-center mb-4 pb-2 border-b">
                 <span className="text-sm font-medium text-muted-foreground">Average:</span>
-                <span className="text-xl font-bold">{metric.format(metric.average)}</span>
+                <span className="text-xl ">{metric.format(metric.average)}</span>
               </div>
               
               <div className="space-y-5">
@@ -122,7 +122,7 @@ export function KeyMetricsGrid({
                   </div>
                   <div className="mt-1 flex justify-between items-center">
                     <span className="font-medium text-sm">{metric.best?.name || "N/A"}</span>
-                    <span className="font-bold">
+                    <span className="">
                       {metric.format(metric.best?.[metric.property])}
                     </span>
                   </div>
@@ -138,7 +138,7 @@ export function KeyMetricsGrid({
                   </div>
                   <div className="mt-1 flex justify-between items-center">
                     <span className="font-medium text-sm">{metric.worst?.name || "N/A"}</span>
-                    <span className="font-bold">
+                    <span className="">
                       {metric.format(metric.worst?.[metric.property])}
                     </span>
                   </div>
@@ -164,7 +164,7 @@ export function KeyMetricsGrid({
           {loading ? (
             <div className="h-8 w-24 bg-muted rounded animate-pulse"></div>
           ) : (
-            <h3 className="text-2xl font-bold">${totalRevenue.toLocaleString()}</h3>
+            <h3 className="text-2xl ">${totalRevenue.toLocaleString()}</h3>
           )}
         </div>
         
@@ -192,7 +192,7 @@ export function KeyMetricsGrid({
           {loading ? (
             <div className="h-8 w-24 bg-muted rounded animate-pulse"></div>
           ) : (
-            <h3 className="text-2xl font-bold">${totalCost.toLocaleString()}</h3>
+            <h3 className="text-2xl ">${totalCost.toLocaleString()}</h3>
           )}
         </div>
         
@@ -220,7 +220,7 @@ export function KeyMetricsGrid({
           {loading ? (
             <div className="h-8 w-24 bg-muted rounded animate-pulse"></div>
           ) : (
-            <h3 className="text-2xl font-bold">{totalRoas.toFixed(2)}x</h3>
+            <h3 className="text-2xl ">{totalRoas.toFixed(2)}x</h3>
           )}
         </div>
         
@@ -248,7 +248,7 @@ export function KeyMetricsGrid({
           {loading ? (
             <div className="h-8 w-24 bg-muted rounded animate-pulse"></div>
           ) : (
-            <h3 className="text-2xl font-bold">{Math.round(totalConversions).toLocaleString()}</h3>
+            <h3 className="text-2xl ">{Math.round(totalConversions).toLocaleString()}</h3>
           )}
         </div>
         

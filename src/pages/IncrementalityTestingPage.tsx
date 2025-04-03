@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -107,34 +106,34 @@ const IncrementalityTestingPage = () => {
               <TestSetupSummary test={selectedTestData} />
             </div>
             
-            <div className="mb-16">
+            <div className="mb-32">  {/* Increased margin-bottom from mb-16 to mb-32 */}
               <UpliftChart test={selectedTestData} />
             </div>
             
-            <div className="mb-16">
+            <div className="mb-32">
               <ROASComparison test={selectedTestData} />
             </div>
             
-            <div className="mb-16">
+            <div className="mb-32">
               <MethodologyComparison test={selectedTestData} />
             </div>
           </TabsContent>
           
           {/* Tab 2: Context - Added significantly more space between components */}
           <TabsContent value="context" className="space-y-20 pt-6 animate-fade-in">
-            <div className="mb-16">
+            <div className="mb-32">
               <LearningAgenda test={selectedTestData} />
             </div>
             
-            <div className="mb-16">
+            <div className="mb-32">
               <BusinessQuestion test={selectedTestData} />
             </div>
             
-            <div className="mb-16">
+            <div className="mb-32">
               <MethodologySelection test={selectedTestData} />
             </div>
             
-            <div className="mb-16">
+            <div className="mb-32">
               <FinalResults test={selectedTestData} />
             </div>
           </TabsContent>

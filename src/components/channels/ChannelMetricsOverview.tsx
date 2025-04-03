@@ -108,7 +108,7 @@ export function ChannelMetricsOverview({ data, loading }: ChannelMetricsOverview
           <CardContent className="p-6">
             <div className="flex justify-between items-center mb-4 pb-2 border-b">
               <span className="text-sm font-medium text-muted-foreground">Average:</span>
-              <span className="text-xl font-bold">{metric.format(metric.average)}</span>
+              <span className="text-xl">{metric.format(metric.average)}</span>
             </div>
             
             <div className="space-y-5">
@@ -128,7 +128,7 @@ export function ChannelMetricsOverview({ data, loading }: ChannelMetricsOverview
                 </div>
                 <div className="mt-1 flex justify-between items-center">
                   <span className="font-medium text-sm">{metric.best?.name || "N/A"}</span>
-                  <span className="font-bold">
+                  <span>
                     {metric.format(metric.best?.[metric.property])}
                   </span>
                 </div>
@@ -150,7 +150,7 @@ export function ChannelMetricsOverview({ data, loading }: ChannelMetricsOverview
                 </div>
                 <div className="mt-1 flex justify-between items-center">
                   <span className="font-medium text-sm">{metric.worst?.name || "N/A"}</span>
-                  <span className="font-bold">
+                  <span>
                     {metric.format(metric.worst?.[metric.property])}
                   </span>
                 </div>

@@ -231,7 +231,7 @@ export function AnalyticsOverview() {
   return (
     <div className="animate-fade-in space-y-6">
       <PageHeader 
-        title="Analytics Overview" 
+        title="Strategic Overview" 
         description="Your marketing performance journey starts here with comprehensive insights and data visualization tools to make informed decisions."
       >
         <div className="flex flex-wrap gap-2">

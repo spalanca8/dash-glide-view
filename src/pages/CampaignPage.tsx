@@ -7,7 +7,7 @@ import { MetricCard } from "@/components/dashboard/MetricCard";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Brain, LineChart, Target, Users, DollarSign, BarChart3, Filter, ChevronRight } from "lucide-react";
+import { Brain, LineChart, Target, Users, DollarSign, BarChart3, Filter, ChevronRight, PercentIcon, Calendar } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { FilterExportControls } from "@/components/channels/FilterExportControls";
 import {
@@ -22,6 +22,14 @@ import { ChannelJourneyComparison } from "@/components/campaigns/ChannelJourneyC
 import { KeyMetricsGrid } from "@/components/dashboard/KeyMetricsGrid";
 import { RoasComparisonChart } from "@/components/channels/RoasComparisonChart";
 import { CampaignTimeline } from "@/components/campaigns/CampaignTimeline";
+
+import { IncrementalRevenueCounter } from "@/components/campaign-analytics/IncrementalRevenueCounter";
+import { PromotionLiftChart } from "@/components/campaign-analytics/PromotionLiftChart";
+import { PromotionCalendar } from "@/components/campaign-analytics/PromotionCalendar";
+import { PromotionCostChart } from "@/components/campaign-analytics/PromotionCostChart";
+import { EfficiencyRatioChart } from "@/components/campaign-analytics/EfficiencyRatioChart";
+import { PromotionTypeChart } from "@/components/campaign-analytics/PromotionTypeChart";
+
 
 const ChannelDetailsPage = () => {
   const [searchParams] = useSearchParams();
@@ -42,7 +50,6 @@ const ChannelDetailsPage = () => {
 
   // Mock campaigns for the filter
   const campaigns = [
-    { id: "all", name: "All Campaigns" },
     { id: "camp1", name: "Summer Sale 2023" },
     { id: "camp2", name: "Holiday Promotion" },
     { id: "camp3", name: "Back to School" },
@@ -424,10 +431,16 @@ const ChannelDetailsPage = () => {
       >
         <TabsList className="w-full md:w-auto bg-white shadow-sm">
           <TabsTrigger value="overview" className="data-[state=active]:shadow-sm">
-            Campaign Overview
+            <LineChart className="w-4 h-4 mr-2" />
+            Overview
           </TabsTrigger>
           <TabsTrigger value="detailed" className="data-[state=active]:shadow-sm">
-            Campaign Detailed
+            <BarChart3 className="w-4 h-4 mr-2" />
+            Detailed Analytics
+          </TabsTrigger>
+          <TabsTrigger value="promotional" className="data-[state=active]:shadow-sm">
+            <Target className="w-4 h-4 mr-2" />
+            Promotional Analytics
           </TabsTrigger>
         </TabsList>
 
@@ -463,9 +476,8 @@ const ChannelDetailsPage = () => {
               )}
             </CardContent>
           </Card>
-
           {/* ROAS vs Cost and Incremental Outcome Chart */}
-          <div className="mb-6">
+          <div className="mb-6 w-full h-[800px]">
             <RoasComparisonChart 
               channelData={generateChannelData("Q2").map(channel => ({
                 ...channel,
@@ -633,7 +645,6 @@ const ChannelDetailsPage = () => {
             )}
           </div>
         </TabsContent>
-        
         {/* Campaign Detailed Tab Content */}
         <TabsContent value="detailed" className="space-y-8 mt-6">
           {/* Campaign Filter Section */}
@@ -677,38 +688,6 @@ const ChannelDetailsPage = () => {
               </CardContent>
             </Card>
 
-            {/* Attribution over time */}
-            <Card className="shadow-sm overflow-hidden border-border/40">
-              <div className="h-1 bg-gradient-to-r from-[#4361ee] to-[#f72585]"></div>
-              <CardHeader>
-                <CardTitle>Campaign Performance Over Time</CardTitle>
-                <CardDescription>
-                  Visualize attributed revenue and conversions across the selected time period
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <PerformanceChart 
-                  data={attributionData} 
-                  lines={[
-                    {
-                      dataKey: "value",
-                      color: "#4361ee",
-                      label: "Attributed Revenue",
-                      yAxisId: "left"
-                    },
-                    {
-                      dataKey: "conversions",
-                      color: "#f72585",
-                      label: "Conversions",
-                      yAxisId: "right"
-                    },
-                  ]}
-                  loading={loading}
-                  height={350}
-                />
-              </CardContent>
-            </Card>
-
             {/* Campaign Breakdown - Only shown when a specific campaign is selected */}
             {selectedCampaign !== "all" && (
               <div className="mt-6">
@@ -719,12 +698,95 @@ const ChannelDetailsPage = () => {
                 />
               </div>
             )}
-            
-            {/* Campaign Timeline - Only shown in Campaign Detailed tab */}
-            <div className="mt-6">
-              <CampaignTimeline loading={loading} />
-            </div>
           </div>
+        </TabsContent>
+
+        {/* Promotional Analytics Tab Content */}
+        <TabsContent value="promotional" className="space-y-8 mt-6">
+          <Card>
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle className="text-xl flex items-center gap-2">
+                    <Target className="h-5 w-5 text-primary" />
+                    Promotion Analytics
+                  </CardTitle>
+                  <CardDescription>
+                    Detailed analysis of promotion performance and impact
+                  </CardDescription>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <Card className="col-span-3 md:col-span-1">
+                  <CardContent className="pt-6">
+                    <IncrementalRevenueCounter />
+                  </CardContent>
+                </Card>
+                <Card className="col-span-3 md:col-span-2">
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-base">Average Promotion Lift Analysis</CardTitle>
+                    <CardDescription>
+                      Baseline vs Actual revenue comparison
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <PromotionLiftChart />
+                  </CardContent>
+                </Card>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle className="text-xl flex items-center gap-2">
+                    <DollarSign className="h-5 w-5 text-primary" />
+                    Cost Analysis
+                  </CardTitle>
+                  <CardDescription>
+                    Detailed breakdown of promotion costs and efficiency
+                  </CardDescription>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="mb-8">
+                <h3 className="text-lg font-medium mb-2 flex items-center gap-2">
+                  <BarChart3 className="h-5 w-5 text-primary" /> Promotion Cost Timeseries
+                </h3>
+                <p className="text-sm text-muted-foreground mb-4">
+                  Area chart with cohort overlays
+                </p>
+                <PromotionCostChart />
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
+                <div>
+                  <h3 className="text-lg font-medium mb-2 flex items-center gap-2">
+                    <DollarSign className="h-5 w-5 text-primary" /> Promotion Efficiency Ratio
+                  </h3>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Revenue per $1 spent histogram
+                  </p>
+                  <EfficiencyRatioChart />
+                </div>
+                
+                <div>
+                  <h3 className="text-lg font-medium mb-2 flex items-center gap-2">
+                    <PercentIcon className="h-5 w-5 text-primary" /> Promotion Type Breakdown
+                  </h3>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Flash Sale vs BOGO vs %-Off comparison
+                  </p>
+                  <PromotionTypeChart />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
         </TabsContent>
       </Tabs>
     </div>
