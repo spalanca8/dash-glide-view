@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -50,13 +49,33 @@ export default function ChannelsPage() {
       const yoyData = generateYearOverYearData();
       const externalFactors = generateExternalFactorsYoYData();
       
+      const fixedRevenueByFactor = yoyData.revenueByFactor.map(item => {
+        if (item.name === "External Factors") {
+          return { ...item, value: -12 }; // Change to negative 12%
+        }
+        if (item.name === "Pricing") {
+          return { ...item, value: -8 }; // Change to negative 8%
+        }
+        return item;
+      });
+      
+      const fixedExternalFactors = externalFactors.map(item => {
+        if (item.name === "Market Conditions") {
+          return { ...item, value: -12 }; // Change to negative 12%
+        }
+        if (item.name === "Competitor Activity") {
+          return { ...item, value: -15 }; // Change to negative 15%
+        }
+        return item;
+      });
+      
       setChannelData(data);
       setTrendsData(trends);
       setYearOverYearData({
-        revenueByFactor: yoyData.revenueByFactor,
+        revenueByFactor: fixedRevenueByFactor,
         revenueByChannel: yoyData.revenueByChannel,
         roasByChannel: yoyData.roasByChannel,
-        externalFactors: externalFactors
+        externalFactors: fixedExternalFactors
       });
       setLoading(false);
     };
