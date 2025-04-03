@@ -28,6 +28,9 @@ type YearOverYearComparisonChartProps = {
   className?: string;
   showInfo?: boolean;
   infoText?: string;
+  insights?: string[];
+  bestPerformer?: string;
+  worstPerformer?: string;
 };
 
 export function YearOverYearComparisonChart({
@@ -39,6 +42,9 @@ export function YearOverYearComparisonChart({
   className,
   showInfo = false,
   infoText,
+  insights = [],
+  bestPerformer,
+  worstPerformer,
 }: YearOverYearComparisonChartProps) {
   if (loading) {
     return <Skeleton className={cn("w-full", className)} style={{ height }} />;
@@ -113,6 +119,31 @@ export function YearOverYearComparisonChart({
           />
         </BarChart>
       </ResponsiveContainer>
+      
+      {(insights?.length > 0 || bestPerformer || worstPerformer) && (
+        <div className="mt-4 p-4 bg-blue-50/50 border border-blue-100 rounded-lg">
+          <h4 className="font-medium text-blue-800 mb-2">Key Insights</h4>
+          {insights?.length > 0 && (
+            <ul className="list-disc pl-5 space-y-1 mb-3">
+              {insights.map((insight, i) => (
+                <li key={i} className="text-sm text-blue-700">{insight}</li>
+              ))}
+            </ul>
+          )}
+          {bestPerformer && (
+            <div className="flex items-center gap-2 text-sm text-green-700 font-medium">
+              <span className="inline-block w-3 h-3 bg-green-500 rounded-full"></span>
+              Best performer: {bestPerformer}
+            </div>
+          )}
+          {worstPerformer && (
+            <div className="flex items-center gap-2 text-sm text-red-700 font-medium mt-1">
+              <span className="inline-block w-3 h-3 bg-red-500 rounded-full"></span>
+              Area of concern: {worstPerformer}
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }
