@@ -85,7 +85,7 @@ export function YearOverYearComparisonChart({
           <XAxis
             type="number"
             tickFormatter={(value) => `${value > 0 ? "+" : ""}${value}%`}
-            domain={["dataMin", "dataMax"]}
+            domain={["auto", "auto"]}  // Use auto domain to properly show negative values
           />
           <YAxis 
             type="category" 
@@ -103,18 +103,16 @@ export function YearOverYearComparisonChart({
             dataKey="value"
             name="YoY Change"
             radius={[4, 4, 4, 4]}
-            fill="#4361ee"
-            fillOpacity={0.8}
             animationDuration={1500}
-            // Fix: Use a proper fill function that returns a string
             isAnimationActive={true}
+            fill={({ value }) => (value >= 0 ? "#4361ee" : "#ef476f")}
             shape={(props) => {
               // Extract the data entry from the props
-              const { x, y, width, height, index, payload } = props;
-              // Use the color from the data entry
-              const fill = payload.color || "#4361ee";
+              const { x, y, width, height, payload } = props;
+              // Use the color from the data entry for consistent coloring
+              const fill = payload.color || (payload.value >= 0 ? "#4361ee" : "#ef476f");
               // Return the bar with the proper fill color
-              return <rect x={x} y={y} width={width} height={height} fill={fill} radius={4} />;
+              return <rect x={x} y={y} width={Math.abs(width)} height={height} fill={fill} rx={4} ry={4} />;
             }}
           />
         </BarChart>

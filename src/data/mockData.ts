@@ -80,30 +80,44 @@ export const channelSaturationData = {
 export const generateYearOverYearData = () => {
   // Percentage change in incremental revenue by factor
   const revenueByFactor = [
-    { name: "Paid Online Media", value: faker.number.int({ min: 15, max: 35 }), color: mediaGroupColors.paid },
-    { name: "Organic Search", value: faker.number.int({ min: 5, max: 25 }), color: mediaGroupColors.organic },
-    { name: "Offline Media", value: faker.number.int({ min: -10, max: 15 }), color: mediaGroupColors.offline },
-    { name: "Branding", value: faker.number.int({ min: 10, max: 30 }), color: mediaGroupColors.branding },
-    { name: "Promotions", value: faker.number.int({ min: -5, max: 20 }), color: mediaGroupColors.promotions },
-    { name: "Pricing", value: faker.number.int({ min: -15, max: 5 }), color: mediaGroupColors.pricing },
-    { name: "Distribution", value: faker.number.int({ min: -20, max: 10 }), color: mediaGroupColors.distribution },
-    { name: "External Factors", value: faker.number.int({ min: -25, max: 5 }), color: mediaGroupColors.external },
-    { name: "Baseline", value: faker.number.int({ min: -5, max: 10 }), color: mediaGroupColors.baseline },
+    { name: "Paid Online Media", value: 24, color: mediaGroupColors.paid },
+    { name: "Organic Search", value: 8, color: mediaGroupColors.organic },
+    { name: "Offline Media", value: -2, color: mediaGroupColors.offline },
+    { name: "Branding", value: 18, color: mediaGroupColors.branding },
+    { name: "Promotions", value: 14, color: mediaGroupColors.promotions },
+    { name: "Pricing", value: -8, color: mediaGroupColors.pricing },
+    { name: "Distribution", value: 5, color: mediaGroupColors.distribution },
+    { name: "External Factors", value: -12, color: mediaGroupColors.external },
+    { name: "Baseline", value: 3, color: mediaGroupColors.baseline },
   ];
 
-  // Percentage change in incremental revenue by channel
-  const revenueByChannel = Object.keys(channelNames).map(channel => ({
-    name: channelNames[channel as keyof typeof channelNames],
-    value: faker.number.int({ min: -30, max: 45 }),
-    color: channelColors[channel as keyof typeof channelColors]
-  }));
+  // Percentage change in incremental revenue by channel - ensuring consistent data with insights
+  const revenueByChannel = [
+    { name: channelNames.google, value: 32, color: channelColors.google },
+    { name: channelNames.facebook, value: 28, color: channelColors.facebook },
+    { name: channelNames.youtube, value: 20, color: channelColors.youtube },
+    { name: channelNames.tiktok, value: 15, color: channelColors.tiktok },
+    { name: channelNames.email, value: 15, color: channelColors.email },
+    { name: channelNames.affiliate, value: 10, color: channelColors.affiliate },
+    { name: channelNames.direct, value: 5, color: channelColors.direct },
+    { name: channelNames.referral, value: 8, color: channelColors.referral },
+    { name: channelNames.organicSearch, value: 12, color: channelColors.organicSearch },
+    { name: channelNames.organicSocial, value: 18, color: channelColors.organicSocial },
+  ];
 
-  // Percentage change in ROAS by channel
-  const roasByChannel = Object.keys(channelNames).map(channel => ({
-    name: channelNames[channel as keyof typeof channelNames],
-    value: faker.number.int({ min: -25, max: 40 }),
-    color: channelColors[channel as keyof typeof channelColors]
-  }));
+  // Percentage change in ROAS by channel - ensuring consistent data with insights
+  const roasByChannel = [
+    { name: channelNames.google, value: 22, color: channelColors.google },
+    { name: channelNames.facebook, value: 18, color: channelColors.facebook },
+    { name: channelNames.youtube, value: 12, color: channelColors.youtube },
+    { name: channelNames.tiktok, value: 8, color: channelColors.tiktok },
+    { name: channelNames.email, value: 25, color: channelColors.email },
+    { name: channelNames.affiliate, value: 14, color: channelColors.affiliate },
+    { name: channelNames.direct, value: 5, color: channelColors.direct },
+    { name: channelNames.referral, value: 10, color: channelColors.referral },
+    { name: channelNames.organicSearch, value: 15, color: channelColors.organicSearch },
+    { name: channelNames.organicSocial, value: 16, color: channelColors.organicSocial },
+  ];
 
   return {
     revenueByFactor,
@@ -115,11 +129,11 @@ export const generateYearOverYearData = () => {
 // Generate external factors YoY data
 export const generateExternalFactorsYoYData = () => {
   return [
-    { name: "Market Conditions", value: faker.number.int({ min: -20, max: 15 }), color: "#D3455B" },
-    { name: "Competitor Activity", value: faker.number.int({ min: -30, max: 10 }), color: "#FB8500" },
-    { name: "Economic Factors", value: faker.number.int({ min: -15, max: 20 }), color: "#0077B6" },
-    { name: "Seasonality", value: faker.number.int({ min: -5, max: 25 }), color: "#8338EC" },
-    { name: "Industry Trends", value: faker.number.int({ min: 5, max: 30 }), color: "#06D6A0" }
+    { name: "Market Conditions", value: -12, color: "#D3455B" },
+    { name: "Competitor Activity", value: -15, color: "#FB8500" },
+    { name: "Economic Factors", value: -5, color: "#0077B6" },
+    { name: "Seasonality", value: 8, color: "#8338EC" },
+    { name: "Industry Trends", value: 16, color: "#06D6A0" }
   ];
 };
 

@@ -239,7 +239,11 @@ export default function ChannelsPage() {
                   <ChannelPerformanceTable data={channelData} loading={loading} />
                 </TabsContent>
                 <TabsContent value="breakdown" className="border-none p-0 pt-4">
-                  <ChannelBreakdownChart data={channelData} loading={loading} />
+                  <ChannelBreakdownChart 
+                    data={channelData} 
+                    loading={loading} 
+                    bars={["revenue", "cost", "roas"]} 
+                  />
                 </TabsContent>
                 <TabsContent value="trends" className="border-none p-0 pt-4">
                   <ChannelTrendsChart data={trendsData} loading={loading} />
