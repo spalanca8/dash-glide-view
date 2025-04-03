@@ -1,10 +1,26 @@
+
 import React, { useState, useEffect } from "react";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { BarChart, PieChart, LineChart as LineChartIcon, Filter, ArrowDown, ArrowUp, Table as TableIcon, Info, Calendar, TrendingUp, Activity, GitCompare, AlertTriangle, Lightbulb } from "lucide-react";
+import { 
+  BarChart, 
+  PieChart, 
+  LineChart as LineChartIcon, 
+  Filter, 
+  ArrowDown, 
+  ArrowUp, 
+  Table as TableIcon, 
+  Info, 
+  Calendar, 
+  TrendingUp, 
+  Activity, 
+  GitCompare, 
+  AlertTriangle, 
+  Lightbulb 
+} from "lucide-react";
 import { ChannelPerformanceTable } from "@/components/channels/ChannelPerformanceTable";
 import { ChannelBreakdownChart } from "@/components/dashboard/ChannelBreakdownChart";
 import { ChannelTrendsChart } from "@/components/channels/ChannelTrendsChart";
@@ -179,6 +195,54 @@ export default function ChannelsPage() {
 
         <TabsContent value="overview" className="space-y-8 mt-8">
           <IncrementalRevenueWaterfallChart data={channelData} loading={loading} />
+          
+          {/* New Key Takeaways Card */}
+          <Card className="border-blue-100 bg-blue-50/40">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-xl flex items-center gap-2 text-blue-800">
+                <Lightbulb className="h-5 w-5 text-yellow-500" /> Key Takeaways
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="space-y-3">
+                  <div className="flex items-center gap-2">
+                    <TrendingUp className="h-5 w-5 text-green-600" />
+                    <h3 className="font-medium text-green-800">Top Performers</h3>
+                  </div>
+                  <ul className="ml-7 list-disc space-y-1 text-sm text-green-700">
+                    <li>Search delivers highest ROAS at 5.2x, leading all channels</li>
+                    <li>Social media shows consistent growth in Q4</li>
+                    <li>Email marketing remains most cost-effective channel</li>
+                  </ul>
+                </div>
+                
+                <div className="space-y-3">
+                  <div className="flex items-center gap-2">
+                    <AlertTriangle className="h-5 w-5 text-amber-600" />
+                    <h3 className="font-medium text-amber-800">Areas of Concern</h3>
+                  </div>
+                  <ul className="ml-7 list-disc space-y-1 text-sm text-amber-700">
+                    <li>Display advertising ROAS falling below 2.0x threshold</li>
+                    <li>Video shows high cost but moderate return</li>
+                    <li>Affiliate network needs optimization</li>
+                  </ul>
+                </div>
+                
+                <div className="space-y-3">
+                  <div className="flex items-center gap-2">
+                    <Info className="h-5 w-5 text-blue-600" />
+                    <h3 className="font-medium text-blue-800">Recommendations</h3>
+                  </div>
+                  <ul className="ml-7 list-disc space-y-1 text-sm text-blue-700">
+                    <li>Reallocate 15% of display budget to search and social</li>
+                    <li>Optimize video creative to improve engagement</li>
+                    <li>Increase email frequency to capitalize on high ROAS</li>
+                  </ul>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
           
           <Card className="shadow-lg">
             <CardHeader className="flex flex-row items-center">

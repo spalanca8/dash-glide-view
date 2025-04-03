@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -8,7 +7,7 @@ import { DemographicChart } from "@/components/campaign-analytics/DemographicCha
 import { AttributionComparison } from "@/components/campaign-analytics/AttributionComparison";
 import { ConversionPathSankey } from "@/components/campaign-analytics/ConversionPathSankey";
 import { TouchpointHeatmap } from "@/components/campaign-analytics/TouchpointHeatmap";
-import { BarChart3, Route, ArrowUp, ArrowDown } from "lucide-react";
+import { BarChart3, Route, ArrowUp, ArrowDown, Lightbulb, AlertTriangle, TrendingUp, Info } from "lucide-react";
 import type { CampaignSubPage } from "@/pages/CampaignAnalytics";
 
 interface CampaignOverviewProps {
@@ -98,6 +97,42 @@ export const CampaignOverview = ({ activeSubPage, dateRange }: CampaignOverviewP
             </CardContent>
           </Card>
 
+          <Card className="mt-6 border-indigo-100 bg-indigo-50/40">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-xl flex items-center gap-2 text-indigo-800">
+                <Lightbulb className="h-5 w-5 text-yellow-500" /> Campaign Insights
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-3">
+                  <div className="flex items-center gap-2">
+                    <TrendingUp className="h-5 w-5 text-green-600" />
+                    <h3 className="font-medium text-green-800">Efficiency Highlights</h3>
+                  </div>
+                  <ul className="ml-7 list-disc space-y-2 text-sm text-green-700">
+                    <li>CPC reduced by 12.4% over past 30 days, showing improved targeting</li>
+                    <li>CPM decreased 8.2% month-over-month, indicating better reach efficiency</li>
+                    <li>"Summer Sale" campaign achieved highest ROI at 4.7x, outperforming benchmarks by 35%</li>
+                  </ul>
+                </div>
+                
+                <div className="space-y-3">
+                  <div className="flex items-center gap-2">
+                    <Info className="h-5 w-5 text-blue-600" />
+                    <h3 className="font-medium text-blue-800">Strategic Recommendations</h3>
+                  </div>
+                  <ul className="ml-7 list-disc space-y-2 text-sm text-blue-700">
+                    <li>Address rising CPV trend (+3.8%) by optimizing video length and engagement elements</li>
+                    <li>Focus on 35-44 age demographic showing highest conversion rates</li>
+                    <li>Replicate success factors from "Summer Sale" campaign for upcoming promotions</li>
+                    <li>Implement multi-touch attribution model to better understand customer journeys</li>
+                  </ul>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
             <Card>
               <CardHeader>
@@ -156,6 +191,43 @@ export const CampaignOverview = ({ activeSubPage, dateRange }: CampaignOverviewP
                   <TouchpointHeatmap />
                 </TabsContent>
               </Tabs>
+            </CardContent>
+          </Card>
+          
+          <Card className="mt-6 border-purple-100 bg-purple-50/40">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-xl flex items-center gap-2 text-purple-800">
+                <Lightbulb className="h-5 w-5 text-yellow-500" /> Journey Insights
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-3">
+                  <div className="flex items-center gap-2">
+                    <TrendingUp className="h-5 w-5 text-green-600" />
+                    <h3 className="font-medium text-green-800">Key Patterns</h3>
+                  </div>
+                  <ul className="ml-7 list-disc space-y-2 text-sm text-green-700">
+                    <li>Social media is most common first touchpoint (42% of journeys)</li>
+                    <li>Email remarketing shows highest conversion rate at touchpoint #3</li>
+                    <li>Average customer journey involves 3.2 touchpoints before conversion</li>
+                    <li>Weekend engagement peaks between 6-9pm showing 23% higher conversion rates</li>
+                  </ul>
+                </div>
+                
+                <div className="space-y-3">
+                  <div className="flex items-center gap-2">
+                    <AlertTriangle className="h-5 w-5 text-amber-600" />
+                    <h3 className="font-medium text-amber-800">Friction Points</h3>
+                  </div>
+                  <ul className="ml-7 list-disc space-y-2 text-sm text-amber-700">
+                    <li>Display to landing page pathway shows 65% drop-off rate</li>
+                    <li>Mobile journey completion rate 17% lower than desktop</li>
+                    <li>Cart abandonment highest when payment is the last touchpoint</li>
+                    <li>Attribution models differ by up to 30% in channel value assessment</li>
+                  </ul>
+                </div>
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
