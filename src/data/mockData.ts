@@ -38,6 +38,20 @@ export const channelColors = {
   video: "#0EA5E9"
 };
 
+// Define media group colors for different categories
+export const mediaGroupColors = {
+  paid: "#4361ee", // Blue
+  organic: "#06d6a0", // Green
+  nonPaid: "#ffd166", // Amber
+  baseline: "#ef476f", // Red
+  offline: "#8338ec", // Purple
+  branding: "#ff9f1c", // Orange
+  promotions: "#ff70a6", // Pink
+  pricing: "#43aa8b", // Teal
+  distribution: "#277da1", // Dark Blue
+  external: "#9e2a2b", // Red-Brown
+};
+
 // Define saturation points and current spending for channel types
 export const channelSaturationData = {
   search: {
@@ -60,6 +74,53 @@ export const channelSaturationData = {
     maxSaturation: 55000,
     color: "#0EA5E9" // Ocean Blue
   }
+};
+
+// Generate year-over-year comparison data
+export const generateYearOverYearData = () => {
+  // Percentage change in incremental revenue by factor
+  const revenueByFactor = [
+    { name: "Paid Online Media", value: faker.number.int({ min: 15, max: 35 }), color: mediaGroupColors.paid },
+    { name: "Organic Search", value: faker.number.int({ min: 5, max: 25 }), color: mediaGroupColors.organic },
+    { name: "Offline Media", value: faker.number.int({ min: -10, max: 15 }), color: mediaGroupColors.offline },
+    { name: "Branding", value: faker.number.int({ min: 10, max: 30 }), color: mediaGroupColors.branding },
+    { name: "Promotions", value: faker.number.int({ min: -5, max: 20 }), color: mediaGroupColors.promotions },
+    { name: "Pricing", value: faker.number.int({ min: -15, max: 5 }), color: mediaGroupColors.pricing },
+    { name: "Distribution", value: faker.number.int({ min: -20, max: 10 }), color: mediaGroupColors.distribution },
+    { name: "External Factors", value: faker.number.int({ min: -25, max: 5 }), color: mediaGroupColors.external },
+    { name: "Baseline", value: faker.number.int({ min: -5, max: 10 }), color: mediaGroupColors.baseline },
+  ];
+
+  // Percentage change in incremental revenue by channel
+  const revenueByChannel = Object.keys(channelNames).map(channel => ({
+    name: channelNames[channel as keyof typeof channelNames],
+    value: faker.number.int({ min: -30, max: 45 }),
+    color: channelColors[channel as keyof typeof channelColors]
+  }));
+
+  // Percentage change in ROAS by channel
+  const roasByChannel = Object.keys(channelNames).map(channel => ({
+    name: channelNames[channel as keyof typeof channelNames],
+    value: faker.number.int({ min: -25, max: 40 }),
+    color: channelColors[channel as keyof typeof channelColors]
+  }));
+
+  return {
+    revenueByFactor,
+    revenueByChannel,
+    roasByChannel
+  };
+};
+
+// Generate external factors YoY data
+export const generateExternalFactorsYoYData = () => {
+  return [
+    { name: "Market Conditions", value: faker.number.int({ min: -20, max: 15 }), color: "#D3455B" },
+    { name: "Competitor Activity", value: faker.number.int({ min: -30, max: 10 }), color: "#FB8500" },
+    { name: "Economic Factors", value: faker.number.int({ min: -15, max: 20 }), color: "#0077B6" },
+    { name: "Seasonality", value: faker.number.int({ min: -5, max: 25 }), color: "#8338EC" },
+    { name: "Industry Trends", value: faker.number.int({ min: 5, max: 30 }), color: "#06D6A0" }
+  ];
 };
 
 // Function to generate random incremental data for each channel

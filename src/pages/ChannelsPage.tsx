@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -7,24 +6,36 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Button } from "@/components/ui/button";
 import { BarChart, PieChart, LineChart as LineChartIcon, Filter, ArrowDown, ArrowUp, Table as TableIcon, Info, Calendar, TrendingUp, Activity, GitCompare } from "lucide-react";
 import { ChannelPerformanceTable } from "@/components/channels/ChannelPerformanceTable";
-import { ChannelBreakdownChart } from "@/components/channels/ChannelBreakdownChart";
+import { ChannelBreakdownChart } from "@/components/dashboard/ChannelBreakdownChart";
 import { ChannelTrendsChart } from "@/components/channels/ChannelTrendsChart";
 import { ChannelComparisonChart } from "@/components/channels/ChannelComparisonChart";
 import { ChannelMetricsOverview } from "@/components/channels/ChannelMetricsOverview";
-import { generateChannelData, generateChannelTrendsData, channelColors, channelNames } from "@/data/mockData";
+import { generateChannelData, generateChannelTrendsData, channelColors, channelNames, generateYearOverYearData, generateExternalFactorsYoYData, mediaGroupColors } from "@/data/mockData";
 import { FilterExportControls } from "@/components/channels/FilterExportControls";
 import { ChannelDetailView } from "@/components/channels/ChannelDetailView";
 import { RoasComparisonChart } from "@/components/channels/RoasComparisonChart";
 import { IncrementalRevenueWaterfallChart } from "@/components/channels/IncrementalRevenueWaterfallChart";
+import { YearOverYearComparisonChart } from "@/components/channels/YearOverYearComparisonChart";
 
 export default function ChannelsPage() {
-  const [mainTab, setMainTab] = useState("analysis");
+  const [mainTab, setMainTab] = useState("overview");
   const [activeTab, setActiveTab] = useState("performance");
   const [channelData, setChannelData] = useState<any[]>([]);
   const [trendsData, setTrendsData] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [timeframe, setTimeframe] = useState("Q4");
   const [selectedChannel, setSelectedChannel] = useState<string | null>(Object.keys(channelNames)[0]); // Default to first channel
+  const [yearOverYearData, setYearOverYearData] = useState<{
+    revenueByFactor: any[];
+    revenueByChannel: any[];
+    roasByChannel: any[];
+    externalFactors: any[];
+  }>({
+    revenueByFactor: [],
+    revenueByChannel: [],
+    roasByChannel: [],
+    externalFactors: []
+  });
 
   useEffect(() => {
     const loadData = async () => {
@@ -36,8 +47,18 @@ export default function ChannelsPage() {
       const data = generateChannelData(timeframe);
       const trends = generateChannelTrendsData();
       
+      // Generate Year-over-Year comparison data
+      const yoyData = generateYearOverYearData();
+      const externalFactors = generateExternalFactorsYoYData();
+      
       setChannelData(data);
       setTrendsData(trends);
+      setYearOverYearData({
+        revenueByFactor: yoyData.revenueByFactor,
+        revenueByChannel: yoyData.revenueByChannel,
+        roasByChannel: yoyData.roasByChannel,
+        externalFactors: externalFactors
+      });
       setLoading(false);
     };
 
@@ -258,6 +279,88 @@ export default function ChannelsPage() {
                   Select a channel above to view detailed performance data
                 </div>
               )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+        
+        {/* Year-over-Year Tab Content */}
+        <TabsContent value="yoy" className="space-y-6 mt-6">
+          <Card className="shadow-lg">
+            <CardHeader>
+              <div className="flex flex-row items-center justify-between">
+                <div>
+                  <CardTitle className="flex items-center gap-2">
+                    <Calendar className="h-5 w-5" /> 
+                    Year-over-Year Performance
+                  </CardTitle>
+                  <CardDescription>
+                    Compare this period's performance to the same period last year
+                  </CardDescription>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="mb-6 p-4 bg-muted/30 rounded-lg">
+                <div className="flex items-start gap-2">
+                  <Info className="h-5 w-5 text-primary mt-0.5" />
+                  <div>
+                    <h3 className="text-sm font-medium mb-1">About Year-over-Year Analysis</h3>
+                    <p className="text-sm text-muted-foreground">
+                      This analysis compares current period metrics with the same period from last year,
+                      showing percentage changes across different dimensions. Use these insights to identify
+                      trends, improvements, and areas needing attention in your marketing strategy.
+                    </p>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="grid grid-cols-1 gap-8">
+                <div>
+                  <YearOverYearComparisonChart
+                    title="Percentage Change in Incremental Revenue by Factor"
+                    description="How incremental revenue has changed since last year across different business factors"
+                    data={yearOverYearData.revenueByFactor}
+                    loading={loading}
+                    height={400}
+                    showInfo={true}
+                    infoText="This chart shows how incremental revenue contributions have changed year-over-year across major business categories. Positive values indicate growth, while negative values show decline."
+                  />
+                </div>
+                
+                <div>
+                  <YearOverYearComparisonChart
+                    title="Percentage Change in Incremental Revenue by Media Channel"
+                    description="How each channel's contribution to incremental revenue has changed since last year"
+                    data={yearOverYearData.revenueByChannel}
+                    loading={loading}
+                    height={400}
+                  />
+                </div>
+                
+                <div>
+                  <YearOverYearComparisonChart
+                    title="Percentage Change in ROAS by Media Channel"
+                    description="How return on ad spend has evolved since last year for each channel"
+                    data={yearOverYearData.roasByChannel}
+                    loading={loading}
+                    height={400}
+                    showInfo={true}
+                    infoText="Return on Ad Spend (ROAS) changes show how efficiently your marketing spend is converting to revenue compared to the same period last year."
+                  />
+                </div>
+                
+                <div>
+                  <YearOverYearComparisonChart
+                    title="Percentage Change in Incremental Revenue from External Factors"
+                    description="Breakdown of how external factors have influenced incremental revenue year-over-year"
+                    data={yearOverYearData.externalFactors}
+                    loading={loading}
+                    height={350}
+                    showInfo={true}
+                    infoText="External factors include market conditions, competitive landscape, seasonality, economic indicators, and other elements outside direct marketing control."
+                  />
+                </div>
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
