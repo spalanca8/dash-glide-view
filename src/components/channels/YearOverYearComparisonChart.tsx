@@ -97,8 +97,19 @@ export function YearOverYearComparisonChart({
             dataKey="value"
             name="YoY Change"
             radius={[4, 4, 4, 4]}
-            fill={(entry) => entry.color}
+            fill="#4361ee"
+            fillOpacity={0.8}
             animationDuration={1500}
+            // Fix: Use a proper fill function that returns a string
+            isAnimationActive={true}
+            shape={(props) => {
+              // Extract the data entry from the props
+              const { x, y, width, height, index, payload } = props;
+              // Use the color from the data entry
+              const fill = payload.color || "#4361ee";
+              // Return the bar with the proper fill color
+              return <rect x={x} y={y} width={width} height={height} fill={fill} radius={4} />;
+            }}
           />
         </BarChart>
       </ResponsiveContainer>
