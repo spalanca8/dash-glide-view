@@ -77,7 +77,7 @@ export function YearOverYearComparisonChart({
           margin={{
             top: 20,
             right: 30,
-            left: 100,
+            left: 150, // Increased from 100 to 150 to accommodate longer campaign names
             bottom: 20,
           }}
         >
@@ -90,7 +90,7 @@ export function YearOverYearComparisonChart({
           <YAxis 
             type="category" 
             dataKey="name" 
-            width={100}
+            width={140} // Increased from 100 to 140 to give more space for campaign names
             tick={{ fontSize: 12 }}
           />
           <Tooltip 
