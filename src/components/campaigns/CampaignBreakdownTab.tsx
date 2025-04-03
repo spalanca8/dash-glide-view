@@ -17,7 +17,14 @@ import {
   Globe,
   Image,
   Video,
-  MessageSquare
+  MessageSquare,
+  Music,
+  Gift,
+  ShoppingBag,
+  ChevronRight,
+  Sparkles,
+  PieChart,
+  Share2
 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { FilterExportControls } from "@/components/channels/FilterExportControls";
@@ -76,13 +83,224 @@ export const CampaignBreakdownTab: React.FC<CampaignBreakdownTabProps> = ({
     };
   });
 
-  // Define more descriptive creative examples with appropriate icons
-  const creativeTypesIcons = {
-    "video": <Video className="h-4 w-4 text-primary" />,
-    "image": <Image className="h-4 w-4 text-primary" />,
-    "carousel": <BarChart4 className="h-4 w-4 text-primary" />,
-    "message": <MessageSquare className="h-4 w-4 text-primary" />
+  // Define creative types based on campaign ID
+  // Different creative types for each campaign
+  const getCreativesForCampaign = (campaignId: string) => {
+    switch (campaignId) {
+      case "camp1": // Summer Sale 2023
+        return {
+          creativeTypesIcons: {
+            "video": <Video className="h-4 w-4 text-primary" />,
+            "image": <Image className="h-4 w-4 text-primary" />,
+            "carousel": <BarChart4 className="h-4 w-4 text-primary" />
+          },
+          creatives: [
+            {
+              type: "video",
+              name: "Summer Lifestyle Video",
+              performance: 92,
+              impressions: 348259,
+              clicks: 14732,
+              ctr: 4.2
+            },
+            {
+              type: "image",
+              name: "Beach Collection Banner",
+              performance: 87,
+              impressions: 286427,
+              clicks: 11457,
+              ctr: 4.0
+            },
+            {
+              type: "carousel",
+              name: "Swimwear Collection Carousel",
+              performance: 76,
+              impressions: 192845,
+              clicks: 6750,
+              ctr: 3.5
+            }
+          ]
+        };
+        
+      case "camp2": // Holiday Promotion
+        return {
+          creativeTypesIcons: {
+            "image": <Image className="h-4 w-4 text-primary" />,
+            "gift": <Gift className="h-4 w-4 text-primary" />,
+            "message": <MessageSquare className="h-4 w-4 text-primary" />
+          },
+          creatives: [
+            {
+              type: "gift",
+              name: "Gift Guide Interactive Feature",
+              performance: 95,
+              impressions: 392158,
+              clicks: 18912,
+              ctr: 4.8
+            },
+            {
+              type: "image",
+              name: "Holiday Family Portrait",
+              performance: 89,
+              impressions: 274235,
+              clicks: 12615,
+              ctr: 4.6
+            },
+            {
+              type: "message",
+              name: "Season's Greetings Message",
+              performance: 82,
+              impressions: 186452,
+              clicks: 7832,
+              ctr: 4.2
+            }
+          ]
+        };
+        
+      case "camp3": // Back to School
+        return {
+          creativeTypesIcons: {
+            "shopping": <ShoppingBag className="h-4 w-4 text-primary" />,
+            "video": <Video className="h-4 w-4 text-primary" />,
+            "carousel": <ChevronRight className="h-4 w-4 text-primary" />
+          },
+          creatives: [
+            {
+              type: "shopping",
+              name: "Student Essentials Bundle",
+              performance: 91,
+              impressions: 325640,
+              clicks: 15942,
+              ctr: 4.9
+            },
+            {
+              type: "video",
+              name: "Dorm Room Makeover Video",
+              performance: 84,
+              impressions: 246580,
+              clicks: 10108,
+              ctr: 4.1
+            },
+            {
+              type: "carousel",
+              name: "School Supplies Guide",
+              performance: 79,
+              impressions: 187420,
+              clicks: 7121,
+              ctr: 3.8
+            }
+          ]
+        };
+        
+      case "camp4": // Spring Collection
+        return {
+          creativeTypesIcons: {
+            "sparkles": <Sparkles className="h-4 w-4 text-primary" />,
+            "image": <Image className="h-4 w-4 text-primary" />,
+            "pie": <PieChart className="h-4 w-4 text-primary" />
+          },
+          creatives: [
+            {
+              type: "sparkles",
+              name: "New Arrivals Showcase",
+              performance: 94,
+              impressions: 368750,
+              clicks: 17532,
+              ctr: 4.8
+            },
+            {
+              type: "image",
+              name: "Spring Lookbook Gallery",
+              performance: 86,
+              impressions: 264920,
+              clicks: 11394,
+              ctr: 4.3
+            },
+            {
+              type: "pie",
+              name: "Color Trends Infographic",
+              performance: 80,
+              impressions: 198640,
+              clicks: 7648,
+              ctr: 3.9
+            }
+          ]
+        };
+        
+      case "camp5": // Black Friday
+        return {
+          creativeTypesIcons: {
+            "shopping": <ShoppingBag className="h-4 w-4 text-primary" />,
+            "music": <Music className="h-4 w-4 text-primary" />,
+            "share": <Share2 className="h-4 w-4 text-primary" />
+          },
+          creatives: [
+            {
+              type: "shopping",
+              name: "Doorbusters Countdown Timer",
+              performance: 97,
+              impressions: 452180,
+              clicks: 24868,
+              ctr: 5.5
+            },
+            {
+              type: "music",
+              name: "Shopping Playlist Interactive Ad",
+              performance: 91,
+              impressions: 312460,
+              clicks: 15935,
+              ctr: 5.1
+            },
+            {
+              type: "share",
+              name: "Flash Sale Social Share Card",
+              performance: 85,
+              impressions: 224980,
+              clicks: 10349,
+              ctr: 4.6
+            }
+          ]
+        };
+        
+      default:
+        return {
+          creativeTypesIcons: {
+            "video": <Video className="h-4 w-4 text-primary" />,
+            "image": <Image className="h-4 w-4 text-primary" />,
+            "message": <MessageSquare className="h-4 w-4 text-primary" />
+          },
+          creatives: [
+            {
+              type: "video",
+              name: "Product Demo Video",
+              performance: 92,
+              impressions: 348259,
+              clicks: 14732,
+              ctr: 4.2
+            },
+            {
+              type: "image",
+              name: "Lifestyle Banner Image",
+              performance: 87,
+              impressions: 286427,
+              clicks: 11457,
+              ctr: 4.0
+            },
+            {
+              type: "message",
+              name: "Customer Testimonials",
+              performance: 76,
+              impressions: 192845,
+              clicks: 6750,
+              ctr: 3.5
+            }
+          ]
+        };
+    }
   };
+  
+  // Get creatives based on the current campaign
+  const { creativeTypesIcons, creatives } = getCreativesForCampaign(campaign.id);
 
   return (
     <div className="space-y-6">
@@ -165,7 +383,7 @@ export const CampaignBreakdownTab: React.FC<CampaignBreakdownTabProps> = ({
         loading={loading}
       />
       
-      {/* Creative performance with improved naming and details */}
+      {/* Creative performance with campaign-specific creatives */}
       <Card>
         <CardHeader>
           <CardTitle>Top Performing Creatives</CardTitle>
@@ -173,104 +391,40 @@ export const CampaignBreakdownTab: React.FC<CampaignBreakdownTabProps> = ({
         </CardHeader>
         <CardContent>
           <div className="space-y-6">
-            <div className="space-y-2">
-              <div className="flex justify-between">
-                <div className="flex items-center gap-2">
-                  {creativeTypesIcons.video}
-                  <span className="font-medium">Product Demo Video</span>
+            {creatives.map((creative: any, index: number) => (
+              <div key={index} className="space-y-2">
+                <div className="flex justify-between">
+                  <div className="flex items-center gap-2">
+                    {creativeTypesIcons[creative.type]}
+                    <span className="font-medium">{creative.name}</span>
+                  </div>
+                  <span className="text-sm">Performance Score: {creative.performance}/100</span>
                 </div>
-                <span className="text-sm">Performance Score: 92/100</span>
-              </div>
-              <div className="grid grid-cols-3 gap-4 text-sm">
-                <div className="flex gap-2 items-center">
-                  <BarChart4 className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-muted-foreground">Impressions:</span>
-                  <span className="font-medium">348,259</span>
+                <div className="grid grid-cols-3 gap-4 text-sm">
+                  <div className="flex gap-2 items-center">
+                    <BarChart4 className="h-4 w-4 text-muted-foreground" />
+                    <span className="text-muted-foreground">Impressions:</span>
+                    <span className="font-medium">{creative.impressions.toLocaleString()}</span>
+                  </div>
+                  <div className="flex gap-2 items-center">
+                    <Users className="h-4 w-4 text-muted-foreground" />
+                    <span className="text-muted-foreground">Clicks:</span>
+                    <span className="font-medium">{creative.clicks.toLocaleString()}</span>
+                  </div>
+                  <div className="flex gap-2 items-center">
+                    <Percent className="h-4 w-4 text-muted-foreground" />
+                    <span className="text-muted-foreground">CTR:</span>
+                    <span className="font-medium">{creative.ctr}%</span>
+                  </div>
                 </div>
-                <div className="flex gap-2 items-center">
-                  <Users className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-muted-foreground">Clicks:</span>
-                  <span className="font-medium">14,732</span>
-                </div>
-                <div className="flex gap-2 items-center">
-                  <Percent className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-muted-foreground">CTR:</span>
-                  <span className="font-medium">4.2%</span>
-                </div>
-              </div>
-              <div className="w-full bg-gray-200 rounded-full h-2.5">
-                <div
-                  className="h-2.5 rounded-full bg-primary"
-                  style={{ width: "92%" }}
-                ></div>
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <div className="flex justify-between">
-                <div className="flex items-center gap-2">
-                  {creativeTypesIcons.carousel}
-                  <span className="font-medium">Customer Testimonial Carousel</span>
-                </div>
-                <span className="text-sm">Performance Score: 87/100</span>
-              </div>
-              <div className="grid grid-cols-3 gap-4 text-sm">
-                <div className="flex gap-2 items-center">
-                  <BarChart4 className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-muted-foreground">Impressions:</span>
-                  <span className="font-medium">286,427</span>
-                </div>
-                <div className="flex gap-2 items-center">
-                  <Users className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-muted-foreground">Clicks:</span>
-                  <span className="font-medium">11,457</span>
-                </div>
-                <div className="flex gap-2 items-center">
-                  <Percent className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-muted-foreground">CTR:</span>
-                  <span className="font-medium">4.0%</span>
+                <div className="w-full bg-gray-200 rounded-full h-2.5">
+                  <div
+                    className="h-2.5 rounded-full bg-primary"
+                    style={{ width: `${creative.performance}%` }}
+                  ></div>
                 </div>
               </div>
-              <div className="w-full bg-gray-200 rounded-full h-2.5">
-                <div
-                  className="h-2.5 rounded-full bg-primary"
-                  style={{ width: "87%" }}
-                ></div>
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <div className="flex justify-between">
-                <div className="flex items-center gap-2">
-                  {creativeTypesIcons.image}
-                  <span className="font-medium">Limited-Time Offer Banner</span>
-                </div>
-                <span className="text-sm">Performance Score: 76/100</span>
-              </div>
-              <div className="grid grid-cols-3 gap-4 text-sm">
-                <div className="flex gap-2 items-center">
-                  <BarChart4 className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-muted-foreground">Impressions:</span>
-                  <span className="font-medium">192,845</span>
-                </div>
-                <div className="flex gap-2 items-center">
-                  <Users className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-muted-foreground">Clicks:</span>
-                  <span className="font-medium">6,750</span>
-                </div>
-                <div className="flex gap-2 items-center">
-                  <Percent className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-muted-foreground">CTR:</span>
-                  <span className="font-medium">3.5%</span>
-                </div>
-              </div>
-              <div className="w-full bg-gray-200 rounded-full h-2.5">
-                <div
-                  className="h-2.5 rounded-full bg-primary"
-                  style={{ width: "76%" }}
-                ></div>
-              </div>
-            </div>
+            ))}
           </div>
         </CardContent>
       </Card>
