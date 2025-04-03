@@ -109,10 +109,24 @@ export function YearOverYearComparisonChart({
             shape={(props) => {
               // Extract the data entry from the props
               const { x, y, width, height, payload } = props;
+              
+              // Determine the actual x position and width for negative values
+              let barX = x;
+              let barWidth = width;
+              
+              // For negative values, need to adjust the x position
+              if (payload.value < 0) {
+                // Calculate width based on absolute value
+                barWidth = Math.abs(width);
+                // For negative values in horizontal layout, bar starts at a different x
+                barX = x - barWidth;
+              }
+              
               // Use the color from the data entry for consistent coloring
               const fill = payload.color || (payload.value >= 0 ? "#4361ee" : "#ef476f");
+              
               // Return the bar with the proper fill color
-              return <rect x={x} y={y} width={Math.abs(width)} height={height} fill={fill} rx={4} ry={4} />;
+              return <rect x={barX} y={y} width={barWidth} height={height} fill={fill} rx={4} ry={4} />;
             }}
           />
         </BarChart>
