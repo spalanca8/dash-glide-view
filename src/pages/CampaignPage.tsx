@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { useSearchParams, useLocation } from "react-router-dom";
 import { PageHeader } from "@/components/layout/PageHeader";
@@ -21,6 +20,7 @@ import { Cpu, Database, BarChart4, Info } from "lucide-react";
 import { ChannelJourneyComparison } from "@/components/campaigns/ChannelJourneyComparison";
 import { KeyMetricsGrid } from "@/components/dashboard/KeyMetricsGrid";
 import { RoasComparisonChart } from "@/components/channels/RoasComparisonChart";
+import { CostRevenueComparisonChart } from "@/components/channels/CostRevenueComparisonChart";
 import { CampaignTimeline } from "@/components/campaigns/CampaignTimeline";
 
 import { IncrementalRevenueCounter } from "@/components/campaign-analytics/IncrementalRevenueCounter";
@@ -29,7 +29,6 @@ import { PromotionCalendar } from "@/components/campaign-analytics/PromotionCale
 import { PromotionCostChart } from "@/components/campaign-analytics/PromotionCostChart";
 import { EfficiencyRatioChart } from "@/components/campaign-analytics/EfficiencyRatioChart";
 import { PromotionTypeChart } from "@/components/campaign-analytics/PromotionTypeChart";
-
 
 const ChannelDetailsPage = () => {
   const [searchParams] = useSearchParams();
@@ -48,7 +47,6 @@ const ChannelDetailsPage = () => {
   const [journeyData, setJourneyData] = useState<any | null>(null);
   const [mainTab, setMainTab] = useState("overview"); // For main tab navigation
 
-  // Mock campaigns for the filter
   const campaigns = [
     { id: "camp1", name: "Summer Sale 2023" },
     { id: "camp2", name: "Holiday Promotion" },
@@ -57,18 +55,19 @@ const ChannelDetailsPage = () => {
     { id: "camp5", name: "Black Friday" },
   ];
 
-  // Generate mock campaign metrics data
   const generateCampaignMetricsData = () => {
     return campaigns.map(campaign => {
       const revenue = Math.round(50000 + Math.random() * 300000);
       const cost = Math.round(20000 + Math.random() * 100000);
       const conversionRate = parseFloat((1 + Math.random() * 8).toFixed(2));
+      const incremental = revenue - cost;
       
       return {
         id: campaign.id,
         name: campaign.name,
         revenue: revenue,
         cost: cost,
+        incremental: incremental,
         roas: parseFloat((revenue / cost).toFixed(2)),
         conversionRate: conversionRate
       };
@@ -78,15 +77,12 @@ const ChannelDetailsPage = () => {
   const [campaignMetricsData, setCampaignMetricsData] = useState<any[]>([]);
 
   useEffect(() => {
-    // Simulate data loading
     const loadChannelData = async () => {
       setLoading(true);
-      // Simulate API call delay
       await new Promise((resolve) => setTimeout(resolve, 800));
 
       const channelsData = generateChannelData(timeframe === "7d" ? "Q1" : timeframe === "30d" ? "Q2" : "Q3");
       
-      // Add incremental outcomes for each channel (a derived metric based on revenue minus cost)
       const enhancedChannelsData = channelsData.map(channel => ({
         ...channel,
         incremental: Math.round(channel.revenue - channel.cost)
@@ -97,12 +93,10 @@ const ChannelDetailsPage = () => {
       const days = timeframe === "7d" ? 7 : timeframe === "30d" ? 30 : 90;
       const allPerformance = generatePerformanceData(days);
       
-      // Extract just this channel's data for the performance chart
       const channelPerformance = allPerformance.map(day => ({
         name: day.name,
         date: day.date,
         revenue: day[channelId] || 0,
-        // Add some made up metrics for the channel details
         clicks: Math.round((day[channelId] || 0) / (5 + Math.random() * 15)),
         impressions: Math.round((day[channelId] || 0) / (1 + Math.random() * 3) * 100),
         ctr: parseFloat((Math.random() * 5).toFixed(2)),
@@ -111,10 +105,8 @@ const ChannelDetailsPage = () => {
       setChannelData(channel);
       setPerformanceData(channelPerformance);
       
-      // Generate attribution data
       const attributionChannels = ["Paid Search", "Organic Search", "Social Media", "Display", "Email", "Direct"];
       
-      // Generate date range based on timeframe
       const attributionData = Array.from({ length: days }).map((_, i) => {
         const date = new Date();
         date.setDate(date.getDate() - (days - i - 1));
@@ -126,9 +118,7 @@ const ChannelDetailsPage = () => {
         };
       });
       
-      // Generate channel contribution data for data-driven attribution
       const channelContribution = attributionChannels.map(channelName => {
-        // Data-driven attribution gives more nuanced distribution based on model output
         const contributionValue = parseFloat((8 + Math.random() * 25).toFixed(1));
         
         return {
@@ -138,19 +128,16 @@ const ChannelDetailsPage = () => {
         };
       });
       
-      // Normalize contributions to sum to 100%
       const totalContribution = channelContribution.reduce((sum, item) => sum + item.contribution, 0);
       channelContribution.forEach(item => {
         item.contribution = parseFloat(((item.contribution / totalContribution) * 100).toFixed(1));
       });
       
-      // Sort by contribution value (descending)
       channelContribution.sort((a, b) => b.contribution - a.contribution);
       
       setAttributionData(attributionData);
       setChannelContribution(channelContribution);
       
-      // Generate campaign-specific data if a campaign is selected
       if (selectedCampaign !== "all") {
         const campaign = campaigns.find(c => c.id === selectedCampaign);
         const campaignPerformance = {
@@ -194,10 +181,9 @@ const ChannelDetailsPage = () => {
             const clicks = Math.round(300 + Math.random() * 1500);
             const cost = Math.round(300 + Math.random() * 1500);
             
-            // Calculate derived cost metrics
-            const cpc = cost / Math.max(clicks, 1); // Cost per click
-            const cpm = (cost / Math.max(impressions, 1)) * 1000; // Cost per mille (1000 impressions)
-            const cpv = cost / Math.max(impressions * 0.4, 1); // Cost per view (assuming 40% view rate)
+            const cpc = cost / Math.max(clicks, 1);
+            const cpm = (cost / Math.max(impressions, 1)) * 1000;
+            const cpv = cost / Math.max(impressions * 0.4, 1);
             
             return {
               date: date.toISOString().split('T')[0],
@@ -226,11 +212,9 @@ const ChannelDetailsPage = () => {
         setCampaignData(null);
       }
       
-      // Generate campaign metrics data
       const campaignMetrics = generateCampaignMetricsData();
       setCampaignMetricsData(campaignMetrics);
       
-      // Generate journey analysis data
       const journeyChannels = [
         {
           id: "search",
@@ -338,7 +322,6 @@ const ChannelDetailsPage = () => {
     loadChannelData();
   }, [channelId, timeframe, selectedCampaign]);
   
-  // Calculate totals for attribution metrics
   const totalRevenue = !loading && attributionData.length
     ? attributionData.reduce((sum, day) => sum + day.value, 0)
     : 0;
@@ -351,9 +334,8 @@ const ChannelDetailsPage = () => {
     ? totalRevenue / totalConversions
     : 0;
   
-  const conversionRate = 5.2; // Dummy value
+  const conversionRate = 5.2;
 
-  // Helper function to get channel colors
   const getChannelColor = (channel: string) => {
     const colors: Record<string, string> = {
       "Paid Search": "#4361ee",
@@ -367,11 +349,9 @@ const ChannelDetailsPage = () => {
     return colors[channel] || "#888888";
   };
   
-  // Calculate channel metrics for current data
   const channelName = channelNames[channelId as keyof typeof channelNames] || "Channel";
   const channelColor = channelColors[channelId as keyof typeof channelColors] || "#4361ee";
 
-  // Handle campaign change
   const handleCampaignChange = (campaignId: string) => {
     setSelectedCampaign(campaignId);
     setLoading(true);
@@ -397,7 +377,6 @@ const ChannelDetailsPage = () => {
         </Tabs>
       </PageHeader>
 
-      {/* Key metrics section - Removed the Card wrapper */}
       <div className="mb-6">
         {loading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -422,7 +401,6 @@ const ChannelDetailsPage = () => {
         )}
       </div>
 
-      {/* Main Tabs for Campaign Overview and Campaign Detailed */}
       <Tabs 
         defaultValue="overview" 
         value={mainTab} 
@@ -444,9 +422,7 @@ const ChannelDetailsPage = () => {
           </TabsTrigger>
         </TabsList>
 
-        {/* Campaign Overview Tab Content */}
         <TabsContent value="overview" className="space-y-8 mt-6">
-          {/* Campaign Overview Section - Key Metrics */}
           <Card className="mb-6 overflow-hidden border-border/40 shadow-sm">
             <div className="h-1 bg-gradient-to-r from-primary/80 to-primary/40"></div>
             <CardHeader className="pb-3">
@@ -476,18 +452,35 @@ const ChannelDetailsPage = () => {
               )}
             </CardContent>
           </Card>
-          {/* ROAS vs Cost and Incremental Outcome Chart */}
-          <div className="mb-6 w-full h-[800px]">
-            <RoasComparisonChart 
-              channelData={generateChannelData("Q2").map(channel => ({
-                ...channel,
-                incremental: Math.round(channel.revenue - channel.cost)
-              }))} 
-              loading={loading} 
-            />
-          </div>
           
-          {/* Data-Driven Attribution Section */}
+          <Card className="mb-6 overflow-hidden border-border/40 shadow-sm">
+            <div className="h-1 bg-gradient-to-r from-primary/80 to-primary/40"></div>
+            <CardHeader>
+              <CardTitle>Campaign Insights</CardTitle>
+              <CardDescription>Performance metrics by campaign</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-6">
+                <div className="mb-6">
+                  <CostRevenueComparisonChart 
+                    channelData={campaignMetricsData} 
+                    loading={loading}
+                    title="Cost and Incremental Revenue by Campaign"
+                    description="Comparing marketing spend versus incremental outcomes across campaigns"
+                  />
+                </div>
+                <div className="mb-6">
+                  <RoasComparisonChart 
+                    channelData={campaignMetricsData} 
+                    loading={loading}
+                    title="Return on Ad Spend (ROAS) by Campaign"
+                    description="Comparing efficiency of marketing spend across campaigns"
+                  />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+          
           <Card className="mb-6 overflow-hidden shadow-sm border-border/40">
             <div className="h-1 bg-gradient-to-r from-[#4361ee] to-[#7209b7]"></div>
             <CardHeader>
@@ -575,14 +568,9 @@ const ChannelDetailsPage = () => {
                   </ul>
                 </div>
               </div>
-              {/* Key metrics */}
-
-              {/* Attribution chart */}
-
             </CardContent>
           </Card>
 
-          {/* Overview Section - Journey Analysis */}
           <div className="space-y-6 mb-6">
             {journeyData && (
               <ChannelJourneyComparison 
@@ -592,61 +580,55 @@ const ChannelDetailsPage = () => {
             )}
           </div>
         </TabsContent>
-        {/* Campaign Detailed Tab Content */}
-        <TabsContent value="detailed" className="space-y-8 mt-6">
-          {/* Campaign Filter Section */}
-          <div className="space-y-8">
-            {/* Campaign Selector */}
-            <Card className="shadow-sm overflow-hidden border-border/40">
-              <div className="h-1 bg-gradient-to-r from-[#f72585] to-[#4361ee]"></div>
-              <CardHeader className="pb-3">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <div className="p-1.5 rounded-md bg-primary/10">
-                      <Filter className="h-5 w-5 text-primary" />
-                    </div>
-                    <CardTitle>Campaign Filter</CardTitle>
-                  </div>
-                  <FilterExportControls 
-                    filterOptions={{ 
-                      channels: false,
-                      metrics: true
-                    }}
-                  />
-                </div>
-                <CardDescription>Select a specific campaign to view detailed analytics</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <Select
-                  value={selectedCampaign || campaigns[0]?.id}
-                  onValueChange={handleCampaignChange}
-                >
-                  <SelectTrigger className="w-full md:w-[320px] border-border/60">
-                    <SelectValue placeholder={campaigns[0]?.name || "Select campaign"} />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {campaigns.map((campaign) => (
-                      <SelectItem key={campaign.id} value={campaign.id}>
-                        {campaign.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </CardContent>
-            </Card>
 
-            {/* Campaign Breakdown - Show first campaign by default */}
-            <div className="mt-6">
-              <CampaignBreakdownTab 
-                campaignData={campaignData} 
-                loading={loading} 
-                campaign={campaigns.find(c => c.id === (selectedCampaign || campaigns[0]?.id)) || { id: "", name: "" }}
-              />
-            </div>
+        <TabsContent value="detailed" className="space-y-8 mt-6">
+          <Card className="shadow-sm overflow-hidden border-border/40">
+            <div className="h-1 bg-gradient-to-r from-[#f72585] to-[#4361ee]"></div>
+            <CardHeader className="pb-3">
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle className="text-xl flex items-center gap-2">
+                    <Filter className="h-5 w-5 text-primary" />
+                    Campaign Filter
+                  </CardTitle>
+                  <CardDescription>Select a specific campaign to view detailed analytics</CardDescription>
+                </div>
+                <FilterExportControls 
+                  filterOptions={{ 
+                    channels: false,
+                    metrics: true
+                  }}
+                />
+              </div>
+            </CardHeader>
+            <CardContent>
+              <Select
+                value={selectedCampaign || campaigns[0]?.id}
+                onValueChange={handleCampaignChange}
+              >
+                <SelectTrigger className="w-full md:w-[320px] border-border/60">
+                  <SelectValue placeholder={campaigns[0]?.name || "Select campaign"} />
+                </SelectTrigger>
+                <SelectContent>
+                  {campaigns.map((campaign) => (
+                    <SelectItem key={campaign.id} value={campaign.id}>
+                      {campaign.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </CardContent>
+          </Card>
+
+          <div className="mt-6">
+            <CampaignBreakdownTab 
+              campaignData={campaignData} 
+              loading={loading} 
+              campaign={campaigns.find(c => c.id === (selectedCampaign || campaigns[0]?.id)) || { id: "", name: "" }}
+            />
           </div>
         </TabsContent>
 
-        {/* Promotional Analytics Tab Content */}
         <TabsContent value="promotional" className="space-y-8 mt-6">
           <Card>
             <CardHeader>
@@ -738,7 +720,6 @@ const ChannelDetailsPage = () => {
   );
 };
 
-// Helper component for the attribution chart
 const AttributionChart: React.FC<{ data: any[] }> = ({ data }) => {
   return (
     <div className="w-full h-full flex">

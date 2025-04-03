@@ -9,12 +9,16 @@ interface CostRevenueComparisonChartProps {
   channelData: any[];
   loading: boolean;
   height?: number;
+  title?: string;
+  description?: string;
 }
 
 export function CostRevenueComparisonChart({ 
   channelData, 
   loading, 
-  height = 400 
+  height = 400,
+  title = "Cost and Incremental Revenue Comparison",
+  description = "Comparing cost and incremental revenue across channels"
 }: CostRevenueComparisonChartProps) {
   if (loading) {
     return <Skeleton className="w-full h-[400px]" />;
@@ -26,6 +30,12 @@ export function CostRevenueComparisonChart({
   return (
     <Card className="overflow-hidden border-border/40 shadow-sm">
       <CardContent className="p-6">
+        {(title || description) && (
+          <div className="mb-4">
+            {title && <h3 className="text-lg font-medium">{title}</h3>}
+            {description && <p className="text-sm text-muted-foreground">{description}</p>}
+          </div>
+        )}
         <div className="w-full h-[400px] relative">
           <div className="absolute inset-0">
             <ChartContainer 
