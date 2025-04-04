@@ -3,8 +3,10 @@ import React, { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
-import { Calendar, Info, AlertTriangle, ArrowUp, ArrowDown } from "lucide-react";
+import { Calendar, Info, AlertTriangle, ArrowUp, ArrowDown, Filter } from "lucide-react";
 import { TimeSeriesChart } from "@/components/dashboard/TimeSeriesChart";
+import { ChannelDropdown } from "@/components/dashboard/ChannelDropdown";
+import { FilterDropdown } from "@/components/dashboard/FilterDropdown";
 
 type MonthOverMonthComparisonChartProps = {
   data: Array<{
@@ -17,6 +19,10 @@ type MonthOverMonthComparisonChartProps = {
   height?: number;
   metric?: string;
   hideChangeMetric?: boolean;
+  channels?: Array<{ value: string; label: string; color?: string }>;
+  factors?: Array<{ value: string; label: string }>;
+  onChannelChange?: (channel: string) => void;
+  onFactorChange?: (factor: string) => void;
 };
 
 export function MonthOverMonthComparisonChart({
@@ -24,9 +30,29 @@ export function MonthOverMonthComparisonChart({
   loading = false,
   height = 400,
   metric = "Revenue",
-  hideChangeMetric = false
+  hideChangeMetric = false,
+  channels = [],
+  factors = [],
+  onChannelChange,
+  onFactorChange
 }: MonthOverMonthComparisonChartProps) {
   const [showHelp, setShowHelp] = useState(false);
+  const [selectedChannel, setSelectedChannel] = useState("all");
+  const [selectedFactor, setSelectedFactor] = useState("all");
+  
+  const handleChannelChange = (value: string) => {
+    setSelectedChannel(value);
+    if (onChannelChange) {
+      onChannelChange(value);
+    }
+  };
+
+  const handleFactorChange = (value: string) => {
+    setSelectedFactor(value);
+    if (onFactorChange) {
+      onFactorChange(value);
+    }
+  };
   
   if (loading) {
     return <Skeleton className="w-full h-[400px]" />;
@@ -81,13 +107,36 @@ export function MonthOverMonthComparisonChart({
               Compare monthly {metric.toLowerCase()} trends and changes between this year and last year
             </CardDescription>
           </div>
-          <Button 
-            variant="ghost" 
-            size="icon" 
-            onClick={() => setShowHelp(!showHelp)}
-          >
-            <Info className="h-5 w-5 text-muted-foreground" />
-          </Button>
+          <div className="flex items-center gap-3">
+            {channels.length > 0 && (
+              <div className="w-[180px]">
+                <ChannelDropdown
+                  channels={channels}
+                  value={selectedChannel}
+                  onChange={handleChannelChange}
+                  placeholder="Select channel"
+                />
+              </div>
+            )}
+            {factors.length > 0 && (
+              <div className="w-[180px]">
+                <FilterDropdown
+                  options={factors}
+                  value={selectedFactor}
+                  onChange={handleFactorChange}
+                  icon={<Filter className="h-4 w-4" />}
+                  label="Factor"
+                />
+              </div>
+            )}
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              onClick={() => setShowHelp(!showHelp)}
+            >
+              <Info className="h-5 w-5 text-muted-foreground" />
+            </Button>
+          </div>
         </div>
       </CardHeader>
       <CardContent>

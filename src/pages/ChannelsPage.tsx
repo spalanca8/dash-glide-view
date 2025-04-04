@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -64,6 +63,8 @@ export default function ChannelsPage() {
     externalFactors: []
   });
   const [monthOverMonthData, setMonthOverMonthData] = useState<any[]>([]);
+  const [momSelectedChannel, setMomSelectedChannel] = useState("all");
+  const [momSelectedFactor, setMomSelectedFactor] = useState("all");
 
   useEffect(() => {
     const loadData = async () => {
@@ -125,6 +126,20 @@ export default function ChannelsPage() {
     name: channelNames[id as keyof typeof channelNames]
   }));
 
+  const channelOptions = Object.keys(channelNames).map(id => ({
+    value: id,
+    label: channelNames[id as keyof typeof channelNames],
+    color: channelColors[id as keyof typeof channelColors]
+  }));
+
+  const factorOptions = [
+    { value: "paidMedia", label: "Paid Media" },
+    { value: "ownedMedia", label: "Owned Media" },
+    { value: "promotions", label: "Promotions" },
+    { value: "external", label: "External Factors" },
+    { value: "pricing", label: "Pricing" }
+  ];
+
   const selectedChannelData = selectedChannel 
     ? channelData.find(channel => channel.id === selectedChannel)
     : null;
@@ -170,6 +185,10 @@ export default function ChannelsPage() {
   const revenueChannelPerformers = getBestAndWorstPerformers(yearOverYearData.revenueByChannel);
   const roasChannelPerformers = getBestAndWorstPerformers(yearOverYearData.roasByChannel);
   const externalFactorsPerformers = getBestAndWorstPerformers(yearOverYearData.externalFactors);
+
+  const getFilteredMomData = () => {
+    return monthOverMonthData;
+  };
 
   return (
     <div className="space-y-6 pb-8">
@@ -464,11 +483,15 @@ export default function ChannelsPage() {
               
               <div className="mb-8">
                 <MonthOverMonthComparisonChart 
-                  data={monthOverMonthData} 
+                  data={getFilteredMomData()} 
                   loading={loading} 
                   height={400} 
                   metric="Revenue"
                   hideChangeMetric={true}
+                  channels={channelOptions}
+                  factors={factorOptions}
+                  onChannelChange={(channel) => setMomSelectedChannel(channel)}
+                  onFactorChange={(factor) => setMomSelectedFactor(factor)}
                 />
               </div>
               
