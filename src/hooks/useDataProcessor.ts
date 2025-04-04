@@ -67,7 +67,7 @@ export function useDataProcessor(timeframe: string) {
         conversions: conversions,
         ctr: ctr.toFixed(2),
         conversionRate: conversionRate.toFixed(2),
-        lastYearConversion: lastYearConversionRate.toFixed(2),
+        lastYearConversionRate: lastYearConversionRate.toFixed(2),
         cpc: (cost / clicks).toFixed(2),
         cpa: (cost / conversions).toFixed(2),
         roas: roas,
@@ -98,7 +98,7 @@ export function useDataProcessor(timeframe: string) {
     const totalConversions = aggregatedData.reduce((sum, day) => sum + day.conversions, 0);
     const avgCTR = aggregatedData.reduce((sum, day) => sum + parseFloat(day.ctr), 0) / aggregatedData.length;
     const avgConversionRate = aggregatedData.reduce((sum, day) => sum + parseFloat(day.conversionRate), 0) / aggregatedData.length;
-    const avgLastYearConversionRate = aggregatedData.reduce((sum, day) => sum + parseFloat(day.lastYearConversion), 0) / aggregatedData.length;
+    const avgLastYearConversionRate = aggregatedData.reduce((sum, day) => sum + parseFloat(day.lastYearConversionRate), 0) / aggregatedData.length;
     const avgBounceRate = aggregatedData.reduce((sum, day) => sum + parseFloat(day.bounceRate), 0) / aggregatedData.length;
     const avgSessionDuration = aggregatedData.reduce((sum, day) => sum + day.avgSessionDuration, 0) / aggregatedData.length;
     const totalReach = aggregatedData.reduce((sum, day) => sum + day.reach, 0);
@@ -119,7 +119,7 @@ export function useDataProcessor(timeframe: string) {
       conversions: totalConversions,
       ctr: avgCTR.toFixed(2),
       conversionRate: avgConversionRate.toFixed(2),
-      lastYearConversion: avgLastYearConversionRate.toFixed(2),
+      lastYearConversionRate: avgLastYearConversionRate.toFixed(2),
       roas: currentRoas,
       lastYearRoas: lastYearRoas,
       cpa: totalCost / totalConversions,
