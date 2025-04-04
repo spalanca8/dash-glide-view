@@ -31,7 +31,8 @@ const ChannelsPage = () => {
     trendsData, 
     processingError,
     yearOverYearData,
-    monthOverMonthData
+    monthOverMonthData,
+    loading: dataLoading
   } = useDataProcessor({
     dataGeneratorFn: generateChannelData,
     timeSeriesFn: generatePerformanceData,
@@ -133,6 +134,9 @@ const ChannelsPage = () => {
     },
   ];
 
+  // Combined loading state
+  const isLoading = loading || dataLoading;
+
   return (
     <div className="animate-fade-in space-y-8">
       <PageHeader
@@ -140,7 +144,7 @@ const ChannelsPage = () => {
         description="Analyze performance across marketing channels"
       />
 
-      <ChannelMetricsOverview data={channelData} loading={loading} />
+      <ChannelMetricsOverview data={channelData} loading={isLoading} />
       
       <Tabs defaultValue="overview" value={activeTab} onValueChange={setActiveTab}>
         <TabsList className="w-full">
@@ -162,7 +166,7 @@ const ChannelsPage = () => {
                 <h3 className="text-lg font-medium mb-4">Channel Performance</h3>
                 <ChannelPerformanceTable
                   data={channelData}
-                  loading={loading}
+                  loading={isLoading}
                   onRowClick={handleChannelSelect}
                 />
               </CardContent>
@@ -178,7 +182,7 @@ const ChannelsPage = () => {
                     { dataKey: "cost", color: "#f72585", label: "Cost" },
                   ]}
                   xAxisKey="name"
-                  loading={loading}
+                  loading={isLoading}
                 />
               </CardContent>
             </Card>
@@ -187,33 +191,33 @@ const ChannelsPage = () => {
           <div className="space-y-6">
             <IncrementalRevenueWaterfallChart 
               data={channelData} 
-              loading={loading} 
+              loading={isLoading} 
             />
           </div>
           
           <div className="space-y-6">
-            <IncrementalRevenueByFactorChart loading={loading} />
+            <IncrementalRevenueByFactorChart loading={isLoading} />
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <CostRevenueComparisonChart
               channelData={channelData}
-              loading={loading}
+              loading={isLoading}
             />
             <RoasComparisonChart 
-              data={channelData}
-              loading={loading}
+              channelData={channelData}
+              loading={isLoading}
             />
           </div>
         </TabsContent>
 
         <TabsContent value="comparison" className="space-y-6 pt-6">
-          <ChannelComparisonChart data={channelData} loading={loading} />
-          <EuropeRoasHeatmap loading={loading} />
+          <ChannelComparisonChart data={channelData} loading={isLoading} />
+          <EuropeRoasHeatmap loading={isLoading} />
         </TabsContent>
 
         <TabsContent value="trends" className="space-y-6 pt-6">
-          <ChannelTrendsChart data={trendsData} loading={loading} />
+          <ChannelTrendsChart data={trendsData} loading={isLoading} />
         </TabsContent>
 
         <TabsContent value="yoy" className="space-y-6 pt-6">
@@ -222,7 +226,7 @@ const ChannelsPage = () => {
               data={yearOverYearData}
               title="Year-Over-Year Channel Performance"
               description="Percentage change in revenue compared to previous year"
-              loading={loading}
+              loading={isLoading}
               insights={[
                 "Search shows the strongest YoY growth at +15.2%",
                 "Display shows concerning decline of -5.8%",
@@ -234,9 +238,7 @@ const ChannelsPage = () => {
             
             <MonthOverMonthComparisonChart
               data={monthOverMonthData}
-              title="Month-Over-Month Performance"
-              description="Percentage change in revenue compared to previous month"
-              loading={loading}
+              loading={isLoading}
             />
           </div>
           
@@ -245,7 +247,7 @@ const ChannelsPage = () => {
               data={externalFactorsYoYData}
               title="External Factors Impact on Revenue"
               description="Percentage change in incremental revenue from external market factors"
-              loading={loading}
+              loading={isLoading}
               contextualInfo={externalFactorsContextualInfo}
               insights={[
                 "Seasonal effects provide the biggest positive impact at +12.0%",
@@ -260,7 +262,7 @@ const ChannelsPage = () => {
               data={creativeYoYData}
               title="Creative Performance Year-Over-Year"
               description="Percentage change in performance by creative type"
-              loading={loading}
+              loading={isLoading}
               insights={[
                 "Interactive ads show the strongest performance improvements",
                 "Video assets consistently outperform static assets",
@@ -277,7 +279,7 @@ const ChannelsPage = () => {
             <ChannelDetailView
               channelData={selectedChannelData}
               trendsData={trendsData}
-              loading={loading}
+              loading={isLoading}
             />
           ) : (
             <div className="text-center py-12 text-muted-foreground">

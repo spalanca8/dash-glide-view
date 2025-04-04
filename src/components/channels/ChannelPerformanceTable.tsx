@@ -7,9 +7,10 @@ import { FilterExportControls } from "./FilterExportControls";
 type ChannelPerformanceTableProps = {
   data: any[];
   loading: boolean;
+  onRowClick?: (channelId: string) => void;
 };
 
-export function ChannelPerformanceTable({ data, loading }: ChannelPerformanceTableProps) {
+export function ChannelPerformanceTable({ data, loading, onRowClick }: ChannelPerformanceTableProps) {
   const [filteredChannels, setFilteredChannels] = useState<string[]>([]);
   const [activeMetrics, setActiveMetrics] = useState<string[]>([]);
 
@@ -127,7 +128,11 @@ export function ChannelPerformanceTable({ data, loading }: ChannelPerformanceTab
           </TableHeader>
           <TableBody>
             {filteredData.map((channel) => (
-              <TableRow key={channel.id}>
+              <TableRow 
+                key={channel.id} 
+                className={onRowClick ? "cursor-pointer hover:bg-muted/50" : ""}
+                onClick={onRowClick ? () => onRowClick(channel.id) : undefined}
+              >
                 <TableCell className="font-medium">{channel.name}</TableCell>
                 {displayMetrics.map(metric => (
                   <TableCell key={metric} className="text-right">
