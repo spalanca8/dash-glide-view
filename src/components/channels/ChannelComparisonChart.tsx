@@ -102,14 +102,21 @@ export function ChannelComparisonChart({ data, loading }: ChannelComparisonChart
         <BarChart
           data={filteredData}
           margin={{
-            top: 20, // Increased top margin to accommodate labels
+            top: 20,
             right: 30,
             left: 20,
-            bottom: 5,
+            bottom: 70, // Increased bottom margin for labels
           }}
         >
           <CartesianGrid strokeDasharray="3 3" vertical={false} />
-          <XAxis dataKey="name" />
+          <XAxis 
+            dataKey="name" 
+            angle={-45} 
+            textAnchor="end" 
+            height={70} 
+            tick={{ fontSize: 12 }}
+            interval={0} // Force display all labels
+          />
           <YAxis
             tickFormatter={(value) =>
               metric === "revenue" || metric === "cost" || metric === "cpa" || metric === "incremental"

@@ -12,6 +12,7 @@ interface RoasComparisonChartProps {
   height?: number;
   title?: string;
   description?: string;
+  data?: any[]; // Added for compatibility with other components
 }
 
 export function RoasComparisonChart({ 
@@ -19,14 +20,18 @@ export function RoasComparisonChart({
   loading, 
   height = 400,
   title = "ROAS Comparison",
-  description = "Return on Ad Spend across channels"
+  description = "Return on Ad Spend across channels",
+  data
 }: RoasComparisonChartProps) {
   if (loading) {
     return <Skeleton className="w-full h-[400px]" />;
   }
 
+  // Use data prop if provided, otherwise use channelData
+  const chartData = data || channelData;
+  
   // Sort channels by ROAS for better visualization
-  const sortedData = [...channelData].sort((a, b) => b.roas - a.roas);
+  const sortedData = [...chartData].sort((a, b) => b.roas - a.roas);
 
   return (
     <Card className="overflow-hidden border-border/40 shadow-sm">
@@ -50,14 +55,15 @@ export function RoasComparisonChart({
               <RechartsPrimitive.ResponsiveContainer width="100%" height="100%">
                 <RechartsPrimitive.BarChart
                   data={sortedData}
-                  margin={{ top: 20, right: 30, left: 20, bottom: 60 }}
+                  margin={{ top: 20, right: 30, left: 20, bottom: 70 }} // Increased bottom margin
                 >
                   <RechartsPrimitive.XAxis 
                     dataKey="name" 
                     angle={-45} 
                     textAnchor="end"
                     tick={{ fontSize: 12 }}
-                    height={60}
+                    height={70} // Increased height for x-axis
+                    interval={0} // Force display all labels
                   />
                   <RechartsPrimitive.YAxis
                     stroke="#94a3b8"

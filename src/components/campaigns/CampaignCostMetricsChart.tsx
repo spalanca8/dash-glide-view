@@ -48,6 +48,23 @@ export function CampaignCostMetricsChart({ loading, data }: CampaignCostMetricsC
     );
   }
   
+  // Process data to format dates for better display
+  const formattedData = data.map(item => {
+    // Extract just the date part if it's an ISO string (YYYY-MM-DD)
+    const datePart = item.date.split('T')[0];
+    // Format to shorter display (e.g., "Mar 15" or "03/15")
+    const date = new Date(datePart);
+    const formattedDate = date.toLocaleDateString('en-US', { 
+      month: 'short', 
+      day: 'numeric' 
+    });
+    
+    return {
+      ...item,
+      date: formattedDate
+    };
+  });
+  
   const formatValue = (value: number, metric: string) => {
     switch (metric) {
       case "cpc":
@@ -132,8 +149,8 @@ export function CampaignCostMetricsChart({ loading, data }: CampaignCostMetricsC
         <div className="h-[350px] w-full">
           <ResponsiveContainer width="100%" height="100%">
             <LineChart
-              data={data}
-              margin={{ top: 5, right: 30, left: 20, bottom: 25 }}
+              data={formattedData}
+              margin={{ top: 5, right: 30, left: 20, bottom: 40 }} // Increased bottom margin
             >
               <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.05)" />
               <XAxis 
@@ -141,6 +158,10 @@ export function CampaignCostMetricsChart({ loading, data }: CampaignCostMetricsC
                 tick={{ fontSize: 12 }}
                 tickLine={false}
                 axisLine={{ stroke: "rgba(0,0,0,0.09)" }}
+                height={40} // Increased height for x-axis
+                interval={0} // Force display all labels
+                angle={-30} // Angle for better visibility
+                textAnchor="end" // Proper text anchor for angled text
               />
               <YAxis 
                 tick={{ fontSize: 12 }}

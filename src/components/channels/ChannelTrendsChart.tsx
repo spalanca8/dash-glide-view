@@ -74,7 +74,7 @@ export function ChannelTrendsChart({ data, loading }: ChannelTrendsChartProps) {
             top: 20,
             right: 30,
             left: 20,
-            bottom: 10,
+            bottom: 40, // Increased bottom margin for x-axis labels
           }}
         >
           <CartesianGrid strokeDasharray="3 3" vertical={false} />
@@ -83,6 +83,10 @@ export function ChannelTrendsChart({ data, loading }: ChannelTrendsChartProps) {
             tick={{ fontSize: 12 }}
             tickLine={false}
             axisLine={{ stroke: "rgba(0,0,0,0.09)" }}
+            angle={-30} // Angled text for better readability
+            textAnchor="end" // Align the angled text properly
+            height={60} // More height for the angled labels
+            interval={0} // Force display all labels
           />
           <YAxis
             tick={{ fontSize: 12 }}
