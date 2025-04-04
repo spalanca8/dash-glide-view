@@ -1,656 +1,293 @@
+
 import React, { useState, useEffect } from "react";
 import { PageHeader } from "@/components/layout/PageHeader";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
-import { 
-  BarChart, 
-  PieChart, 
-  LineChart as LineChartIcon, 
-  Filter, 
-  ArrowDown, 
-  ArrowUp, 
-  Table as TableIcon, 
-  Info, 
-  Calendar, 
-  TrendingUp, 
-  Activity, 
-  GitCompare, 
-  AlertTriangle, 
-  Lightbulb 
-} from "lucide-react";
 import { ChannelPerformanceTable } from "@/components/channels/ChannelPerformanceTable";
-import { ChannelBreakdownChart } from "@/components/dashboard/ChannelBreakdownChart";
+import { ChannelBreakdownChart } from "@/components/channels/ChannelBreakdownChart";
 import { ChannelTrendsChart } from "@/components/channels/ChannelTrendsChart";
 import { ChannelComparisonChart } from "@/components/channels/ChannelComparisonChart";
-import { ChannelMetricsOverview } from "@/components/channels/ChannelMetricsOverview";
-import { 
-  generateChannelData, 
-  generateChannelTrendsData, 
-  channelColors, 
-  channelNames, 
-  generateYearOverYearData, 
-  generateExternalFactorsYoYData, 
-  generateMonthOverMonthData,
-  mediaGroupColors 
-} from "@/data/mockData";
-import { FilterExportControls } from "@/components/channels/FilterExportControls";
-import { ChannelDetailView } from "@/components/channels/ChannelDetailView";
-import { RoasComparisonChart } from "@/components/channels/RoasComparisonChart";
-import { CostRevenueComparisonChart } from "@/components/channels/CostRevenueComparisonChart";
-import { IncrementalRevenueWaterfallChart } from "@/components/channels/IncrementalRevenueWaterfallChart";
 import { YearOverYearComparisonChart } from "@/components/channels/YearOverYearComparisonChart";
+import { ChannelMetricsOverview } from "@/components/channels/ChannelMetricsOverview";
+import { ChannelDetailView } from "@/components/channels/ChannelDetailView";
 import { MonthOverMonthComparisonChart } from "@/components/channels/MonthOverMonthComparisonChart";
+import { IncrementalRevenueWaterfallChart } from "@/components/channels/IncrementalRevenueWaterfallChart";
+import { IncrementalRevenueByFactorChart } from "@/components/channels/IncrementalRevenueByFactorChart";
+import { RoasComparisonChart } from "@/components/channels/RoasComparisonChart";
+import { EuropeRoasHeatmap } from "@/components/channels/EuropeRoasHeatmap";
+import { CostRevenueComparisonChart } from "@/components/channels/CostRevenueComparisonChart";
+import { generateChannelData, generatePerformanceData, channelColors } from "@/data/mockData";
+import { useDataProcessor } from "@/hooks/useDataProcessor";
+import { useToast } from "@/hooks/use-toast";
+import { Card, CardContent } from "@/components/ui/card";
 
-export default function ChannelsPage() {
-  const [mainTab, setMainTab] = useState("overview");
-  const [activeTab, setActiveTab] = useState("performance");
-  const [channelData, setChannelData] = useState<any[]>([]);
-  const [trendsData, setTrendsData] = useState<any[]>([]);
+const ChannelsPage = () => {
+  const [activeTab, setActiveTab] = useState("overview");
   const [loading, setLoading] = useState(true);
-  const [timeframe, setTimeframe] = useState("Q4");
-  const [selectedChannel, setSelectedChannel] = useState<string | null>(Object.keys(channelNames)[0]);
-  const [yearOverYearData, setYearOverYearData] = useState<{
-    revenueByFactor: any[];
-    revenueByChannel: any[];
-    roasByChannel: any[];
-    externalFactors: any[];
-  }>({
-    revenueByFactor: [],
-    revenueByChannel: [],
-    roasByChannel: [],
-    externalFactors: []
+  const [selectedChannel, setSelectedChannel] = useState<string | null>(null);
+  const { toast } = useToast();
+  
+  const { 
+    channelData, 
+    trendsData, 
+    processingError,
+    yearOverYearData,
+    monthOverMonthData
+  } = useDataProcessor({
+    dataGeneratorFn: generateChannelData,
+    timeSeriesFn: generatePerformanceData,
+    onError: (error) => {
+      toast({
+        title: "Data Processing Error",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
   });
-  const [monthOverMonthData, setMonthOverMonthData] = useState<any[]>([]);
-  const [momSelectedChannel, setMomSelectedChannel] = useState("all");
-  const [momSelectedFactor, setMomSelectedFactor] = useState("all");
 
   useEffect(() => {
     const loadData = async () => {
       setLoading(true);
-      await new Promise((resolve) => setTimeout(resolve, 800));
       
-      const data = generateChannelData(timeframe);
-      const trends = generateChannelTrendsData();
+      // Simulate API call delay
+      await new Promise((resolve) => setTimeout(resolve, 700));
       
-      const yoyData = generateYearOverYearData();
-      const externalFactors = generateExternalFactorsYoYData();
-      
-      const momData = generateMonthOverMonthData();
-      
-      const fixedRevenueByFactor = yoyData.revenueByFactor.map(item => {
-        if (item.name === "External Factors") {
-          return { ...item, value: -12 }; // Change to negative 12%
-        }
-        if (item.name === "Pricing") {
-          return { ...item, value: -8 }; // Change to negative 8%
-        }
-        return item;
-      });
-      
-      const fixedExternalFactors = externalFactors.map(item => {
-        if (item.name === "Market Conditions") {
-          return { ...item, value: -12 }; // Change to negative 12%
-        }
-        if (item.name === "Competitor Activity") {
-          return { ...item, value: -15 }; // Change to negative 15%
-        }
-        return item;
-      });
-      
-      setChannelData(data);
-      setTrendsData(trends);
-      setYearOverYearData({
-        revenueByFactor: fixedRevenueByFactor,
-        revenueByChannel: yoyData.revenueByChannel,
-        roasByChannel: yoyData.roasByChannel,
-        externalFactors: fixedExternalFactors
-      });
-      setMonthOverMonthData(momData);
       setLoading(false);
     };
-
+    
     loadData();
-  }, [timeframe]);
+  }, []);
 
-  const handleTimeframeChange = (value: string) => {
-    setTimeframe(value);
+  const handleChannelSelect = (channelId: string) => {
+    setSelectedChannel(channelId);
+    setActiveTab("details");
   };
 
-  const handleChannelSelect = (value: string) => {
-    setSelectedChannel(value);
+  const selectedChannelData = channelData.find(
+    (channel) => channel.id === selectedChannel
+  );
+
+  // External factors data for YoY comparison
+  const externalFactorsYoYData = [
+    {
+      name: "Economic Growth",
+      value: 8.5,
+      color: "#4ade80",
+    },
+    {
+      name: "Competitor Activity",
+      value: -4.5,
+      color: "#f87171",
+    },
+    {
+      name: "Platform Algorithm Changes",
+      value: -3.5,
+      color: "#f87171",
+    },
+    {
+      name: "Seasonal Effects",
+      value: 12.0,
+      color: "#4ade80",
+    },
+    {
+      name: "Privacy Regulations",
+      value: -2.5,
+      color: "#f87171",
+    },
+  ];
+
+  // Contextual information for external factors
+  const externalFactorsContextualInfo = {
+    "Economic Growth": "Overall market expansion has driven increased consumer spending, creating a positive lift of 8.5% in year-over-year revenue performance.",
+    "Competitor Activity": "Major competitor campaigns and pricing strategies have created headwinds resulting in approximately 4.5% decrease in potential revenue growth.",
+    "Platform Algorithm Changes": "Updates to search engines and social media algorithms have reduced organic reach by approximately 3.5%, affecting visibility and engagement.",
+    "Seasonal Effects": "Holiday and promotional periods have generated a 12% lift compared to typical baseline performance due to increased consumer intent.",
+    "Privacy Regulations": "GDPR, CCPA and iOS updates have reduced targeting capabilities and attribution accuracy by approximately 2.5% as more users opt out of tracking."
   };
 
-  const availableChannels = Object.keys(channelNames).map(id => ({
-    id,
-    name: channelNames[id as keyof typeof channelNames]
-  }));
-
-  const channelOptions = Object.keys(channelNames).map(id => ({
-    value: id,
-    label: channelNames[id as keyof typeof channelNames],
-    color: channelColors[id as keyof typeof channelColors]
-  }));
-
-  const factorOptions = [
-    { value: "paidMedia", label: "Paid Media" },
-    { value: "ownedMedia", label: "Owned Media" },
-    { value: "promotions", label: "Promotions" },
-    { value: "external", label: "External Factors" },
-    { value: "pricing", label: "Pricing" }
+  // Creative performance data for YoY comparison
+  const creativeYoYData = [
+    {
+      name: "Video Assets",
+      value: 14.2,
+      color: "#4ade80",
+    },
+    {
+      name: "Static Banners",
+      value: -2.7,
+      color: "#f87171",
+    },
+    {
+      name: "Interactive Ads",
+      value: 18.5,
+      color: "#4ade80",
+    },
+    {
+      name: "Native Content",
+      value: 7.3,
+      color: "#4ade80",
+    },
+    {
+      name: "Text Ads",
+      value: -5.1,
+      color: "#f87171",
+    },
   ];
-
-  const selectedChannelData = selectedChannel 
-    ? channelData.find(channel => channel.id === selectedChannel)
-    : null;
-
-  const externalFactorsContext = {
-    "Market Conditions": "Economic trends, industry growth rates, and overall market performance that impact consumer purchasing behavior.",
-    "Competitor Activity": "Changes in competitor pricing, promotions, new product launches, and marketing strategies.",
-    "Seasonal Factors": "Regular cyclical patterns in consumer behavior based on time of year, holidays, or weather.",
-    "Industry Trends": "Shifting consumer preferences, technological advancements, and emerging behaviors in the marketplace.",
-    "Supply Chain": "Logistics, inventory availability, and distribution challenges affecting product availability.",
-  };
-
-  const revenueFactorInsights = [
-    "Paid Online Media shows a 24% increase, indicating effective digital investments",
-    "Offline Media performance has declined by 2%, suggesting a shift in customer behavior",
-    "Promotions have increased revenue by 14%, showing good campaign planning",
-    "External Factors have negatively impacted revenue by 12%, highlighting market volatility"
-  ];
-
-  const revenueChannelInsights = [
-    "Search and Social channels are your top performers with 30%+ growth",
-    "Email marketing shows moderate growth at 15%, consistent with industry trends",
-    "Display advertising has seen limited growth compared to other channels",
-    "Consider reallocating budget from lower to higher performing channels"
-  ];
-
-  const roasChannelInsights = [
-    "Search Ads ROAS improved by 22%, showing increased efficiency",
-    "Social Media ROAS increase of 18% shows better targeting is working",
-    "Email continues to be the most cost-effective channel with 25% ROAS improvement",
-    "Video advertising efficiency has improved but still lags behind other channels"
-  ];
-
-  const externalFactorsInsights = [
-    "Market conditions account for the biggest negative impact at -12%, primarily due to economic slowdown in key regions",
-    "Competitor activity has intensified, causing a 15% negative impact through aggressive pricing strategies",
-    "Seasonal factors contributed positively with an 8% uplift due to better alignment with holiday promotions",
-    "Industry trends are favorable, contributing a 16% positive impact through growing adoption of online shopping"
-  ];
-
-  const getBestAndWorstPerformers = (data: any[]) => {
-    if (!data.length) return { best: "", worst: "" };
-    const sortedData = [...data].sort((a, b) => b.value - a.value);
-    return {
-      best: `${sortedData[0].name} (${sortedData[0].value > 0 ? "+" : ""}${sortedData[0].value}%)`,
-      worst: `${sortedData[sortedData.length - 1].name} (${sortedData[sortedData.length - 1].value > 0 ? "+" : ""}${sortedData[sortedData.length - 1].value}%)`
-    };
-  };
-
-  const revenueFactorPerformers = getBestAndWorstPerformers(yearOverYearData.revenueByFactor);
-  const revenueChannelPerformers = getBestAndWorstPerformers(yearOverYearData.revenueByChannel);
-  const roasChannelPerformers = getBestAndWorstPerformers(yearOverYearData.roasByChannel);
-  const externalFactorsPerformers = getBestAndWorstPerformers(yearOverYearData.externalFactors);
-
-  const getFilteredMomData = () => {
-    let filtered = [...monthOverMonthData];
-    
-    if (momSelectedChannel !== "all") {
-      filtered = filtered.filter(item => item.channel === momSelectedChannel);
-    }
-    
-    if (momSelectedFactor !== "all") {
-      filtered = filtered.filter(item => item.factor === momSelectedFactor);
-    }
-    
-    return filtered;
-  };
 
   return (
-    <div className="space-y-6 pb-8">
-      <div className="flex flex-col">
-        <PageHeader title="Channels" description="Analyze campaign performance by channel">
-          <div className="flex items-center gap-2">
-            <Select onValueChange={handleTimeframeChange} defaultValue="Q4">
-              <SelectTrigger className="w-[140px]">
-                <SelectValue placeholder="Timeframe" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="Q1">Q1 2023</SelectItem>
-                <SelectItem value="Q2">Q2 2023</SelectItem>
-                <SelectItem value="Q3">Q3 2023</SelectItem>
-                <SelectItem value="Q4">Q4 2023</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </PageHeader>
-      </div>
+    <div className="animate-fade-in space-y-8">
+      <PageHeader
+        title="Channel Analysis"
+        description="Analyze performance across marketing channels"
+      />
 
       <ChannelMetricsOverview data={channelData} loading={loading} />
       
-      <Tabs value={mainTab} onValueChange={setMainTab} defaultValue="overview" className="space-y-6">
-        <TabsList className="justify-start">
-          <TabsTrigger value="overview" className="flex items-center gap-2">
-            <BarChart className="h-4 w-4" /> Overview
-          </TabsTrigger>
-          <TabsTrigger value="detailed" className="flex items-center gap-2">
-            <TableIcon className="h-4 w-4" /> Detailed Analysis
-          </TabsTrigger>
-          <TabsTrigger value="yoy" className="flex items-center gap-2">
-            <Calendar className="h-5 w-5" /> Year-over-Year
+      <Tabs defaultValue="overview" value={activeTab} onValueChange={setActiveTab}>
+        <TabsList className="w-full">
+          <TabsTrigger value="overview">Overview</TabsTrigger>
+          <TabsTrigger value="comparison">Comparison</TabsTrigger>
+          <TabsTrigger value="trends">Trends</TabsTrigger>
+          <TabsTrigger value="yoy">Year-Over-Year</TabsTrigger>
+          <TabsTrigger value="details" disabled={!selectedChannel}>
+            {selectedChannel
+              ? `${channelData.find((ch) => ch.id === selectedChannel)?.name} Details`
+              : "Channel Details"}
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="overview" className="space-y-8 mt-8">
-          <IncrementalRevenueWaterfallChart data={channelData} loading={loading} />
+        <TabsContent value="overview" className="space-y-6 pt-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <Card>
+              <CardContent className="p-6">
+                <h3 className="text-lg font-medium mb-4">Channel Performance</h3>
+                <ChannelPerformanceTable
+                  data={channelData}
+                  loading={loading}
+                  onRowClick={handleChannelSelect}
+                />
+              </CardContent>
+            </Card>
+            
+            <Card>
+              <CardContent className="p-6">
+                <h3 className="text-lg font-medium mb-4">Channel Breakdown</h3>
+                <ChannelBreakdownChart
+                  data={channelData}
+                  bars={[
+                    { dataKey: "revenue", color: "#4361ee", label: "Revenue" },
+                    { dataKey: "cost", color: "#f72585", label: "Cost" },
+                  ]}
+                  xAxisKey="name"
+                  loading={loading}
+                />
+              </CardContent>
+            </Card>
+          </div>
           
-          <Card className="border-blue-100 bg-blue-50/40">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-xl flex items-center gap-2 text-blue-800">
-                <Lightbulb className="h-5 w-5 text-yellow-500" /> Key Takeaways
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="space-y-3">
-                  <div className="flex items-center gap-2">
-                    <TrendingUp className="h-5 w-5 text-green-600" />
-                    <h3 className="font-medium text-green-800">Top Performers</h3>
-                  </div>
-                  <ul className="ml-7 list-disc space-y-1 text-sm text-green-700">
-                    <li>Search delivers highest ROAS at 5.2x, leading all channels</li>
-                    <li>Social media shows consistent growth in Q4</li>
-                    <li>Email marketing remains most cost-effective channel</li>
-                  </ul>
-                </div>
-                
-                <div className="space-y-3">
-                  <div className="flex items-center gap-2">
-                    <AlertTriangle className="h-5 w-5 text-amber-600" />
-                    <h3 className="font-medium text-amber-800">Areas of Concern</h3>
-                  </div>
-                  <ul className="ml-7 list-disc space-y-1 text-sm text-amber-700">
-                    <li>Display advertising ROAS falling below 2.0x threshold</li>
-                    <li>Video shows high cost but moderate return</li>
-                    <li>Affiliate network needs optimization</li>
-                  </ul>
-                </div>
-                
-                <div className="space-y-3">
-                  <div className="flex items-center gap-2">
-                    <Info className="h-5 w-5 text-blue-600" />
-                    <h3 className="font-medium text-blue-800">Recommendations</h3>
-                  </div>
-                  <ul className="ml-7 list-disc space-y-1 text-sm text-blue-700">
-                    <li>Reallocate 15% of display budget to search and social</li>
-                    <li>Optimize video creative to improve engagement</li>
-                    <li>Increase email frequency to capitalize on high ROAS</li>
-                    <li>Develop contingency plans for negative market conditions</li>
-                  </ul>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+          <div className="space-y-6">
+            <IncrementalRevenueWaterfallChart 
+              data={channelData} 
+              loading={loading} 
+            />
+          </div>
           
-          <Card className="shadow-lg">
-            <CardHeader className="flex flex-row items-center">
-              <div className="flex flex-col space-y-1.5">
-                <CardTitle className="flex items-center gap-2">
-                  <BarChart className="h-5 w-5" /> Channel Overview
-                </CardTitle>
-                <CardDescription>
-                  Compare performance metrics across channels
-                </CardDescription>
-              </div>
-              <div className="ml-auto">
-                <FilterExportControls />
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="mb-6 p-4 bg-muted/30 rounded-lg">
-                <div className="flex items-start gap-2">
-                  <Info className="h-5 w-5 text-primary mt-0.5" />
-                  <div>
-                    <h3 className="text-sm font-medium mb-1">About Channel Overview</h3>
-                    <p className="text-sm text-muted-foreground">
-                      This dashboard provides a comprehensive view of your marketing channel performance. 
-                      ROAS (Return on Ad Spend) is the primary metric used to evaluate efficiency across channels.
-                      Use the tabs below to explore different visualizations and insights about your marketing mix.
-                    </p>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="mb-6">
-                <h3 className="text-lg font-medium mb-3">Revenue and Cost by Channel</h3>
-                <p className="text-sm text-muted-foreground mb-4">
-                  Compare both cost and incremental revenue across your marketing channels.
-                </p>
-                <CostRevenueComparisonChart channelData={channelData} loading={loading} />
-              </div>
-              
-              <div className="mb-6">
-                <h3 className="text-lg font-medium mb-3">ROAS by Channel</h3>
-                <p className="text-sm text-muted-foreground mb-4">
-                  Compare return on ad spend across your marketing channels. Higher values indicate more efficient spending.
-                </p>
-                <RoasComparisonChart channelData={channelData} loading={loading} />
-              </div>
-              
-              <Tabs value={activeTab} onValueChange={setActiveTab}>
-                <TabsList className="w-full md:w-auto">
-                  <TabsTrigger value="performance" className="flex items-center gap-1">
-                    <BarChart className="h-4 w-4" /> Performance
-                  </TabsTrigger>
-                  <TabsTrigger value="breakdown" className="flex items-center gap-1">
-                    <PieChart className="h-4 w-4" /> Breakdown
-                  </TabsTrigger>
-                  <TabsTrigger value="trends" className="flex items-center gap-1">
-                    <LineChartIcon className="h-4 w-4" /> Trends
-                  </TabsTrigger>
-                  <TabsTrigger value="comparison" className="flex items-center gap-1">
-                    <BarChart className="h-4 w-4" /> Comparison
-                  </TabsTrigger>
-                </TabsList>
-                
-                <div className="mt-2 mb-4">
-                  {activeTab === "performance" && (
-                    <p className="text-sm text-muted-foreground">
-                      View detailed performance metrics for each channel in a tabular format.
-                    </p>
-                  )}
-                  {activeTab === "breakdown" && (
-                    <p className="text-sm text-muted-foreground">
-                      Visualize the contribution of each channel to your overall marketing performance.
-                    </p>
-                  )}
-                  {activeTab === "trends" && (
-                    <p className="text-sm text-muted-foreground">
-                      Track how channel performance has evolved over time to identify patterns and opportunities.
-                    </p>
-                  )}
-                  {activeTab === "comparison" && (
-                    <p className="text-sm text-muted-foreground">
-                      Compare multiple metrics across channels to understand relative strengths and weaknesses.
-                    </p>
-                  )}
-                </div>
-                
-                <TabsContent value="performance" className="border-none p-0 pt-4">
-                  <ChannelPerformanceTable data={channelData} loading={loading} />
-                </TabsContent>
-                <TabsContent value="breakdown" className="border-none p-0 pt-4">
-                  <ChannelBreakdownChart 
-                    data={channelData} 
-                    loading={loading} 
-                    bars={[
-                      { dataKey: "revenue", color: "#4361ee", label: "Revenue" },
-                      { dataKey: "cost", color: "#f72585", label: "Cost" },
-                      { dataKey: "roas", color: "#8B5CF6", label: "ROAS" }
-                    ]} 
-                  />
-                </TabsContent>
-                <TabsContent value="trends" className="border-none p-0 pt-4">
-                  <ChannelTrendsChart data={trendsData} loading={loading} />
-                </TabsContent>
-                <TabsContent value="comparison" className="border-none p-0 pt-4">
-                  <ChannelComparisonChart data={channelData} loading={loading} />
-                </TabsContent>
-              </Tabs>
-            </CardContent>
-          </Card>
+          <div className="space-y-6">
+            <IncrementalRevenueByFactorChart loading={loading} />
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <CostRevenueComparisonChart
+              channelData={channelData}
+              loading={loading}
+            />
+            <RoasComparisonChart 
+              data={channelData}
+              loading={loading}
+            />
+          </div>
         </TabsContent>
 
-        <TabsContent value="detailed" className="space-y-6 mt-6">
-          <Card>
-            <CardHeader>
-              <div className="flex flex-row items-center justify-between">
-                <div>
-                  <CardTitle className="flex items-center gap-2">
-                    <TableIcon className="h-5 w-5" /> 
-                    Channel Details
-                  </CardTitle>
-                  <CardDescription>
-                    Select a specific channel to view detailed performance insights
-                  </CardDescription>
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="mb-6 p-4 bg-muted/30 rounded-lg">
-                <div className="flex items-start gap-2">
-                  <Info className="h-5 w-5 text-primary mt-0.5" />
-                  <div>
-                    <h3 className="text-sm font-medium mb-1">About Channel Details</h3>
-                    <p className="text-sm text-muted-foreground">
-                      This section provides in-depth analysis for individual marketing channels. 
-                      Select a specific channel from the options below to view its detailed metrics, performance trends, 
-                      and saturation analysis. Use these insights to optimize your strategy for each channel.
-                    </p>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="mb-6 p-4 bg-muted/30 rounded-lg">
-                <h3 className="text-sm font-medium mb-3">Channel Filter</h3>
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2">
-                  {availableChannels.map((channel) => (
-                    <Button
-                      key={channel.id}
-                      variant={selectedChannel === channel.id ? "default" : "outline"}
-                      className="w-full justify-start"
-                      onClick={() => handleChannelSelect(channel.id)}
-                      style={{ borderColor: selectedChannel === channel.id ? "transparent" : channelColors[channel.id as keyof typeof channelColors] }}
-                    >
-                      {channel.name}
-                    </Button>
-                  ))}
-                </div>
-              </div>
-              
-              {selectedChannel && selectedChannelData ? (
-                <ChannelDetailView 
-                  channelData={selectedChannelData} 
-                  trendsData={trendsData}
-                  loading={loading} 
-                />
-              ) : (
-                <div className="text-center py-8 text-muted-foreground">
-                  Select a channel above to view detailed performance data
-                </div>
-              )}
-            </CardContent>
-          </Card>
+        <TabsContent value="comparison" className="space-y-6 pt-6">
+          <ChannelComparisonChart data={channelData} loading={loading} />
+          <EuropeRoasHeatmap loading={loading} />
         </TabsContent>
-        
-        <TabsContent value="yoy" className="space-y-6 mt-6">
-          <Card className="shadow-lg">
-            <CardHeader>
-              <div className="flex flex-row items-center justify-between">
-                <div>
-                  <CardTitle className="flex items-center gap-2">
-                    <Calendar className="h-5 w-5" /> 
-                    Year-over-Year Performance
-                  </CardTitle>
-                  <CardDescription>
-                    Compare this period's performance to the same period last year
-                  </CardDescription>
-                </div>
-                <Button variant="outline" size="sm">
-                  <Calendar className="mr-2 h-4 w-4" />
-                  Q4 2023 vs Q4 2022
-                </Button>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="mb-6 p-4 bg-blue-50 rounded-lg border border-blue-100">
-                <div className="flex items-start gap-2">
-                  <Lightbulb className="h-5 w-5 text-yellow-500 mt-0.5" />
-                  <div>
-                    <h3 className="text-sm font-medium mb-1 text-blue-800">Executive Summary</h3>
-                    <p className="text-sm text-blue-700">
-                      Overall, your marketing performance has improved by 18% year-over-year, with Paid Online Media 
-                      driving the strongest growth at 24%. Your most efficient channel is Email Marketing with a 25% 
-                      increase in ROAS. Market conditions are creating a -12% headwind, suggesting the need to 
-                      adjust strategies in challenging market segments. Competitor activity has intensified with 
-                      aggressive pricing strategies, creating an additional -15% pressure on performance.
-                    </p>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="mb-8">
-                <MonthOverMonthComparisonChart 
-                  data={getFilteredMomData()} 
-                  loading={loading} 
-                  height={400} 
-                  metric="Revenue"
-                  hideChangeMetric={true}
-                  channels={channelOptions}
-                  factors={factorOptions}
-                  onChannelChange={(channel) => setMomSelectedChannel(channel)}
-                  onFactorChange={(factor) => setMomSelectedFactor(factor)}
-                />
-              </div>
-              
-              <div className="grid grid-cols-1 gap-10">
-                <div>
-                  <YearOverYearComparisonChart
-                    title="Percentage Change in Incremental Revenue by Factor"
-                    description="How incremental revenue has changed since last year across different business factors"
-                    data={yearOverYearData.revenueByFactor}
-                    loading={loading}
-                    height={400}
-                    showInfo={true}
-                    infoText="This chart shows how incremental revenue contributions have changed year-over-year across major business categories. Positive values indicate growth, while negative values show decline."
-                    insights={revenueFactorInsights}
-                    bestPerformer={revenueFactorPerformers.best}
-                    worstPerformer={revenueFactorPerformers.worst}
-                  />
-                </div>
-                
-                <div>
-                  <YearOverYearComparisonChart
-                    title="Percentage Change in Incremental Revenue by Media Channel"
-                    description="How each channel's contribution to incremental revenue has changed since last year"
-                    data={yearOverYearData.revenueByChannel}
-                    loading={loading}
-                    height={400}
-                    insights={revenueChannelInsights}
-                    bestPerformer={revenueChannelPerformers.best}
-                    worstPerformer={revenueChannelPerformers.worst}
-                  />
-                </div>
-                
-                <div>
-                  <YearOverYearComparisonChart
-                    title="Percentage Change in ROAS by Media Channel"
-                    description="How return on ad spend has evolved since last year for each channel"
-                    data={yearOverYearData.roasByChannel}
-                    loading={loading}
-                    height={400}
-                    showInfo={true}
-                    infoText="Return on Ad Spend (ROAS) changes show how efficiently your marketing spend is converting to revenue compared to the same period last year."
-                    insights={roasChannelInsights}
-                    bestPerformer={roasChannelPerformers.best}
-                    worstPerformer={roasChannelPerformers.worst}
-                  />
-                </div>
-                
-                <div className="mb-4">
-                  <YearOverYearComparisonChart
-                    title="Percentage Change in Incremental Revenue from External Factors"
-                    description="Breakdown of how external factors have influenced incremental revenue year-over-year"
-                    data={yearOverYearData.externalFactors}
-                    loading={loading}
-                    height={350}
-                    showInfo={true}
-                    infoText="External factors include market conditions, competitive landscape, seasonality, economic indicators, and other elements outside direct marketing control."
-                    insights={externalFactorsInsights}
-                    bestPerformer={externalFactorsPerformers.best}
-                    worstPerformer={externalFactorsPerformers.worst}
-                    contextualInfo={externalFactorsContext}
-                  />
-                </div>
-                
-                <div className="p-6 bg-amber-50 border border-amber-100 rounded-lg mb-2">
-                  <div className="flex items-start gap-3">
-                    <AlertTriangle className="h-6 w-6 text-amber-600 mt-1" />
-                    <div>
-                      <h3 className="font-medium text-amber-800 mb-2 text-lg">Key Recommendations</h3>
-                      <ul className="list-disc pl-5 space-y-3 text-amber-700">
-                        <li>
-                          <strong>Reallocate Budget:</strong> Given the 30%+ growth in Search and Social channels, consider shifting 15-20% of your Display budget to these higher-performing channels.
-                        </li>
-                        <li>
-                          <strong>Mitigate External Risks:</strong> Develop contingency plans for the -12% impact from market conditions and -15% from competitor activity, focusing on differentiated value propositions and targeted promotions.
-                        </li>
-                        <li>
-                          <strong>Optimize Email Marketing:</strong> With its 25% ROAS improvement, invest in expanding your email subscriber base and segmentation capabilities.
-                        </li>
-                        <li>
-                          <strong>Review Offline Strategy:</strong> The -2% performance decline suggests a need to reassess your offline media approach and better integrate it with digital channels.
-                        </li>
-                        <li>
-                          <strong>Seasonal Planning:</strong> Leverage the 8% positive impact from seasonal factors by planning campaigns further in advance and increasing budget during these favorable periods.
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
 
-                <div className="p-6 bg-white border rounded-lg shadow-sm mb-2">
-                  <h3 className="font-medium text-lg mb-4">External Factors Impact Analysis</h3>
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="space-y-4">
-                      <h4 className="font-medium text-primary">Understanding External Factors</h4>
-                      <p className="text-sm text-muted-foreground">
-                        External factors significantly impact marketing performance but are often overlooked in performance analysis. 
-                        Understanding these factors helps contextualize results and develop more resilient strategies.
-                      </p>
-                      
-                      <div className="space-y-2">
-                        {Object.entries(externalFactorsContext).map(([factor, description]) => (
-                          <div key={factor} className="border-l-4 border-blue-200 pl-3 py-1">
-                            <h5 className="text-sm font-medium">{factor}</h5>
-                            <p className="text-xs text-muted-foreground">{description}</p>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                    
-                    <div className="space-y-4">
-                      <h4 className="font-medium text-primary">Mitigation Strategies</h4>
-                      <div className="space-y-3">
-                        <div>
-                          <h5 className="text-sm font-medium">For Market Conditions (-12%)</h5>
-                          <p className="text-xs text-muted-foreground">Focus on value messaging, adjust pricing strategies, and target recession-proof segments. Consider introducing budget-friendly product options.</p>
-                        </div>
-                        <div>
-                          <h5 className="text-sm font-medium">For Competitor Activity (-15%)</h5>
-                          <p className="text-xs text-muted-foreground">Emphasize unique selling points, invest in brand differentiation, and introduce loyalty programs to maintain customer base despite competitive pressure.</p>
-                        </div>
-                        <div>
-                          <h5 className="text-sm font-medium">For Seasonal Factors (+8%)</h5>
-                          <p className="text-xs text-muted-foreground">Plan campaigns further in advance, increase inventory planning, and develop specialized creative for seasonal peaks.</p>
-                        </div>
-                        <div>
-                          <h5 className="text-sm font-medium">For Industry Trends (+16%)</h5>
-                          <p className="text-xs text-muted-foreground">Accelerate digital transformation initiatives, adopt emerging technologies early, and allocate more resources to growing channels and formats.</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+        <TabsContent value="trends" className="space-y-6 pt-6">
+          <ChannelTrendsChart data={trendsData} loading={loading} />
+        </TabsContent>
+
+        <TabsContent value="yoy" className="space-y-6 pt-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <YearOverYearComparisonChart
+              data={yearOverYearData}
+              title="Year-Over-Year Channel Performance"
+              description="Percentage change in revenue compared to previous year"
+              loading={loading}
+              insights={[
+                "Search shows the strongest YoY growth at +15.2%",
+                "Display shows concerning decline of -5.8%",
+                "Email remains stable with moderate growth"
+              ]}
+              bestPerformer="Search"
+              worstPerformer="Display"
+            />
+            
+            <MonthOverMonthComparisonChart
+              data={monthOverMonthData}
+              title="Month-Over-Month Performance"
+              description="Percentage change in revenue compared to previous month"
+              loading={loading}
+            />
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <YearOverYearComparisonChart
+              data={externalFactorsYoYData}
+              title="External Factors Impact on Revenue"
+              description="Percentage change in incremental revenue from external market factors"
+              loading={loading}
+              contextualInfo={externalFactorsContextualInfo}
+              insights={[
+                "Seasonal effects provide the biggest positive impact at +12.0%",
+                "Competitor activity is the largest negative factor at -4.5%",
+                "Net impact of all external factors is positive at +10.0%"
+              ]}
+              bestPerformer="Seasonal Effects"
+              worstPerformer="Competitor Activity"
+            />
+            
+            <YearOverYearComparisonChart
+              data={creativeYoYData}
+              title="Creative Performance Year-Over-Year"
+              description="Percentage change in performance by creative type"
+              loading={loading}
+              insights={[
+                "Interactive ads show the strongest performance improvements",
+                "Video assets consistently outperform static assets",
+                "Text ads continue to decline in effectiveness"
+              ]}
+              bestPerformer="Interactive Ads"
+              worstPerformer="Text Ads"
+            />
+          </div>
+        </TabsContent>
+
+        <TabsContent value="details" className="space-y-6 pt-6">
+          {selectedChannelData ? (
+            <ChannelDetailView
+              channelData={selectedChannelData}
+              trendsData={trendsData}
+              loading={loading}
+            />
+          ) : (
+            <div className="text-center py-12 text-muted-foreground">
+              Select a channel from the overview tab to see detailed insights.
+            </div>
+          )}
         </TabsContent>
       </Tabs>
     </div>
   );
-}
+};
+
+export default ChannelsPage;
