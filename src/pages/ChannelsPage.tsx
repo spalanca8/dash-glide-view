@@ -76,20 +76,8 @@ export default function ChannelsPage() {
       
       const yoyData = generateYearOverYearData();
       const externalFactors = generateExternalFactorsYoYData();
-      const momData = generateMonthOverMonthData();
       
-      const enhancedMomData = momData.map(item => {
-        const channelKeys = Object.keys(channelNames);
-        const randomChannel = channelKeys[Math.floor(Math.random() * channelKeys.length)];
-        const factorTypes = ["paidMedia", "ownedMedia", "promotions", "external", "pricing"];
-        const randomFactor = factorTypes[Math.floor(Math.random() * factorTypes.length)];
-        
-        return {
-          ...item,
-          channel: randomChannel,
-          factor: randomFactor
-        };
-      });
+      const momData = generateMonthOverMonthData();
       
       const fixedRevenueByFactor = yoyData.revenueByFactor.map(item => {
         if (item.name === "External Factors") {
@@ -119,7 +107,7 @@ export default function ChannelsPage() {
         roasByChannel: yoyData.roasByChannel,
         externalFactors: fixedExternalFactors
       });
-      setMonthOverMonthData(enhancedMomData);
+      setMonthOverMonthData(momData);
       setLoading(false);
     };
 

@@ -55,7 +55,53 @@ export function MonthOverMonthComparisonChart({
       result = result.filter(item => item.factor === selectedFactor);
     }
     
-    setFilteredData(result);
+    // Aggregate data by month after filtering by channel and factor
+    // This ensures we get one data point per month after filtering
+    if (result.length > 0) {
+      const monthlyAggregated = new Map();
+      
+      result.forEach(item => {
+        if (!monthlyAggregated.has(item.date)) {
+          monthlyAggregated.set(item.date, {
+            date: item.date,
+            currentYearTotal: 0,
+            previousYearTotal: 0,
+            count: 0
+          });
+        }
+        
+        const monthData = monthlyAggregated.get(item.date);
+        monthData.currentYearTotal += item.currentYear;
+        monthData.previousYearTotal += item.previousYear;
+        monthData.count += 1;
+      });
+      
+      // Convert aggregated data back to array format
+      const aggregatedResult = Array.from(monthlyAggregated.values()).map(item => {
+        const currentYear = Math.round(item.currentYearTotal / item.count);
+        const previousYear = Math.round(item.previousYearTotal / item.count);
+        const change = ((currentYear - previousYear) / previousYear) * 100;
+        
+        return {
+          date: item.date,
+          currentYear,
+          previousYear,
+          change: parseFloat(change.toFixed(1))
+        };
+      });
+      
+      // Sort by month sequence
+      const monthOrder = {
+        "Jan": 0, "Feb": 1, "Mar": 2, "Apr": 3, "May": 4, "Jun": 5,
+        "Jul": 6, "Aug": 7, "Sep": 8, "Oct": 9, "Nov": 10, "Dec": 11
+      };
+      
+      aggregatedResult.sort((a, b) => monthOrder[a.date as keyof typeof monthOrder] - monthOrder[b.date as keyof typeof monthOrder]);
+      
+      setFilteredData(aggregatedResult);
+    } else {
+      setFilteredData([]);
+    }
   }, [data, selectedChannel, selectedFactor]);
   
   const handleChannelChange = (value: string) => {
@@ -77,13 +123,15 @@ export function MonthOverMonthComparisonChart({
   }
 
   // Calculate overall trend for insights using filtered data
-  const overallTrend = filteredData.reduce((acc, item) => acc + item.change, 0) / filteredData.length;
+  const overallTrend = filteredData.length > 0 
+    ? filteredData.reduce((acc, item) => acc + item.change, 0) / filteredData.length 
+    : 0;
   const trendDirection = overallTrend > 0 ? "positive" : "negative";
   
   // Find the best and worst months from filtered data
   const sortedByChange = [...filteredData].sort((a, b) => b.change - a.change);
-  const bestMonth = sortedByChange[0];
-  const worstMonth = sortedByChange[sortedByChange.length - 1];
+  const bestMonth = sortedByChange.length > 0 ? sortedByChange[0] : null;
+  const worstMonth = sortedByChange.length > 0 ? sortedByChange[sortedByChange.length - 1] : null;
   
   // Prepare chart series 
   const chartSeries = [
