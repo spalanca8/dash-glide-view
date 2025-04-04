@@ -30,19 +30,21 @@ export function useDataProcessor(timeframe: string) {
     
     return data.map(day => {
       const revenue = day.totalRevenue;
-      // Generate last year's data with some variance (70-90% of current year's figures)
-      const lastYearVariance = 0.7 + (Math.random() * 0.2); // 70-90% of current year
+      // Generate last year's data with more significant variance (50-90% of current year's figures)
+      const lastYearVariance = 0.5 + (Math.random() * 0.4); // 50-90% of current year
       const lastYearRevenue = revenue * lastYearVariance;
       
       const cost = Object.keys(channelNames).reduce((sum, channel) => sum + (day[channel] || 0) * 0.4, 0);
-      const lastYearCost = cost * (0.8 + (Math.random() * 0.3)); // 80-110% of current year
+      // More significant variance for cost (70-120% of current year)
+      const lastYearCost = cost * (0.7 + (Math.random() * 0.5)); // 70-120% of current year
       
       const clicks = Math.round(revenue / 2.5);
       const impressions = Math.round(revenue * 10);
       const conversions = Math.round(revenue / 50);
       const ctr = (clicks / impressions) * 100;
       const conversionRate = (conversions / clicks) * 100;
-      const lastYearConversionRate = conversionRate * (0.7 + (Math.random() * 0.4)); // 70-110% of current year
+      // More significant variance for conversion rate (50-95% of current year)
+      const lastYearConversionRate = conversionRate * (0.5 + (Math.random() * 0.45)); // 50-95% of current year
       
       const bounce = 35 + (Math.random() * 20);
       const sessionDuration = 120 + (Math.random() * 180);
@@ -68,7 +70,7 @@ export function useDataProcessor(timeframe: string) {
         lastYearConversion: lastYearConversionRate.toFixed(2),
         cpc: (cost / clicks).toFixed(2),
         cpa: (cost / conversions).toFixed(2),
-        roas: revenue / cost,
+        roas: roas,
         lastYearRoas: lastYearRoas,
         bounceRate: bounce.toFixed(1),
         avgSessionDuration: Math.round(sessionDuration),
