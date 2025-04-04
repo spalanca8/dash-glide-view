@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -461,16 +462,16 @@ export default function ChannelsPage() {
                 </div>
               </div>
               
+              <div className="mb-8">
+                <MonthOverMonthComparisonChart 
+                  data={monthOverMonthData} 
+                  loading={loading} 
+                  height={400} 
+                  metric="Revenue"
+                />
+              </div>
+              
               <div className="grid grid-cols-1 gap-10">
-                <div className="mb-8">
-                  <MonthOverMonthComparisonChart 
-                    data={monthOverMonthData} 
-                    loading={loading} 
-                    height={400} 
-                    metric="Revenue"
-                  />
-                </div>
-                
                 <div>
                   <YearOverYearComparisonChart
                     title="Percentage Change in Incremental Revenue by Factor"
