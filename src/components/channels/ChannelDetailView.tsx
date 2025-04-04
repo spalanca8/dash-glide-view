@@ -4,7 +4,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { channelColors } from "@/data/mockData";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { ArrowUp, ArrowDown, BarChart, LineChart, TrendingUp } from "lucide-react";
+import { ArrowUp, ArrowDown, BarChart, LineChart, TrendingUp, Info } from "lucide-react";
 import { PerformanceChart } from "@/components/dashboard/PerformanceChart";
 import { ChannelImpressionsCostChart } from "./ChannelImpressionsCostChart";
 import { ChannelSaturationCurve } from "./ChannelSaturationCurve";
@@ -19,35 +19,59 @@ interface ChannelDetailViewProps {
 export function ChannelDetailView({ channelData, trendsData, loading }: ChannelDetailViewProps) {
   const [activeDetailTab, setActiveDetailTab] = useState("overview");
   
-  // Add default values for custom budgets needed by ChannelSaturationCurve
   const defaultCustomBudgets = {
     "bau": { [channelData?.id || 'default']: channelData?.cost || 10000 },
     "cost-savings": { [channelData?.id || 'default']: (channelData?.cost || 10000) * 0.9 },
     "revenue-uplift": { [channelData?.id || 'default']: (channelData?.cost || 10000) * 1.2 }
   };
-  
+
+  const relevantExternalFactors = {
+    search: {
+      "Competitor Activity": "Increased competitor keyword bidding has raised CPCs by approximately 18% year-over-year.",
+      "Industry Trends": "Growing adoption of voice search is changing keyword strategies and performance."
+    },
+    social: {
+      "Platform Algorithm Changes": "Recent updates to social platform algorithms have reduced organic reach by approximately 25%.",
+      "Privacy Regulations": "New privacy features are limiting targeting capabilities and attribution accuracy."
+    },
+    email: {
+      "Deliverability Changes": "Email service provider updates have affected inbox placement rates.",
+      "User Engagement Patterns": "Shifting email consumption patterns affect optimal send times and frequency."
+    },
+    display: {
+      "Ad Blocking Technology": "Increased adoption of ad blockers has reduced potential reach.",
+      "Viewability Standards": "Changing viewability requirements affect campaign performance metrics."
+    },
+    video: {
+      "Streaming Behavior": "Shifts from traditional to streaming platforms require adaptation of video strategies.",
+      "Content Consumption Habits": "Shorter attention spans demand more engaging first few seconds of video content."
+    },
+    affiliate: {
+      "Publisher Landscape": "Changes in affiliate publisher ecosystem affect program performance.",
+      "Commission Structures": "Competitive commission rates influence publisher promotion priorities."
+    }
+  };
+
   if (loading) {
     return <Skeleton className="w-full h-[500px]" />;
   }
 
   const channelColor = channelColors[channelData.id as keyof typeof channelColors] || "#4361ee";
 
-  // Calculate MROI (Marginal Return on Investment) - simplified for demo
   const mroi = (channelData.revenue / channelData.cost).toFixed(2);
   
-  // Determine if the channel is performing well based on ROAS
   const isPerformingWell = channelData.roas > 2;
   
-  // Filter trends data for this specific channel
   const channelTrendsData = trendsData.map(item => ({
     name: item.name,
     date: item.date,
     value: item[channelData.id] || 0
   }));
 
+  const channelExternalFactors = relevantExternalFactors[channelData.id as keyof typeof relevantExternalFactors];
+
   return (
     <div className="space-y-6">
-      {/* Channel Overview Card */}
       <Card>
         <CardHeader className="pb-2">
           <div className="flex items-center justify-between">
@@ -75,7 +99,6 @@ export function ChannelDetailView({ channelData, trendsData, loading }: ChannelD
         </CardHeader>
         
         <CardContent>
-          {/* Key Metrics Overview */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
             <div className="bg-muted/40 rounded-lg p-4">
               <div className="text-sm text-muted-foreground mb-1">Revenue</div>
@@ -138,7 +161,6 @@ export function ChannelDetailView({ channelData, trendsData, loading }: ChannelD
             </div>
           </div>
           
-          {/* Detailed Analysis Tabs */}
           <Tabs value={activeDetailTab} onValueChange={setActiveDetailTab}>
             <TabsList className="w-full md:w-auto mb-4">
               <TabsTrigger value="overview" className="flex items-center gap-1">
@@ -186,6 +208,26 @@ export function ChannelDetailView({ channelData, trendsData, loading }: ChannelD
                   } />
                 </div>
               </div>
+
+              {channelExternalFactors && (
+                <div className="bg-blue-50/30 rounded-lg p-4 border border-blue-100">
+                  <h3 className="text-lg font-medium mb-3 text-blue-800 flex items-center gap-1.5">
+                    <Info className="h-5 w-5 text-blue-600" />
+                    External Factors Impacting {channelData.name}
+                  </h3>
+                  <div className="space-y-3">
+                    {Object.entries(channelExternalFactors).map(([factor, impact]) => (
+                      <div key={factor} className="flex items-start gap-2">
+                        <span className="inline-block w-2 h-2 rounded-full bg-blue-400 mt-1.5"></span>
+                        <div>
+                          <h4 className="font-medium text-sm">{factor}</h4>
+                          <p className="text-sm text-muted-foreground">{impact}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
               
               <div>
                 <h3 className="text-lg font-medium mb-4">Performance Drivers</h3>
@@ -218,7 +260,6 @@ export function ChannelDetailView({ channelData, trendsData, loading }: ChannelD
             </TabsContent>
             
             <TabsContent value="trends" className="space-y-6">
-              {/* Performance Over Time Chart */}
               <div>
                 <h3 className="text-lg font-medium mb-4">Performance Over Time</h3>
                 <PerformanceChart
@@ -230,7 +271,6 @@ export function ChannelDetailView({ channelData, trendsData, loading }: ChannelD
                 />
               </div>
               
-              {/* Impressions and Cost Trends */}
               <div>
                 <h3 className="text-lg font-medium mb-4">Impressions & Cost Trends</h3>
                 <ChannelImpressionsCostChart
@@ -253,7 +293,7 @@ export function ChannelDetailView({ channelData, trendsData, loading }: ChannelD
                   channelId={channelData.id}
                   channelName={channelData.name}
                   color={channelColor}
-                  activeScenario="bau"  // Default to "business as usual" scenario
+                  activeScenario="bau"
                   customBudgets={defaultCustomBudgets}
                 />
               </div>

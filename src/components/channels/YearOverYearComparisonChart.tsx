@@ -31,6 +31,7 @@ type YearOverYearComparisonChartProps = {
   insights?: string[];
   bestPerformer?: string;
   worstPerformer?: string;
+  contextualInfo?: Record<string, string>; // Added contextualInfo prop
 };
 
 export function YearOverYearComparisonChart({
@@ -45,6 +46,7 @@ export function YearOverYearComparisonChart({
   insights = [],
   bestPerformer,
   worstPerformer,
+  contextualInfo = {}, // Initialize contextualInfo with empty object
 }: YearOverYearComparisonChartProps) {
   if (loading) {
     return <Skeleton className={cn("w-full", className)} style={{ height }} />;
@@ -52,6 +54,11 @@ export function YearOverYearComparisonChart({
 
   // Sort data by value to make visualization more meaningful
   const sortedData = [...data].sort((a, b) => a.value - b.value);
+
+  // Function to check if an item has contextual information available
+  const hasContextualInfo = (name: string) => {
+    return Object.keys(contextualInfo).includes(name);
+  };
 
   return (
     <div className="space-y-4">
@@ -131,6 +138,21 @@ export function YearOverYearComparisonChart({
           />
         </BarChart>
       </ResponsiveContainer>
+      
+      {/* Contextual Information Section */}
+      {Object.keys(contextualInfo).length > 0 && (
+        <div className="mt-4 p-4 bg-blue-50/40 border border-blue-100 rounded-lg">
+          <h4 className="font-medium text-blue-800 mb-2">External Factors Explained</h4>
+          <div className="space-y-3">
+            {Object.entries(contextualInfo).map(([factor, description]) => (
+              <div key={factor} className="text-sm">
+                <span className="font-medium text-blue-700">{factor}:</span>{" "}
+                <span className="text-blue-600">{description}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
       
       {(insights?.length > 0 || bestPerformer || worstPerformer) && (
         <div className="mt-4 p-4 bg-blue-50/50 border border-blue-100 rounded-lg">

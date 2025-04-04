@@ -145,6 +145,14 @@ export default function ChannelsPage() {
     ? channelData.find(channel => channel.id === selectedChannel)
     : null;
 
+  const externalFactorsContext = {
+    "Market Conditions": "Economic trends, industry growth rates, and overall market performance that impact consumer purchasing behavior.",
+    "Competitor Activity": "Changes in competitor pricing, promotions, new product launches, and marketing strategies.",
+    "Seasonal Factors": "Regular cyclical patterns in consumer behavior based on time of year, holidays, or weather.",
+    "Industry Trends": "Shifting consumer preferences, technological advancements, and emerging behaviors in the marketplace.",
+    "Supply Chain": "Logistics, inventory availability, and distribution challenges affecting product availability.",
+  };
+
   const revenueFactorInsights = [
     "Paid Online Media shows a 24% increase, indicating effective digital investments",
     "Offline Media performance has declined by 2%, suggesting a shift in customer behavior",
@@ -167,10 +175,10 @@ export default function ChannelsPage() {
   ];
 
   const externalFactorsInsights = [
-    "Market conditions account for the biggest negative impact at -12%",
-    "Competitor activity has intensified, causing a 15% negative impact",
-    "Seasonal factors contributed positively with an 8% uplift",
-    "Industry trends are favorable, contributing a 16% positive impact"
+    "Market conditions account for the biggest negative impact at -12%, primarily due to economic slowdown in key regions",
+    "Competitor activity has intensified, causing a 15% negative impact through aggressive pricing strategies",
+    "Seasonal factors contributed positively with an 8% uplift due to better alignment with holiday promotions",
+    "Industry trends are favorable, contributing a 16% positive impact through growing adoption of online shopping"
   ];
 
   const getBestAndWorstPerformers = (data: any[]) => {
@@ -280,6 +288,7 @@ export default function ChannelsPage() {
                     <li>Reallocate 15% of display budget to search and social</li>
                     <li>Optimize video creative to improve engagement</li>
                     <li>Increase email frequency to capitalize on high ROAS</li>
+                    <li>Develop contingency plans for negative market conditions</li>
                   </ul>
                 </div>
               </div>
@@ -486,7 +495,8 @@ export default function ChannelsPage() {
                       Overall, your marketing performance has improved by 18% year-over-year, with Paid Online Media 
                       driving the strongest growth at 24%. Your most efficient channel is Email Marketing with a 25% 
                       increase in ROAS. Market conditions are creating a -12% headwind, suggesting the need to 
-                      adjust strategies in challenging market segments.
+                      adjust strategies in challenging market segments. Competitor activity has intensified with 
+                      aggressive pricing strategies, creating an additional -15% pressure on performance.
                     </p>
                   </div>
                 </div>
@@ -562,6 +572,7 @@ export default function ChannelsPage() {
                     insights={externalFactorsInsights}
                     bestPerformer={externalFactorsPerformers.best}
                     worstPerformer={externalFactorsPerformers.worst}
+                    contextualInfo={externalFactorsContext}
                   />
                 </div>
                 
@@ -575,7 +586,7 @@ export default function ChannelsPage() {
                           <strong>Reallocate Budget:</strong> Given the 30%+ growth in Search and Social channels, consider shifting 15-20% of your Display budget to these higher-performing channels.
                         </li>
                         <li>
-                          <strong>Mitigate External Risks:</strong> Develop contingency plans for the -12% impact from market conditions, potentially through more resilient promotional strategies.
+                          <strong>Mitigate External Risks:</strong> Develop contingency plans for the -12% impact from market conditions and -15% from competitor activity, focusing on differentiated value propositions and targeted promotions.
                         </li>
                         <li>
                           <strong>Optimize Email Marketing:</strong> With its 25% ROAS improvement, invest in expanding your email subscriber base and segmentation capabilities.
@@ -583,7 +594,55 @@ export default function ChannelsPage() {
                         <li>
                           <strong>Review Offline Strategy:</strong> The -2% performance decline suggests a need to reassess your offline media approach and better integrate it with digital channels.
                         </li>
+                        <li>
+                          <strong>Seasonal Planning:</strong> Leverage the 8% positive impact from seasonal factors by planning campaigns further in advance and increasing budget during these favorable periods.
+                        </li>
                       </ul>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="p-6 bg-white border rounded-lg shadow-sm mb-2">
+                  <h3 className="font-medium text-lg mb-4">External Factors Impact Analysis</h3>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-4">
+                      <h4 className="font-medium text-primary">Understanding External Factors</h4>
+                      <p className="text-sm text-muted-foreground">
+                        External factors significantly impact marketing performance but are often overlooked in performance analysis. 
+                        Understanding these factors helps contextualize results and develop more resilient strategies.
+                      </p>
+                      
+                      <div className="space-y-2">
+                        {Object.entries(externalFactorsContext).map(([factor, description]) => (
+                          <div key={factor} className="border-l-4 border-blue-200 pl-3 py-1">
+                            <h5 className="text-sm font-medium">{factor}</h5>
+                            <p className="text-xs text-muted-foreground">{description}</p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                    
+                    <div className="space-y-4">
+                      <h4 className="font-medium text-primary">Mitigation Strategies</h4>
+                      <div className="space-y-3">
+                        <div>
+                          <h5 className="text-sm font-medium">For Market Conditions (-12%)</h5>
+                          <p className="text-xs text-muted-foreground">Focus on value messaging, adjust pricing strategies, and target recession-proof segments. Consider introducing budget-friendly product options.</p>
+                        </div>
+                        <div>
+                          <h5 className="text-sm font-medium">For Competitor Activity (-15%)</h5>
+                          <p className="text-xs text-muted-foreground">Emphasize unique selling points, invest in brand differentiation, and introduce loyalty programs to maintain customer base despite competitive pressure.</p>
+                        </div>
+                        <div>
+                          <h5 className="text-sm font-medium">For Seasonal Factors (+8%)</h5>
+                          <p className="text-xs text-muted-foreground">Plan campaigns further in advance, increase inventory planning, and develop specialized creative for seasonal peaks.</p>
+                        </div>
+                        <div>
+                          <h5 className="text-sm font-medium">For Industry Trends (+16%)</h5>
+                          <p className="text-xs text-muted-foreground">Accelerate digital transformation initiatives, adopt emerging technologies early, and allocate more resources to growing channels and formats.</p>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
