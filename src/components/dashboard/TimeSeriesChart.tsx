@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { 
   LineChart, 
@@ -45,6 +44,7 @@ type TimeSeriesChartProps = {
   roasScatterVisible?: boolean;
   chartType?: "combined" | "separated" | "roas";
   showAverageLines?: boolean;
+  legendSpacing?: boolean;
 };
 
 export function TimeSeriesChart({
@@ -61,12 +61,12 @@ export function TimeSeriesChart({
   roasScatterVisible = false,
   chartType = "combined",
   showAverageLines = false,
+  legendSpacing = false,
 }: TimeSeriesChartProps) {
   const [visibleSeries, setVisibleSeries] = useState<string[]>(
     series.map(s => s.dataKey)
   );
 
-  // Calculate rolling average (7-period) for each series
   const rollingAverageData = useMemo(() => {
     if (!showRollingAverage) return [];
     
@@ -99,7 +99,6 @@ export function TimeSeriesChart({
     });
   }, [data, showRollingAverage, series, roasScatterVisible]);
 
-  // Calculate average values for reference lines
   const averageValues = useMemo(() => {
     if (!showAverageLines) return {};
     
@@ -116,10 +115,8 @@ export function TimeSeriesChart({
     return result;
   }, [data, series, showAverageLines]);
 
-  // Filter series by visibility
   const filteredSeries = series.filter(s => visibleSeries.includes(s.dataKey));
   
-  // Handle legend click to toggle series visibility
   const handleLegendClick = (e: any) => {
     const { dataKey } = e;
     
@@ -146,7 +143,6 @@ export function TimeSeriesChart({
       color: item.color
     };
     
-    // Add rolling average configs
     if (showRollingAverage) {
       acc[`${item.dataKey}RollingAvg`] = {
         label: `${item.label} (7-day Avg)`,
@@ -157,7 +153,6 @@ export function TimeSeriesChart({
     return acc;
   }, {} as Record<string, any>);
 
-  // For ROAS-only chart with different Y-axis
   if (chartType === "roas") {
     return (
       <ChartContainer className={cn("w-full", className)} style={{ height }} config={chartConfig}>
@@ -211,9 +206,10 @@ export function TimeSeriesChart({
                 </span>
               );
             }}
+            iconSize={10}
+            wrapperStyle={legendSpacing ? { paddingLeft: 20, paddingRight: 20, columnGap: '40px' } : undefined}
           />
 
-          {/* Comparison period */}
           {comparisonPeriod && (
             <ReferenceArea 
               x1={data[comparisonPeriod.start]?.[xAxisKey]} 
@@ -223,7 +219,6 @@ export function TimeSeriesChart({
             />
           )}
 
-          {/* Average reference line */}
           {showAverageLines && averageValues.roas && (
             <ReferenceLine 
               y={averageValues.roas} 
@@ -238,7 +233,6 @@ export function TimeSeriesChart({
             />
           )}
 
-          {/* ROAS line */}
           <Line
             type="monotone"
             dataKey="roas"
@@ -250,7 +244,6 @@ export function TimeSeriesChart({
             animationDuration={1000}
           />
 
-          {/* Rolling average line if enabled */}
           {showRollingAverage && (
             <Line
               type="monotone"
@@ -265,7 +258,6 @@ export function TimeSeriesChart({
             />
           )}
 
-          {/* Add brush for zooming */}
           {showBrush && (
             <Brush 
               dataKey={xAxisKey} 
@@ -279,7 +271,6 @@ export function TimeSeriesChart({
     );
   }
 
-  // For separated revenue/cost chart
   if (chartType === "separated") {
     return (
       <ChartContainer className={cn("w-full", className)} style={{ height }} config={chartConfig}>
@@ -334,9 +325,10 @@ export function TimeSeriesChart({
                 </span>
               );
             }}
+            iconSize={10}
+            wrapperStyle={legendSpacing ? { paddingLeft: 20, paddingRight: 20, columnGap: '40px' } : undefined}
           />
 
-          {/* Comparison period */}
           {comparisonPeriod && (
             <ReferenceArea 
               x1={data[comparisonPeriod.start]?.[xAxisKey]} 
@@ -346,7 +338,6 @@ export function TimeSeriesChart({
             />
           )}
 
-          {/* Average reference lines */}
           {showAverageLines && averageValues.revenue && (
             <ReferenceLine 
               y={averageValues.revenue} 
@@ -377,7 +368,6 @@ export function TimeSeriesChart({
             />
           )}
 
-          {/* Render each series based on visibility and type */}
           {filteredSeries.map((item, index) => {
             const isVisible = visibleSeries.includes(item.dataKey);
             if (!isVisible) return null;
@@ -399,13 +389,12 @@ export function TimeSeriesChart({
             );
           })}
 
-          {/* Rolling average lines if enabled */}
           {showRollingAverage && filteredSeries.map((item, index) => (
             <Line
               key={`${item.dataKey}RollingAvg`}
               type="monotone"
               dataKey={`${item.dataKey}RollingAvg`}
-              name={`${item.label} (7-day Avg)`}
+              name={`${item.label} (7-day Avg)}`}
               stroke={item.color}
               strokeWidth={2.5}
               strokeDasharray="5 5"
@@ -416,7 +405,6 @@ export function TimeSeriesChart({
             />
           ))}
 
-          {/* Add brush for zooming */}
           {showBrush && (
             <Brush 
               dataKey={xAxisKey} 
@@ -430,7 +418,6 @@ export function TimeSeriesChart({
     );
   }
 
-  // Default combined chart (original)
   return (
     <ChartContainer className={cn("w-full", className)} style={{ height }} config={chartConfig}>
       <ComposedChart
@@ -501,9 +488,10 @@ export function TimeSeriesChart({
               </span>
             );
           }}
+          iconSize={10}
+          wrapperStyle={legendSpacing ? { paddingLeft: 20, paddingRight: 20, columnGap: '40px' } : undefined}
         />
 
-        {/* Reference area for comparison period */}
         {comparisonPeriod && (
           <ReferenceArea 
             x1={data[comparisonPeriod.start]?.[xAxisKey]} 
@@ -513,7 +501,6 @@ export function TimeSeriesChart({
           />
         )}
 
-        {/* Render each series based on visibility and type */}
         {filteredSeries.map((item, index) => {
           const isVisible = visibleSeries.includes(item.dataKey);
           if (!isVisible && item.dataKey !== "rollingAvg") return null;
@@ -568,7 +555,6 @@ export function TimeSeriesChart({
           }
         })}
 
-        {/* Rolling average lines if enabled */}
         {showRollingAverage && filteredSeries
           .filter(s => s.dataKey !== "roas" || !roasScatterVisible)
           .map((item, index) => {
@@ -579,7 +565,7 @@ export function TimeSeriesChart({
                 key={`${item.dataKey}RollingAvg`}
                 type="monotone"
                 dataKey={`${item.dataKey}RollingAvg`}
-                name={`${item.label} (7-day Avg)`}
+                name={`${item.label} (7-day Avg)}`}
                 stroke={item.color}
                 strokeWidth={2.5}
                 strokeDasharray="5 5"
@@ -591,7 +577,6 @@ export function TimeSeriesChart({
             );
         })}
 
-        {/* Add brush for zooming */}
         {showBrush && (
           <Brush 
             dataKey={xAxisKey} 

@@ -468,6 +468,7 @@ export default function ChannelsPage() {
                   loading={loading} 
                   height={400} 
                   metric="Revenue"
+                  hideChangeMetric={true}
                 />
               </div>
               

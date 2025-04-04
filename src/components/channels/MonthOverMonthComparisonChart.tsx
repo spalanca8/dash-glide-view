@@ -16,13 +16,15 @@ type MonthOverMonthComparisonChartProps = {
   loading?: boolean;
   height?: number;
   metric?: string;
+  hideChangeMetric?: boolean;
 };
 
 export function MonthOverMonthComparisonChart({
   data,
   loading = false,
   height = 400,
-  metric = "Revenue"
+  metric = "Revenue",
+  hideChangeMetric = false
 }: MonthOverMonthComparisonChartProps) {
   const [showHelp, setShowHelp] = useState(false);
   
@@ -53,14 +55,18 @@ export function MonthOverMonthComparisonChart({
       label: "Last Year",
       type: "line" as const,
       strokeDasharray: "5 5"
-    },
-    {
+    }
+  ];
+  
+  // Only add change metric series if not hidden
+  if (!hideChangeMetric) {
+    chartSeries.push({
       dataKey: "change",
       color: "#10b981",
       label: "MoM % Change",
       type: "line" as const,
-    }
-  ];
+    });
+  }
 
   return (
     <Card>
@@ -94,7 +100,7 @@ export function MonthOverMonthComparisonChart({
                 <p className="text-sm text-muted-foreground">
                   This chart displays month-over-month {metric.toLowerCase()} data for the current year compared to the same period last year.
                   The solid blue line represents this year's data, while the dashed gray line shows last year's performance.
-                  The green line shows the percentage change between corresponding months, helping you identify growth trends and seasonal patterns.
+                  {!hideChangeMetric && " The green line shows the percentage change between corresponding months, helping you identify growth trends and seasonal patterns."}
                 </p>
               </div>
             </div>
@@ -107,6 +113,7 @@ export function MonthOverMonthComparisonChart({
           xAxisKey="date"
           height={height}
           showAverageLines={true}
+          legendSpacing={true}
         />
         
         <div className="mt-6 p-4 bg-blue-50/50 border border-blue-100 rounded-lg">
