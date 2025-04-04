@@ -7,7 +7,6 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { channelColors } from "@/data/mockData";
 
 interface RoasComparisonChartProps {
-  data?: any[]; // Make data optional for backward compatibility
   channelData: any[];
   loading: boolean;
   height?: number;
@@ -16,7 +15,6 @@ interface RoasComparisonChartProps {
 }
 
 export function RoasComparisonChart({ 
-  data,
   channelData, 
   loading, 
   height = 400,
@@ -27,11 +25,8 @@ export function RoasComparisonChart({
     return <Skeleton className="w-full h-[400px]" />;
   }
 
-  // Use data if provided, otherwise use channelData
-  const chartData = data || channelData;
-
   // Sort channels by ROAS for better visualization
-  const sortedData = [...chartData].sort((a, b) => b.roas - a.roas);
+  const sortedData = [...channelData].sort((a, b) => b.roas - a.roas);
 
   return (
     <Card className="overflow-hidden border-border/40 shadow-sm">

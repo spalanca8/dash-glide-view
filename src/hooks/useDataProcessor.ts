@@ -1,83 +1,28 @@
+
 import { useState, useEffect } from "react";
-import { generatePerformanceData, generateChannelData, channelNames } from "@/data/mockData";
+import { generatePerformanceData, channelNames } from "@/data/mockData";
 
-type DataProcessorOptions = {
-  dataGeneratorFn?: any;
-  timeSeriesFn?: any;
-  onError?: (error: any) => void;
-  timeframe?: string;
-};
-
-export function useDataProcessor(options: DataProcessorOptions = {}) {
-  const { timeframe = "30d", dataGeneratorFn, timeSeriesFn, onError } = options;
-  
+export function useDataProcessor(timeframe: string) {
   const [loading, setLoading] = useState(true);
   const [performanceData, setPerformanceData] = useState<any[]>([]);
-  const [channelData, setChannelData] = useState<any[]>([]);
-  const [trendsData, setTrendsData] = useState<any[]>([]);
-  const [processingError, setProcessingError] = useState<Error | null>(null);
-  const [yearOverYearData, setYearOverYearData] = useState<any[]>([]);
-  const [monthOverMonthData, setMonthOverMonthData] = useState<any[]>([]);
 
   useEffect(() => {
     // Simulate data loading
     const loadData = async () => {
       setLoading(true);
 
-      try {
-        // Simulate API call delay
-        await new Promise((resolve) => setTimeout(resolve, 600));
+      // Simulate API call delay
+      await new Promise((resolve) => setTimeout(resolve, 600));
 
-        const days = timeframe === "7d" ? 7 : timeframe === "30d" ? 30 : 90;
-        
-        // Generate channel data
-        const channels = dataGeneratorFn ? dataGeneratorFn() : generateChannelData();
-        setChannelData(channels);
-        
-        // Generate time series data
-        const performance = timeSeriesFn ? timeSeriesFn(days) : generatePerformanceData(days);
-        setPerformanceData(performance);
-        setTrendsData(performance);
-        
-        // Generate year-over-year data
-        const yoyData = channels.map(channel => ({
-          name: channel.name,
-          value: ((Math.random() * 30) - 10).toFixed(1), // -10% to +20% change
-          color: channel.value >= 0 ? "#4ade80" : "#f87171"
-        }));
-        setYearOverYearData(yoyData);
-        
-        // Generate month-over-month data
-        const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-        const momData = months.map(month => {
-          const currentYear = Math.round(100000 + Math.random() * 50000);
-          const previousYear = Math.round(currentYear * (0.7 + Math.random() * 0.5));
-          const change = ((currentYear - previousYear) / previousYear) * 100;
-          
-          return {
-            date: month,
-            currentYear,
-            previousYear,
-            change: parseFloat(change.toFixed(1))
-          };
-        });
-        setMonthOverMonthData(momData);
-        
-        setProcessingError(null);
-      } catch (error) {
-        console.error("Error processing data:", error);
-        setProcessingError(error as Error);
-        
-        if (onError) {
-          onError(error);
-        }
-      } finally {
-        setLoading(false);
-      }
+      const days = timeframe === "7d" ? 7 : timeframe === "30d" ? 30 : 90;
+      const performance = generatePerformanceData(days);
+
+      setPerformanceData(performance);
+      setLoading(false);
     };
 
     loadData();
-  }, [timeframe, dataGeneratorFn, timeSeriesFn, onError]);
+  }, [timeframe]);
 
   // Aggregate the data based on selected metrics
   const aggregateData = (data: any[]) => {
@@ -209,10 +154,5 @@ export function useDataProcessor(options: DataProcessorOptions = {}) {
     aggregatedData,
     summaryMetrics,
     dateInfo,
-    channelData,
-    trendsData,
-    processingError,
-    yearOverYearData,
-    monthOverMonthData
   };
 }

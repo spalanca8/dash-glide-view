@@ -25,8 +25,6 @@ type MonthOverMonthComparisonChartProps = {
   factors?: Array<{ value: string; label: string }>;
   onChannelChange?: (channel: string) => void;
   onFactorChange?: (factor: string) => void;
-  title?: string;
-  description?: string;
 };
 
 export function MonthOverMonthComparisonChart({
@@ -38,9 +36,7 @@ export function MonthOverMonthComparisonChart({
   channels = [],
   factors = [],
   onChannelChange,
-  onFactorChange,
-  title,
-  description
+  onFactorChange
 }: MonthOverMonthComparisonChartProps) {
   const [showHelp, setShowHelp] = useState(false);
   const [selectedChannel, setSelectedChannel] = useState("all");
@@ -164,10 +160,6 @@ export function MonthOverMonthComparisonChart({
     });
   }
 
-  // Default title/description if not provided
-  const displayTitle = title || `Month-over-Month ${metric} Comparison`;
-  const displayDescription = description || `Compare monthly ${metric.toLowerCase()} trends and changes between this year and last year`;
-
   return (
     <Card>
       <CardHeader className="pb-2">
@@ -175,10 +167,10 @@ export function MonthOverMonthComparisonChart({
           <div>
             <CardTitle className="text-xl flex items-center gap-2">
               <Calendar className="h-5 w-5 text-primary" />
-              {displayTitle}
+              Month-over-Month {metric} Comparison
             </CardTitle>
             <CardDescription>
-              {displayDescription}
+              Compare monthly {metric.toLowerCase()} trends and changes between this year and last year
             </CardDescription>
           </div>
           <div className="flex items-center gap-3">

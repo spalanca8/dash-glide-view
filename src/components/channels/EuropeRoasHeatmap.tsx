@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -6,6 +7,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { ArrowDown, ArrowUp, Info, Maximize2, X } from "lucide-react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetClose } from "@/components/ui/sheet";
 
+// Mock data for European regions with ROAS values
 const europeRegionsData = [
   { region: "United Kingdom", roas: 4.2, flag: "🇬🇧", channels: {
     social: 3.8, search: 5.2, email: 4.5, display: 3.1, video: 4.7
@@ -63,6 +65,7 @@ const europeRegionsData = [
   }},
 ];
 
+// Define channel names for display
 const channelNames = {
   social: "Social Media",
   search: "Search",
@@ -71,6 +74,7 @@ const channelNames = {
   video: "Video"
 };
 
+// Get colors for the heatmap based on ROAS value
 const getRoasColor = (roas: number) => {
   if (roas >= 5.0) return "bg-green-600 text-white";
   if (roas >= 4.0) return "bg-green-500 text-white";
@@ -83,6 +87,7 @@ const getRoasColor = (roas: number) => {
   return "bg-red-500 text-white";
 };
 
+// Function to get emoji indicators for ROAS trend
 const getTrendIndicator = (value: number) => {
   if (value >= 4.0) return <ArrowUp className="h-4 w-4 text-green-500" />;
   if (value >= 3.0) return <ArrowUp className="h-4 w-4 text-green-400" />;
@@ -92,21 +97,22 @@ const getTrendIndicator = (value: number) => {
 
 interface EuropeRoasHeatmapProps {
   loading?: boolean;
-  selectedChannel?: string | null;
+  selectedChannel: string | null;
 }
 
-export function EuropeRoasHeatmap({ 
-  loading = false, 
-  selectedChannel = null 
-}: EuropeRoasHeatmapProps) {
+export function EuropeRoasHeatmap({ loading = false, selectedChannel }: EuropeRoasHeatmapProps) {
+  // Sort regions by ROAS
   const sortedRegions = [...europeRegionsData].sort((a, b) => b.roas - a.roas);
 
+  // Calculate summary stats
   const averageRoas = sortedRegions.reduce((sum, region) => sum + region.roas, 0) / sortedRegions.length;
   const bestRegion = sortedRegions[0];
   const worstRegion = sortedRegions[sortedRegions.length - 1];
 
+  // State for selected region for detailed view
   const [selectedRegion, setSelectedRegion] = useState<typeof europeRegionsData[0] | null>(null);
 
+  // Filter data based on selected channel if needed
   const filteredRegions = selectedChannel && selectedChannel !== "all" 
     ? sortedRegions.map(region => ({
         ...region,
@@ -145,6 +151,7 @@ export function EuropeRoasHeatmap({
         </CardDescription>
       </CardHeader>
       <CardContent>
+        {/* Summary metrics cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
           <Card>
             <CardContent className="p-4">
@@ -244,6 +251,7 @@ export function EuropeRoasHeatmap({
           </div>
         </div>
 
+        {/* Channel breakdown sheet that appears when a region is clicked */}
         <Sheet open={!!selectedRegion} onOpenChange={() => setSelectedRegion(null)}>
           <SheetContent className="sm:max-w-lg">
             <SheetHeader>
