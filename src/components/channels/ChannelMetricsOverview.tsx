@@ -42,6 +42,7 @@ export function ChannelMetricsOverview({ data, loading }: ChannelMetricsOverview
     {
       name: "Revenue",
       property: "revenue",
+      prevYearProperty: "lastYearRevenue",
       format: (val: number | undefined | null) => {
         if (val === undefined || val === null) return "$0";
         return `$${val.toLocaleString()}`;
@@ -53,6 +54,7 @@ export function ChannelMetricsOverview({ data, loading }: ChannelMetricsOverview
     {
       name: "Cost",
       property: "cost",
+      prevYearProperty: "lastYearCost",
       format: (val: number | undefined | null) => {
         if (val === undefined || val === null) return "$0";
         return `$${val.toLocaleString()}`;
@@ -65,6 +67,7 @@ export function ChannelMetricsOverview({ data, loading }: ChannelMetricsOverview
     {
       name: "ROAS",
       property: "roas",
+      prevYearProperty: "lastYearRoas",
       format: (val: number | undefined | null) => {
         if (val === undefined || val === null) return "0.00x";
         return `${val.toFixed(2)}x`;
@@ -76,6 +79,7 @@ export function ChannelMetricsOverview({ data, loading }: ChannelMetricsOverview
     {
       name: "Conversion",
       property: "conversion",
+      prevYearProperty: "lastYearConversion",
       format: (val: number | undefined | null) => {
         if (val === undefined || val === null) return "0.00%";
         return `${val.toFixed(2)}%`;
@@ -98,67 +102,100 @@ export function ChannelMetricsOverview({ data, loading }: ChannelMetricsOverview
     }
   ];
 
+  // Calculate year-over-year percentage changes
+  const calculateYoYChange = (metric: any) => {
+    // Calculate average for current year
+    const currentYearAvg = data.reduce((sum, item) => sum + (item[metric.property] || 0), 0) / data.length;
+    
+    // Calculate average for previous year
+    const prevYearAvg = data.reduce((sum, item) => sum + (item[metric.prevYearProperty] || 0), 0) / data.length;
+    
+    // Calculate percentage change
+    if (prevYearAvg === 0) return 0; // Avoid division by zero
+    return ((currentYearAvg - prevYearAvg) / prevYearAvg) * 100;
+  };
+
   return (
     <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
-      {metrics.map((metric) => (
-        <Card key={metric.name} className="overflow-hidden border hover:shadow-md transition-shadow">
-          <div className="bg-primary/10 py-3 px-6">
-            <h3 className="text-lg font-medium">{metric.name} Overview</h3>
-          </div>
-          <CardContent className="p-6">
-            <div className="flex justify-between items-center mb-4 pb-2 border-b">
-              <span className="text-sm font-medium text-muted-foreground">Average:</span>
-              <span className="text-xl">{metric.format(metric.average)}</span>
+      {metrics.map((metric) => {
+        // Calculate year-over-year change for this metric
+        const yoyChange = calculateYoYChange(metric);
+        const isPositive = yoyChange > 0;
+        // For cost metric, lower is better so we invert the positive/negative logic
+        const isPerfMetricPositive = metric.name === "Cost" ? !isPositive : isPositive;
+        
+        return (
+          <Card key={metric.name} className="overflow-hidden border hover:shadow-md transition-shadow">
+            <div className="bg-primary/10 py-3 px-6">
+              <h3 className="text-lg font-medium">{metric.name} Overview</h3>
             </div>
-            
-            <div className="space-y-5">
-              <div className="group relative overflow-hidden rounded-md p-3 transition-all hover:bg-primary/5">
-                <div className="absolute left-0 top-0 h-full w-1 bg-green-500"></div>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <ArrowUp className="h-5 w-5 text-green-500" />
-                    <span className="text-sm font-medium">Best:</span>
+            <CardContent className="p-6">
+              <div className="flex justify-between items-center mb-4 pb-2 border-b">
+                <span className="text-sm font-medium text-muted-foreground">Average:</span>
+                <div className="flex flex-col items-end">
+                  <span className="text-xl">{metric.format(metric.average)}</span>
+                  <div className="flex items-center gap-1 text-xs mt-1">
+                    {isPositive ? (
+                      <ArrowUp className={`h-3 w-3 ${isPerfMetricPositive ? "text-green-500" : "text-red-500"}`} />
+                    ) : (
+                      <ArrowDown className={`h-3 w-3 ${isPerfMetricPositive ? "text-red-500" : "text-green-500"}`} />
+                    )}
+                    <span className={`font-medium ${isPerfMetricPositive ? "text-green-600" : "text-red-600"}`}>
+                      {Math.abs(yoyChange).toFixed(1)}% vs last year
+                    </span>
                   </div>
-                  <div 
-                    className="h-3 w-3 rounded-full" 
-                    style={{ 
-                      backgroundColor: channelColors[metric.best?.id as keyof typeof channelColors] || "#888" 
-                    }}
-                  />
-                </div>
-                <div className="mt-1 flex justify-between items-center">
-                  <span className="font-medium text-sm">{metric.best?.name || "N/A"}</span>
-                  <span>
-                    {metric.format(metric.best?.[metric.property])}
-                  </span>
                 </div>
               </div>
               
-              <div className="group relative overflow-hidden rounded-md p-3 transition-all hover:bg-primary/5">
-                <div className="absolute left-0 top-0 h-full w-1 bg-red-500"></div>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <ArrowDown className="h-5 w-5 text-red-500" />
-                    <span className="text-sm font-medium">Worst:</span>
+              <div className="space-y-5">
+                <div className="group relative overflow-hidden rounded-md p-3 transition-all hover:bg-primary/5">
+                  <div className="absolute left-0 top-0 h-full w-1 bg-green-500"></div>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <ArrowUp className="h-5 w-5 text-green-500" />
+                      <span className="text-sm font-medium">Best:</span>
+                    </div>
+                    <div 
+                      className="h-3 w-3 rounded-full" 
+                      style={{ 
+                        backgroundColor: channelColors[metric.best?.id as keyof typeof channelColors] || "#888" 
+                      }}
+                    />
                   </div>
-                  <div 
-                    className="h-3 w-3 rounded-full" 
-                    style={{ 
-                      backgroundColor: channelColors[metric.worst?.id as keyof typeof channelColors] || "#888" 
-                    }}
-                  />
+                  <div className="mt-1 flex justify-between items-center">
+                    <span className="font-medium text-sm">{metric.best?.name || "N/A"}</span>
+                    <span>
+                      {metric.format(metric.best?.[metric.property])}
+                    </span>
+                  </div>
                 </div>
-                <div className="mt-1 flex justify-between items-center">
-                  <span className="font-medium text-sm">{metric.worst?.name || "N/A"}</span>
-                  <span>
-                    {metric.format(metric.worst?.[metric.property])}
-                  </span>
+                
+                <div className="group relative overflow-hidden rounded-md p-3 transition-all hover:bg-primary/5">
+                  <div className="absolute left-0 top-0 h-full w-1 bg-red-500"></div>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <ArrowDown className="h-5 w-5 text-red-500" />
+                      <span className="text-sm font-medium">Worst:</span>
+                    </div>
+                    <div 
+                      className="h-3 w-3 rounded-full" 
+                      style={{ 
+                        backgroundColor: channelColors[metric.worst?.id as keyof typeof channelColors] || "#888" 
+                      }}
+                    />
+                  </div>
+                  <div className="mt-1 flex justify-between items-center">
+                    <span className="font-medium text-sm">{metric.worst?.name || "N/A"}</span>
+                    <span>
+                      {metric.format(metric.worst?.[metric.property])}
+                    </span>
+                  </div>
                 </div>
               </div>
-            </div>
-          </CardContent>
-        </Card>
-      ))}
+            </CardContent>
+          </Card>
+        );
+      })}
     </div>
   );
 }

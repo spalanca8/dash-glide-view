@@ -30,30 +30,46 @@ export function useDataProcessor(timeframe: string) {
     
     return data.map(day => {
       const revenue = day.totalRevenue;
+      // Generate last year's data with some variance (70-90% of current year's figures)
+      const lastYearVariance = 0.7 + (Math.random() * 0.2); // 70-90% of current year
+      const lastYearRevenue = revenue * lastYearVariance;
+      
       const cost = Object.keys(channelNames).reduce((sum, channel) => sum + (day[channel] || 0) * 0.4, 0);
+      const lastYearCost = cost * (0.8 + (Math.random() * 0.3)); // 80-110% of current year
+      
       const clicks = Math.round(revenue / 2.5);
       const impressions = Math.round(revenue * 10);
       const conversions = Math.round(revenue / 50);
       const ctr = (clicks / impressions) * 100;
       const conversionRate = (conversions / clicks) * 100;
+      const lastYearConversionRate = conversionRate * (0.7 + (Math.random() * 0.4)); // 70-110% of current year
+      
       const bounce = 35 + (Math.random() * 20);
       const sessionDuration = 120 + (Math.random() * 180);
       const reach = Math.round(impressions * 0.7);
       const frequency = impressions / reach;
       const engagementRate = 10 + (Math.random() * 15);
       
+      // Calculate ROAS for current and previous year
+      const roas = revenue / cost;
+      const lastYearRoas = lastYearRevenue / lastYearCost;
+      
       const metrics: Record<string, any> = {
         date: day.name,
         revenue: revenue,
+        lastYearRevenue: lastYearRevenue,
         cost: cost,
+        lastYearCost: lastYearCost,
         clicks: clicks,
         impressions: impressions,
         conversions: conversions,
         ctr: ctr.toFixed(2),
         conversionRate: conversionRate.toFixed(2),
+        lastYearConversion: lastYearConversionRate.toFixed(2),
         cpc: (cost / clicks).toFixed(2),
         cpa: (cost / conversions).toFixed(2),
         roas: revenue / cost,
+        lastYearRoas: lastYearRoas,
         bounceRate: bounce.toFixed(1),
         avgSessionDuration: Math.round(sessionDuration),
         frequency: frequency.toFixed(1),
@@ -72,27 +88,38 @@ export function useDataProcessor(timeframe: string) {
     if (!aggregatedData.length) return null;
     
     const totalRevenue = aggregatedData.reduce((sum, day) => sum + day.revenue, 0);
+    const totalLastYearRevenue = aggregatedData.reduce((sum, day) => sum + day.lastYearRevenue, 0);
     const totalCost = aggregatedData.reduce((sum, day) => sum + day.cost, 0);
+    const totalLastYearCost = aggregatedData.reduce((sum, day) => sum + day.lastYearCost, 0);
     const totalClicks = aggregatedData.reduce((sum, day) => sum + day.clicks, 0);
     const totalImpressions = aggregatedData.reduce((sum, day) => sum + day.impressions, 0);
     const totalConversions = aggregatedData.reduce((sum, day) => sum + day.conversions, 0);
     const avgCTR = aggregatedData.reduce((sum, day) => sum + parseFloat(day.ctr), 0) / aggregatedData.length;
     const avgConversionRate = aggregatedData.reduce((sum, day) => sum + parseFloat(day.conversionRate), 0) / aggregatedData.length;
+    const avgLastYearConversionRate = aggregatedData.reduce((sum, day) => sum + parseFloat(day.lastYearConversion), 0) / aggregatedData.length;
     const avgBounceRate = aggregatedData.reduce((sum, day) => sum + parseFloat(day.bounceRate), 0) / aggregatedData.length;
     const avgSessionDuration = aggregatedData.reduce((sum, day) => sum + day.avgSessionDuration, 0) / aggregatedData.length;
     const totalReach = aggregatedData.reduce((sum, day) => sum + day.reach, 0);
     const avgFrequency = aggregatedData.reduce((sum, day) => sum + parseFloat(day.frequency), 0) / aggregatedData.length;
     const avgEngagementRate = aggregatedData.reduce((sum, day) => sum + parseFloat(day.engagementRate), 0) / aggregatedData.length;
+    
+    // Calculate current and last year's ROAS
+    const currentRoas = totalRevenue / totalCost;
+    const lastYearRoas = totalLastYearRevenue / totalLastYearCost;
 
     return {
       revenue: totalRevenue,
+      lastYearRevenue: totalLastYearRevenue,
       cost: totalCost,
+      lastYearCost: totalLastYearCost,
       clicks: totalClicks,
       impressions: totalImpressions,
       conversions: totalConversions,
       ctr: avgCTR.toFixed(2),
       conversionRate: avgConversionRate.toFixed(2),
-      roas: totalRevenue / totalCost,
+      lastYearConversion: avgLastYearConversionRate.toFixed(2),
+      roas: currentRoas,
+      lastYearRoas: lastYearRoas,
       cpa: totalCost / totalConversions,
       cpc: totalCost / totalClicks,
       bounceRate: avgBounceRate.toFixed(1),
