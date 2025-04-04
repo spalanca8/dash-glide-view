@@ -347,3 +347,53 @@ export const generateBudgetRecommendations = () => {
     };
   });
 };
+
+// Generate month-over-month comparison data between this year and last year
+export const generateMonthOverMonthData = (metric = "revenue") => {
+  const months = [
+    "Jan", "Feb", "Mar", "Apr", "May", "Jun", 
+    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+  ];
+  
+  // Generate data for each month
+  return months.map((month, index) => {
+    // Base values with some consistent patterns
+    let baseValue = 100000 + (index * 5000); // Gradual increase through the year
+    
+    // Add seasonal effects
+    if (month === "Nov" || month === "Dec") {
+      baseValue *= 1.5; // Holiday season boost
+    } else if (month === "Jan" || month === "Feb") {
+      baseValue *= 0.8; // Post-holiday slump
+    } else if (month === "Jun" || month === "Jul" || month === "Aug") {
+      baseValue *= 1.2; // Summer increase
+    }
+    
+    // Last year's value with some randomness
+    const previousYear = baseValue * faker.number.float({ min: 0.85, max: 1.1 });
+    
+    // This year's value with improvement trend and randomness
+    let improvementTrend = 1.15;  // Overall 15% improvement
+    
+    // Add some monthly variation to the improvement trend
+    if (month === "Mar" || month === "Apr") {
+      improvementTrend = 1.25; // Stronger improvement in spring
+    } else if (month === "Aug") {
+      improvementTrend = 0.95; // Dip in August
+    } else if (month === "Sep") {
+      improvementTrend = 1.05; // Smaller improvement in September
+    }
+    
+    const currentYear = previousYear * improvementTrend * faker.number.float({ min: 0.95, max: 1.05 });
+    
+    // Calculate percentage change
+    const change = ((currentYear - previousYear) / previousYear) * 100;
+    
+    return {
+      date: month,
+      previousYear: Math.round(previousYear),
+      currentYear: Math.round(currentYear),
+      change: parseFloat(change.toFixed(1))
+    };
+  });
+};

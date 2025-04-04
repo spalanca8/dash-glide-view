@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -26,13 +25,23 @@ import { ChannelBreakdownChart } from "@/components/dashboard/ChannelBreakdownCh
 import { ChannelTrendsChart } from "@/components/channels/ChannelTrendsChart";
 import { ChannelComparisonChart } from "@/components/channels/ChannelComparisonChart";
 import { ChannelMetricsOverview } from "@/components/channels/ChannelMetricsOverview";
-import { generateChannelData, generateChannelTrendsData, channelColors, channelNames, generateYearOverYearData, generateExternalFactorsYoYData, mediaGroupColors } from "@/data/mockData";
+import { 
+  generateChannelData, 
+  generateChannelTrendsData, 
+  channelColors, 
+  channelNames, 
+  generateYearOverYearData, 
+  generateExternalFactorsYoYData, 
+  generateMonthOverMonthData,
+  mediaGroupColors 
+} from "@/data/mockData";
 import { FilterExportControls } from "@/components/channels/FilterExportControls";
 import { ChannelDetailView } from "@/components/channels/ChannelDetailView";
 import { RoasComparisonChart } from "@/components/channels/RoasComparisonChart";
 import { CostRevenueComparisonChart } from "@/components/channels/CostRevenueComparisonChart";
 import { IncrementalRevenueWaterfallChart } from "@/components/channels/IncrementalRevenueWaterfallChart";
 import { YearOverYearComparisonChart } from "@/components/channels/YearOverYearComparisonChart";
+import { MonthOverMonthComparisonChart } from "@/components/channels/MonthOverMonthComparisonChart";
 
 export default function ChannelsPage() {
   const [mainTab, setMainTab] = useState("overview");
@@ -53,6 +62,7 @@ export default function ChannelsPage() {
     roasByChannel: [],
     externalFactors: []
   });
+  const [monthOverMonthData, setMonthOverMonthData] = useState<any[]>([]);
 
   useEffect(() => {
     const loadData = async () => {
@@ -64,6 +74,7 @@ export default function ChannelsPage() {
       
       const yoyData = generateYearOverYearData();
       const externalFactors = generateExternalFactorsYoYData();
+      const momData = generateMonthOverMonthData();
       
       const fixedRevenueByFactor = yoyData.revenueByFactor.map(item => {
         if (item.name === "External Factors") {
@@ -93,6 +104,7 @@ export default function ChannelsPage() {
         roasByChannel: yoyData.roasByChannel,
         externalFactors: fixedExternalFactors
       });
+      setMonthOverMonthData(momData);
       setLoading(false);
     };
 
@@ -196,7 +208,6 @@ export default function ChannelsPage() {
         <TabsContent value="overview" className="space-y-8 mt-8">
           <IncrementalRevenueWaterfallChart data={channelData} loading={loading} />
           
-          {/* New Key Takeaways Card */}
           <Card className="border-blue-100 bg-blue-50/40">
             <CardHeader className="pb-2">
               <CardTitle className="text-xl flex items-center gap-2 text-blue-800">
@@ -451,6 +462,15 @@ export default function ChannelsPage() {
               </div>
               
               <div className="grid grid-cols-1 gap-10">
+                <div className="mb-8">
+                  <MonthOverMonthComparisonChart 
+                    data={monthOverMonthData} 
+                    loading={loading} 
+                    height={400} 
+                    metric="Revenue"
+                  />
+                </div>
+                
                 <div>
                   <YearOverYearComparisonChart
                     title="Percentage Change in Incremental Revenue by Factor"
