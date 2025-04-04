@@ -78,6 +78,19 @@ export default function ChannelsPage() {
       const externalFactors = generateExternalFactorsYoYData();
       const momData = generateMonthOverMonthData();
       
+      const enhancedMomData = momData.map(item => {
+        const channelKeys = Object.keys(channelNames);
+        const randomChannel = channelKeys[Math.floor(Math.random() * channelKeys.length)];
+        const factorTypes = ["paidMedia", "ownedMedia", "promotions", "external", "pricing"];
+        const randomFactor = factorTypes[Math.floor(Math.random() * factorTypes.length)];
+        
+        return {
+          ...item,
+          channel: randomChannel,
+          factor: randomFactor
+        };
+      });
+      
       const fixedRevenueByFactor = yoyData.revenueByFactor.map(item => {
         if (item.name === "External Factors") {
           return { ...item, value: -12 }; // Change to negative 12%
@@ -106,7 +119,7 @@ export default function ChannelsPage() {
         roasByChannel: yoyData.roasByChannel,
         externalFactors: fixedExternalFactors
       });
-      setMonthOverMonthData(momData);
+      setMonthOverMonthData(enhancedMomData);
       setLoading(false);
     };
 
@@ -187,7 +200,17 @@ export default function ChannelsPage() {
   const externalFactorsPerformers = getBestAndWorstPerformers(yearOverYearData.externalFactors);
 
   const getFilteredMomData = () => {
-    return monthOverMonthData;
+    let filtered = [...monthOverMonthData];
+    
+    if (momSelectedChannel !== "all") {
+      filtered = filtered.filter(item => item.channel === momSelectedChannel);
+    }
+    
+    if (momSelectedFactor !== "all") {
+      filtered = filtered.filter(item => item.factor === momSelectedFactor);
+    }
+    
+    return filtered;
   };
 
   return (

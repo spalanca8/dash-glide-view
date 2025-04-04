@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
@@ -14,6 +14,8 @@ type MonthOverMonthComparisonChartProps = {
     currentYear: number;
     previousYear: number;
     change: number;
+    channel?: string;
+    factor?: string;
   }>;
   loading?: boolean;
   height?: number;
@@ -39,6 +41,22 @@ export function MonthOverMonthComparisonChart({
   const [showHelp, setShowHelp] = useState(false);
   const [selectedChannel, setSelectedChannel] = useState("all");
   const [selectedFactor, setSelectedFactor] = useState("all");
+  const [filteredData, setFilteredData] = useState(data);
+  
+  // Apply filtering whenever data changes or filters change
+  useEffect(() => {
+    let result = [...data];
+    
+    if (selectedChannel !== "all" && result.some(item => item.channel)) {
+      result = result.filter(item => item.channel === selectedChannel);
+    }
+    
+    if (selectedFactor !== "all" && result.some(item => item.factor)) {
+      result = result.filter(item => item.factor === selectedFactor);
+    }
+    
+    setFilteredData(result);
+  }, [data, selectedChannel, selectedFactor]);
   
   const handleChannelChange = (value: string) => {
     setSelectedChannel(value);
@@ -58,12 +76,12 @@ export function MonthOverMonthComparisonChart({
     return <Skeleton className="w-full h-[400px]" />;
   }
 
-  // Calculate overall trend for insights
-  const overallTrend = data.reduce((acc, item) => acc + item.change, 0) / data.length;
+  // Calculate overall trend for insights using filtered data
+  const overallTrend = filteredData.reduce((acc, item) => acc + item.change, 0) / filteredData.length;
   const trendDirection = overallTrend > 0 ? "positive" : "negative";
   
-  // Find the best and worst months
-  const sortedByChange = [...data].sort((a, b) => b.change - a.change);
+  // Find the best and worst months from filtered data
+  const sortedByChange = [...filteredData].sort((a, b) => b.change - a.change);
   const bestMonth = sortedByChange[0];
   const worstMonth = sortedByChange[sortedByChange.length - 1];
   
@@ -157,7 +175,7 @@ export function MonthOverMonthComparisonChart({
         )}
         
         <TimeSeriesChart 
-          data={data} 
+          data={filteredData} 
           series={chartSeries}
           xAxisKey="date"
           height={height}
