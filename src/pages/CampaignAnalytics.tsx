@@ -35,8 +35,8 @@ const CampaignAnalytics = () => {
 
       {/* Main Content Area */}
       <div className="flex-1 p-6 bg-background overflow-y-auto">
-        <div className="flex items-center justify-between mb-6">
-          <h1 className="text-2xl font-bold">Promotional Analytics</h1>
+        <div className="mb-6">
+          <h1 className="text-2xl font-bold mb-3">Promotional Analytics</h1>
           <DateRangeSelector dateRange={dateRange} setDateRange={setDateRange} />
         </div>
         
