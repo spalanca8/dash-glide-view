@@ -2,18 +2,10 @@
 import React from "react";
 import { 
   BarChart3, 
-  LineChart, 
-  PieChart, 
-  Tag, 
   Activity, 
-  Users, 
-  LayoutDashboard, 
-  Route, 
   DollarSign, 
-  TrendingUp, 
-  Layers, 
   Calendar, 
-  BarChart
+  PieChart
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { CampaignTab, CampaignSubPage } from "@/pages/CampaignAnalytics";
@@ -62,53 +54,11 @@ export const CampaignSidebar = ({
   return (
     <div className="py-4 space-y-6">
       <div className="px-4 mb-2">
-        <h2 className="text-lg font-semibold">Campaign Analytics</h2>
+        <h2 className="text-lg font-semibold">Promotional Analytics</h2>
         <p className="text-xs text-muted-foreground">Real-time performance data</p>
       </div>
       
-      {/* Tab 1: Campaign Overview */}
-      <div className="space-y-1">
-        <div className="px-4 mb-1">
-          <h3 className="text-xs uppercase tracking-wider text-muted-foreground font-medium">
-            Campaign Overview
-          </h3>
-        </div>
-        <NavItem 
-          isActive={activeTab === "overview" && activeSubPage === "totals"}
-          onClick={() => handleTabChange("overview", "totals")}
-          icon={<LayoutDashboard size={18} />}
-          label="Totals & Aggregates"
-        />
-        <NavItem 
-          isActive={activeTab === "overview" && activeSubPage === "journey"}
-          onClick={() => handleTabChange("overview", "journey")}
-          icon={<Route size={18} />}
-          label="Customer Journey Mapping"
-        />
-      </div>
-      
-      {/* Tab 2: Channel Performance */}
-      <div className="space-y-1">
-        <div className="px-4 mb-1">
-          <h3 className="text-xs uppercase tracking-wider text-muted-foreground font-medium">
-            Channel Performance
-          </h3>
-        </div>
-        <NavItem 
-          isActive={activeTab === "channel" && activeSubPage === "revenue"}
-          onClick={() => handleTabChange("channel", "revenue")}
-          icon={<TrendingUp size={18} />}
-          label="Incremental Revenue"
-        />
-        <NavItem 
-          isActive={activeTab === "channel" && activeSubPage === "cost"}
-          onClick={() => handleTabChange("channel", "cost")}
-          icon={<DollarSign size={18} />}
-          label="Cost Efficiency"
-        />
-      </div>
-      
-      {/* Tab 3: Promotion Analytics */}
+      {/* Promotion Analytics */}
       <div className="space-y-1">
         <div className="px-4 mb-1">
           <h3 className="text-xs uppercase tracking-wider text-muted-foreground font-medium">
@@ -116,13 +66,13 @@ export const CampaignSidebar = ({
           </h3>
         </div>
         <NavItem 
-          isActive={activeTab === "promotion" && activeSubPage === "impact"}
+          isActive={activeSubPage === "impact"}
           onClick={() => handleTabChange("promotion", "impact")}
           icon={<Activity size={18} />}
           label="Promotion Impact"
         />
         <NavItem 
-          isActive={activeTab === "promotion" && activeSubPage === "cost-analysis"}
+          isActive={activeSubPage === "cost-analysis"}
           onClick={() => handleTabChange("promotion", "cost-analysis")}
           icon={<PieChart size={18} />}
           label="Cost Analysis"

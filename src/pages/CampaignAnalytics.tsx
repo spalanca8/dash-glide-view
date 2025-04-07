@@ -1,19 +1,12 @@
 
 import React, { useState } from "react";
 import { Helmet } from "react-helmet";
-import { Card } from "@/components/ui/card";
 import { CampaignSidebar } from "@/components/campaign-analytics/CampaignSidebar";
-import { CampaignOverview } from "@/components/campaign-analytics/CampaignOverview";
-import { ChannelPerformance } from "@/components/campaign-analytics/ChannelPerformance";
 import { PromotionAnalytics } from "@/components/campaign-analytics/PromotionAnalytics";
 import { DateRangeSelector } from "@/components/campaign-analytics/DateRangeSelector";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-export type CampaignTab = "overview" | "channel" | "promotion";
-export type CampaignSubPage = 
-  | "totals" | "journey" 
-  | "revenue" | "cost" 
-  | "impact" | "cost-analysis";
+export type CampaignTab = "promotion";
+export type CampaignSubPage = "impact" | "cost-analysis";
 
 const CampaignAnalytics = () => {
   const [activeTab, setActiveTab] = useState<CampaignTab>("promotion");
@@ -46,19 +39,7 @@ const CampaignAnalytics = () => {
           <DateRangeSelector dateRange={dateRange} setDateRange={setDateRange} />
         </div>
         
-        <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as CampaignTab)}>
-          <TabsContent value="overview">
-            <CampaignOverview activeSubPage={activeSubPage} dateRange={dateRange} />
-          </TabsContent>
-          
-          <TabsContent value="channel">
-            <ChannelPerformance activeSubPage={activeSubPage} dateRange={dateRange} />
-          </TabsContent>
-          
-          <TabsContent value="promotion">
-            <PromotionAnalytics activeSubPage={activeSubPage} dateRange={dateRange} />
-          </TabsContent>
-        </Tabs>
+        <PromotionAnalytics activeSubPage={activeSubPage} dateRange={dateRange} />
       </div>
     </div>
   );
