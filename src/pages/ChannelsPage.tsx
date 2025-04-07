@@ -310,7 +310,7 @@ export default function ChannelsPage() {
               </div>
             </CardHeader>
             <CardContent className="h-auto">
-              <div className="grid grid-cols-2 gap-6 h-full">
+              <div className="grid grid-cols-1 gap-6 h-full">
                 <Card className="shadow-lg">
                   <CardHeader className="flex flex-row items-center">
                     <div className="flex flex-col space-y-1.5">
@@ -406,7 +406,6 @@ export default function ChannelsPage() {
             </CardContent>
           </Card>
         </TabsContent>
-
 
         <TabsContent value="detailed" className="space-y-6 mt-6">
           <Card>
