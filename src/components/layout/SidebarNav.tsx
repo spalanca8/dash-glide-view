@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { 
@@ -19,7 +20,8 @@ import {
   Scale,
   Rocket,
   Bot,
-  Zap
+  Zap,
+  Tag
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -76,13 +78,13 @@ const navItems: NavItem[] = [
         title: "Detailed Analysis",
         href: "/campaign",
         icon: GitCompare,
-      },
-      {
-        title: "Promotional Analytics",
-        href: "/campaign",
-        icon: TrendingUp,
       }
     ]
+  },
+  {
+    title: "Promotional Analytics",
+    href: "/campaign-analytics",
+    icon: Tag,
   },
   {
     title: "Budget Optimizer",

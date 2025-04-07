@@ -16,8 +16,8 @@ export type CampaignSubPage =
   | "impact" | "cost-analysis";
 
 const CampaignAnalytics = () => {
-  const [activeTab, setActiveTab] = useState<CampaignTab>("overview");
-  const [activeSubPage, setActiveSubPage] = useState<CampaignSubPage>("totals");
+  const [activeTab, setActiveTab] = useState<CampaignTab>("promotion");
+  const [activeSubPage, setActiveSubPage] = useState<CampaignSubPage>("impact");
   const [dateRange, setDateRange] = useState<[Date, Date]>([
     new Date(Date.now() - 30 * 24 * 60 * 60 * 1000), // 30 days ago
     new Date() // today
@@ -26,7 +26,7 @@ const CampaignAnalytics = () => {
   return (
     <div className="flex h-full">
       <Helmet>
-        <title>Campaign Analytics Dashboard</title>
+        <title>Promotional Analytics Dashboard</title>
       </Helmet>
 
       {/* Left Sidebar Navigation */}
@@ -42,7 +42,7 @@ const CampaignAnalytics = () => {
       {/* Main Content Area */}
       <div className="flex-1 p-6 bg-background overflow-y-auto">
         <div className="flex items-center justify-between mb-6">
-          <h1 className="text-2xl font-bold">Campaign Analytics</h1>
+          <h1 className="text-2xl font-bold">Promotional Analytics</h1>
           <DateRangeSelector dateRange={dateRange} setDateRange={setDateRange} />
         </div>
         

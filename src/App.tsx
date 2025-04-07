@@ -12,6 +12,7 @@ import StrategicOverview from "./pages/StrategicOverview";
 import DataPage from "./pages/DataPage";
 import ChannelsPage from "./pages/ChannelsPage";
 import CampaignPage from "./pages/CampaignPage";
+import CampaignAnalytics from "./pages/CampaignAnalytics";
 import MetricsPage from "./pages/MetricsPage";
 import IncrementalPage from "./pages/IncrementalPage";
 import BudgetPage from "./pages/BudgetPage";
@@ -46,6 +47,7 @@ const App = () => (
             <Route path="/incremental" element={<IncrementalPage />} />
             <Route path="/channels" element={<ChannelsPage />} />
             <Route path="/campaign" element={<CampaignPage />} />
+            <Route path="/campaign-analytics" element={<CampaignAnalytics />} />
             <Route path="/budget" element={<BudgetPage />} />
             <Route path="/incrementality-testing" element={<IncrementalityTestingPage />} />
             <Route path="/model-metrics" element={<ModelMetricsPage />} />
