@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
@@ -61,17 +62,36 @@ export function RoasComparisonChart({
                 left: 20,
                 bottom: 70
               }}>
-                  <RechartsPrimitive.XAxis dataKey="name" angle={-45} textAnchor="end" tick={{
-                  fontSize: 12
-                }} height={10} interval={0} />
+                  <RechartsPrimitive.XAxis 
+                    dataKey="name" 
+                    angle={-45} 
+                    textAnchor="end" 
+                    tick={{
+                      fontSize: 12
+                    }} 
+                    height={10} 
+                    interval={0} 
+                    label={{
+                      value: 'Campaign',
+                      position: 'insideBottom',
+                      offset: 0,
+                      style: {
+                        textAnchor: 'middle',
+                        fontSize: 12,
+                        fill: '#94a3b8',
+                        dy: 60
+                      }
+                    }}
+                  />
                   <RechartsPrimitive.YAxis stroke="#94a3b8" label={{
-                  value: 'ROAS (x)',
+                  value: 'ROAS (Return on Ad Spend)',
                   angle: -90,
                   position: 'insideLeft',
                   style: {
                     textAnchor: 'middle',
-                    fontSize: 11,
-                    fill: '#94a3b8'
+                    fontSize: 12,
+                    fill: '#94a3b8',
+                    dx: -10
                   }
                 }} />
                   <RechartsPrimitive.CartesianGrid strokeDasharray="3 3" opacity={0.5} />
