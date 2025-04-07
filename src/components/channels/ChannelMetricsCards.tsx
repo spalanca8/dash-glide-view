@@ -42,7 +42,7 @@ export function ChannelMetricsCards({ data, loading }: ChannelMetricsCardsProps)
   const avgRoas = totalRevenue / totalCost || 0;
   const avgConversion = data.reduce((sum, channel) => sum + (channel.conversion || 0), 0) / data.length || 0;
 
-  // Find best performing channel for each metric
+  // Find best performing channel for each metric with null checks
   const bestRevenue = data.reduce((best, item) => (item.revenue || 0) > (best?.revenue || 0) ? item : best, data[0]);
   const lowestCost = data.reduce((best, item) => (item.cost || 0) < (best?.cost || 0) ? item : best, data[0]);
   const bestRoas = data.reduce((best, item) => (item.roas || 0) > (best?.roas || 0) ? item : best, data[0]);
@@ -52,34 +52,40 @@ export function ChannelMetricsCards({ data, loading }: ChannelMetricsCardsProps)
     return itemConv > bestConv ? item : best;
   }, data[0]);
 
+  // Format values safely with null checks
+  const formatValue = (value: number | undefined, decimals = 2): string => {
+    if (value === undefined || value === null) return "N/A";
+    return value.toFixed(decimals);
+  };
+
   const metrics = [
     {
       title: "Total Revenue",
       value: `$${totalRevenue.toLocaleString()}`,
       icon: DollarSign,
-      bestChannel: bestRevenue.name,
-      bestValue: `$${bestRevenue.revenue.toLocaleString()}`
+      bestChannel: bestRevenue?.name || "N/A",
+      bestValue: bestRevenue?.revenue !== undefined ? `$${bestRevenue.revenue.toLocaleString()}` : "N/A"
     },
     {
       title: "Total Cost",
       value: `$${totalCost.toLocaleString()}`,
       icon: BarChart3,
-      bestChannel: lowestCost.name,
-      bestValue: `$${lowestCost.cost.toLocaleString()}`
+      bestChannel: lowestCost?.name || "N/A",
+      bestValue: lowestCost?.cost !== undefined ? `$${lowestCost.cost.toLocaleString()}` : "N/A"
     },
     {
       title: "Average ROAS",
-      value: `${avgRoas.toFixed(2)}x`,
+      value: `${formatValue(avgRoas)}x`,
       icon: ArrowUpRight,
-      bestChannel: bestRoas.name,
-      bestValue: `${bestRoas.roas.toFixed(2)}x`
+      bestChannel: bestRoas?.name || "N/A",
+      bestValue: bestRoas?.roas !== undefined ? `${formatValue(bestRoas.roas)}x` : "N/A"
     },
     {
       title: "Avg Conversion",
-      value: `${avgConversion.toFixed(2)}%`,
+      value: `${formatValue(avgConversion)}%`,
       icon: Users,
-      bestChannel: bestConversion.name,
-      bestValue: `${bestConversion.conversion.toFixed(2)}%`
+      bestChannel: bestConversion?.name || "N/A",
+      bestValue: bestConversion?.conversion !== undefined ? `${formatValue(bestConversion.conversion)}%` : "N/A"
     }
   ];
 
