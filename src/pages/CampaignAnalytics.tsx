@@ -1,22 +1,47 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Helmet } from "react-helmet";
 import { PromotionAnalytics } from "@/components/campaign-analytics/PromotionAnalytics";
 import { DateRangeSelector } from "@/components/campaign-analytics/DateRangeSelector";
 import { Button } from "@/components/ui/button";
 import { Activity, PieChart } from "lucide-react";
+import { useSearchParams, useNavigate } from "react-router-dom";
 
 export type CampaignTab = "promotion";
 // Update the CampaignSubPage type to include all possible subpages
 export type CampaignSubPage = "impact" | "cost-analysis" | "totals" | "journey" | "revenue" | "cost";
 
 const CampaignAnalytics = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
+  const viewParam = searchParams.get("view");
+  
   const [activeTab, setActiveTab] = useState<CampaignTab>("promotion");
-  const [activeSubPage, setActiveSubPage] = useState<CampaignSubPage>("impact");
+  const [activeSubPage, setActiveSubPage] = useState<CampaignSubPage>(
+    (viewParam === "impact" || viewParam === "cost-analysis") 
+      ? (viewParam as CampaignSubPage) 
+      : "impact"
+  );
   const [dateRange, setDateRange] = useState<[Date, Date]>([
     new Date(Date.now() - 30 * 24 * 60 * 60 * 1000), // 30 days ago
     new Date() // today
   ]);
+
+  // Update URL when subpage changes
+  useEffect(() => {
+    setSearchParams({ view: activeSubPage });
+  }, [activeSubPage, setSearchParams]);
+
+  // Update state when URL changes
+  useEffect(() => {
+    if (viewParam === "impact" || viewParam === "cost-analysis") {
+      setActiveSubPage(viewParam as CampaignSubPage);
+    }
+  }, [viewParam]);
+
+  const handleSubPageChange = (subPage: CampaignSubPage) => {
+    setActiveSubPage(subPage);
+  };
 
   return (
     <div className="h-full bg-background">
@@ -35,7 +60,7 @@ const CampaignAnalytics = () => {
         <div className="flex gap-2 mb-6">
           <Button 
             variant={activeSubPage === "impact" ? "default" : "outline"}
-            onClick={() => setActiveSubPage("impact")}
+            onClick={() => handleSubPageChange("impact")}
             className="flex items-center gap-2"
           >
             <Activity size={18} />
@@ -43,7 +68,7 @@ const CampaignAnalytics = () => {
           </Button>
           <Button 
             variant={activeSubPage === "cost-analysis" ? "default" : "outline"}
-            onClick={() => setActiveSubPage("cost-analysis")}
+            onClick={() => handleSubPageChange("cost-analysis")}
             className="flex items-center gap-2"
           >
             <PieChart size={18} />

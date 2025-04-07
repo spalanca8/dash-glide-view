@@ -21,7 +21,9 @@ import {
   Rocket,
   Bot,
   Zap,
-  Tag
+  Tag,
+  Activity,
+  DollarSign
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -83,8 +85,19 @@ const navItems: NavItem[] = [
   },
   {
     title: "Promotional Analytics",
-    href: "/campaign-analytics",
     icon: Tag,
+    children: [
+      {
+        title: "Promotion Impact",
+        href: "/campaign-analytics?view=impact",
+        icon: Activity,
+      },
+      {
+        title: "Cost Analysis",
+        href: "/campaign-analytics?view=cost-analysis",
+        icon: DollarSign,
+      }
+    ]
   },
   {
     title: "Budget Optimizer",
