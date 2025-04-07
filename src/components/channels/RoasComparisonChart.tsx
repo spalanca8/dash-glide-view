@@ -47,7 +47,7 @@ export function RoasComparisonChart({
             {description && <p className="text-sm text-muted-foreground">{description}</p>}
           </div>}
         <div className="w-full h-[400px] relative">
-          <div className="absolute inset-0">
+          <div className="absolute inset-0 my-[55px] py-[4px] mx-0 px-0">
             <ChartContainer config={{
             roas: {
               label: "ROAS",
