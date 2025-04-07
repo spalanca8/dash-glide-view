@@ -217,9 +217,9 @@ const ChannelDetailsPage = () => {
       
       const journeyChannels = [
         {
-          id: "search",
-          name: channelNames.search,
-          colorClass: `bg-[${channelColors.search}]`,
+          id: "google",
+          name: channelNames.google,
+          colorClass: `bg-[${channelColors.google}]`,
           conversions: 171850,
           journeyContribution: {
             awareness: 31,
@@ -229,9 +229,9 @@ const ChannelDetailsPage = () => {
           }
         },
         {
-          id: "social",
-          name: channelNames.social,
-          colorClass: `bg-[${channelColors.social}]`,
+          id: "facebook",
+          name: channelNames.facebook,
+          colorClass: `bg-[${channelColors.facebook}]`,
           conversions: 56205,
           journeyContribution: {
             awareness: 32,
@@ -253,9 +253,9 @@ const ChannelDetailsPage = () => {
           }
         },
         {
-          id: "display",
-          name: channelNames.display,
-          colorClass: `bg-[${channelColors.display}]`,
+          id: "tiktok",
+          name: channelNames.tiktok,
+          colorClass: `bg-[${channelColors.tiktok}]`,
           conversions: 28470,
           journeyContribution: {
             awareness: 24,
@@ -286,30 +286,6 @@ const ChannelDetailsPage = () => {
             consideration: 12,
             conversion: 38,
             advocacy: 23
-          }
-        },
-        {
-          id: "direct",
-          name: channelNames.direct,
-          colorClass: `bg-[${channelColors.direct}]`,
-          conversions: 8230,
-          journeyContribution: {
-            awareness: 15,
-            consideration: 21,
-            conversion: 32,
-            advocacy: 48
-          }
-        },
-        {
-          id: "referral",
-          name: channelNames.referral,
-          colorClass: `bg-[${channelColors.referral}]`,
-          conversions: 5290,
-          journeyContribution: {
-            awareness: 10,
-            consideration: 9,
-            conversion: 22,
-            advocacy: 35
           }
         }
       ];

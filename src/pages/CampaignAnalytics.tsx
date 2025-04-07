@@ -6,7 +6,8 @@ import { PromotionAnalytics } from "@/components/campaign-analytics/PromotionAna
 import { DateRangeSelector } from "@/components/campaign-analytics/DateRangeSelector";
 
 export type CampaignTab = "promotion";
-export type CampaignSubPage = "impact" | "cost-analysis";
+// Update the CampaignSubPage type to include all possible subpages
+export type CampaignSubPage = "impact" | "cost-analysis" | "totals" | "journey" | "revenue" | "cost";
 
 const CampaignAnalytics = () => {
   const [activeTab, setActiveTab] = useState<CampaignTab>("promotion");

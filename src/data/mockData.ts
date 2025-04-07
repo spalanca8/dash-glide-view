@@ -1,4 +1,3 @@
-
 import { faker } from "@faker-js/faker";
 
 // Define the channel names
@@ -18,21 +17,26 @@ export const channelColors = {
   tiktok: "#4cc9f0",
   email: "#f9c74f",
   affiliate: "#90be6d",
-  video: "#7209b7"
+  video: "#7209b7",
+  search: "#4361ee",
+  social: "#f72585",
+  display: "#4cc9f0",
+  direct: "#560bad",
+  referral: "#8338ec"
 };
 
 // Define media group colors for different categories
 export const mediaGroupColors = {
-  paid: "#4361ee", // Blue
-  organic: "#06d6a0", // Green
-  nonPaid: "#ffd166", // Amber
-  baseline: "#ef476f", // Red
-  offline: "#8338ec", // Purple
-  branding: "#ff9f1c", // Orange
-  promotions: "#ff70a6", // Pink
-  pricing: "#43aa8b", // Teal
-  distribution: "#277da1", // Dark Blue
-  external: "#9e2a2b", // Red-Brown
+  paid: "#4361ee",
+  organic: "#06d6a0",
+  nonPaid: "#ffd166",
+  baseline: "#ef476f",
+  offline: "#8338ec",
+  branding: "#ff9f1c",
+  promotions: "#ff70a6",
+  pricing: "#43aa8b",
+  distribution: "#277da1",
+  external: "#9e2a2b"
 };
 
 // Define saturation points and current spending for channel types
@@ -45,17 +49,17 @@ export const channelSaturationData = {
   social: {
     currentSpend: 35000,
     maxSaturation: 70000,
-    color: "#8B5CF6" // Vivid Purple
+    color: "#8B5CF6"
   },
   display: {
     currentSpend: 30000,
     maxSaturation: 60000,
-    color: "#D946EF" // Magenta Pink
+    color: "#D946EF"
   },
   video: {
     currentSpend: 25000,
     maxSaturation: 55000,
-    color: "#0EA5E9" // Ocean Blue
+    color: "#0EA5E9"
   }
 };
 
@@ -128,7 +132,6 @@ export const generateIncrementalData = () => {
 // Function to generate random performance data for each day
 export const generatePerformanceData = (days: number) => {
   if (days <= 0) {
-    // Safety check: ensure days is positive
     console.warn("Days must be greater than 0, defaulting to 7 days");
     days = 7;
   }

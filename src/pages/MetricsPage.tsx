@@ -246,15 +246,15 @@ const MetricsPage = () => {
                 data={performanceData}
                 lines={[
                   {
-                    dataKey: "search",
-                    color: channelColors.search,
-                    label: "Search",
+                    dataKey: "google",
+                    color: channelColors.google,
+                    label: "Google",
                     yAxisId: "left"
                   },
                   {
-                    dataKey: "social",
-                    color: channelColors.social,
-                    label: "Social",
+                    dataKey: "facebook",
+                    color: channelColors.facebook,
+                    label: "Facebook",
                     yAxisId: "left"
                   },
                   {
@@ -264,9 +264,9 @@ const MetricsPage = () => {
                     yAxisId: "left"
                   },
                   {
-                    dataKey: "display",
-                    color: channelColors.display,
-                    label: "Display",
+                    dataKey: "tiktok",
+                    color: channelColors.tiktok,
+                    label: "TikTok",
                     yAxisId: "left"
                   },
                 ]}
