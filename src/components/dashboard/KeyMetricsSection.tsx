@@ -22,17 +22,13 @@ const channelBreakdown = {
   paid: [
     { name: channelNames.google, value: 382500, color: channelColors.google },
     { name: channelNames.facebook, value: 245000, color: channelColors.facebook },
-    { name: channelNames.youtube, value: 175000, color: channelColors.youtube },
-    { name: channelNames.tiktok, value: 97500, color: channelColors.tiktok }
+    { name: channelNames.tiktok, value: 97500, color: channelColors.tiktok },
+    { name: channelNames.video, value: 175000, color: channelColors.video }
   ],
   organic: [
-    { name: channelNames.organicSearch, value: 325000, color: channelColors.organicSearch },
-    { name: channelNames.organicSocial, value: 180000, color: channelColors.organicSocial },
     { name: channelNames.email, value: 95000, color: channelColors.email }
   ],
   nonPaid: [
-    { name: channelNames.direct, value: 215000, color: channelColors.direct },
-    { name: channelNames.referral, value: 145000, color: channelColors.referral },
     { name: channelNames.affiliate, value: 240000, color: channelColors.affiliate }
   ],
   baseline: [

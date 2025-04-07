@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -37,7 +38,7 @@ export const PromotionAnalytics = ({
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                <Card className="col-span-32 md:col-span-">
+                <Card className="col-span-1">
                   <CardContent className="pt-6">
                     <IncrementalRevenueCounter />
                   </CardContent>

@@ -1,21 +1,13 @@
+
 import { faker } from "@faker-js/faker";
 
 // Define the channel names
 export const channelNames = {
   google: "Google Ads",
   facebook: "Facebook Ads",
-  youtube: "YouTube Ads",
   tiktok: "TikTok Ads",
   email: "Email Marketing",
   affiliate: "Affiliate Marketing",
-  direct: "Direct Traffic",
-  referral: "Referral Traffic",
-  organicSearch: "Organic Search",
-  organicSocial: "Organic Social",
-  // Add media type names
-  search: "Search Advertising",
-  social: "Social Media",
-  display: "Display Advertising",
   video: "Video Advertising"
 };
 
@@ -23,19 +15,10 @@ export const channelNames = {
 export const channelColors = {
   google: "#4361ee",
   facebook: "#f72585",
-  youtube: "#7209b7",
   tiktok: "#4cc9f0",
   email: "#f9c74f",
   affiliate: "#90be6d",
-  direct: "#f8961e",
-  referral: "#577590",
-  organicSearch: "#4d908e",
-  organicSocial: "#277da1",
-  // Add media type colors
-  search: "#4361ee",
-  social: "#8B5CF6",
-  display: "#D946EF",
-  video: "#0EA5E9"
+  video: "#7209b7"
 };
 
 // Define media group colors for different categories
@@ -95,28 +78,20 @@ export const generateYearOverYearData = () => {
   const revenueByChannel = [
     { name: channelNames.google, value: 32, color: channelColors.google },
     { name: channelNames.facebook, value: 28, color: channelColors.facebook },
-    { name: channelNames.youtube, value: 20, color: channelColors.youtube },
     { name: channelNames.tiktok, value: 15, color: channelColors.tiktok },
     { name: channelNames.email, value: 15, color: channelColors.email },
     { name: channelNames.affiliate, value: 10, color: channelColors.affiliate },
-    { name: channelNames.direct, value: 5, color: channelColors.direct },
-    { name: channelNames.referral, value: 8, color: channelColors.referral },
-    { name: channelNames.organicSearch, value: 12, color: channelColors.organicSearch },
-    { name: channelNames.organicSocial, value: 18, color: channelColors.organicSocial },
+    { name: channelNames.video, value: 20, color: channelColors.video },
   ];
 
   // Percentage change in ROAS by channel - ensuring consistent data with insights
   const roasByChannel = [
     { name: channelNames.google, value: 22, color: channelColors.google },
     { name: channelNames.facebook, value: 18, color: channelColors.facebook },
-    { name: channelNames.youtube, value: 12, color: channelColors.youtube },
     { name: channelNames.tiktok, value: 8, color: channelColors.tiktok },
     { name: channelNames.email, value: 25, color: channelColors.email },
     { name: channelNames.affiliate, value: 14, color: channelColors.affiliate },
-    { name: channelNames.direct, value: 5, color: channelColors.direct },
-    { name: channelNames.referral, value: 10, color: channelColors.referral },
-    { name: channelNames.organicSearch, value: 15, color: channelColors.organicSearch },
-    { name: channelNames.organicSocial, value: 16, color: channelColors.organicSocial },
+    { name: channelNames.video, value: 12, color: channelColors.video },
   ];
 
   return {
@@ -188,18 +163,14 @@ export function generateSankeyData() {
   
   // Define channels (targets)
   const channels = [
-    { name: "Search Ads", category: "Paid Media", fill: "#4361ee", value: 850000 },
-    { name: "Display Ads", category: "Paid Media", fill: "#4361ee", value: 620000 },
-    { name: "Social Ads", category: "Paid Media", fill: "#4361ee", value: 780000 },
-    { name: "Video Ads", category: "Paid Media", fill: "#4361ee", value: 520000 },
+    { name: "Google Ads", category: "Paid Media", fill: "#4361ee", value: 850000 },
+    { name: "Facebook Ads", category: "Paid Media", fill: "#4361ee", value: 780000 },
+    { name: "TikTok Ads", category: "Paid Media", fill: "#4361ee", value: 520000 },
+    { name: "Video Ads", category: "Paid Media", fill: "#4361ee", value: 620000 },
     
-    { name: "Organic Search", category: "Organic Media", fill: "#06d6a0", value: 910000 },
-    { name: "Organic Social", category: "Organic Media", fill: "#06d6a0", value: 430000 },
-    { name: "Email", category: "Organic Media", fill: "#06d6a0", value: 380000 },
+    { name: "Email Marketing", category: "Organic Media", fill: "#06d6a0", value: 380000 },
     
-    { name: "Direct", category: "Non-Paid Media", fill: "#ffd166", value: 680000 },
-    { name: "Referral", category: "Non-Paid Media", fill: "#ffd166", value: 320000 },
-    { name: "Affiliates", category: "Non-Paid Media", fill: "#ffd166", value: 240000 },
+    { name: "Affiliate Marketing", category: "Non-Paid Media", fill: "#ffd166", value: 320000 },
   ];
   
   // Create nodes array for Sankey diagram
@@ -312,18 +283,18 @@ export const generateBudgetRecommendations = () => {
     // Aligned with saturation curve data
     let currentBudget, impact;
     
-    if (channel === "google" || channel === "search") {
+    if (channel === "google") {
       currentBudget = 45000;
       impact = 25;
-    } else if (channel === "facebook" || channel === "social") {
+    } else if (channel === "facebook") {
       currentBudget = 35000;
       impact = 20;
-    } else if (channel === "display") {
-      currentBudget = 30000;
-      impact = 18;
-    } else if (channel === "youtube" || channel === "video") {
+    } else if (channel === "video") {
       currentBudget = 25000;
       impact = 15;
+    } else if (channel === "tiktok") {
+      currentBudget = 30000;
+      impact = 18;
     } else {
       currentBudget = faker.number.int({ min: 10000, max: 20000 });
       impact = faker.number.int({ min: 5, max: 15 });
@@ -383,17 +354,9 @@ export const generateMonthOverMonthData = (metric = "revenue") => {
         const channelMultiplier = {
           google: 1.2,
           facebook: 1.15,
-          youtube: 0.95,
           tiktok: 1.1,
           email: 0.9,
           affiliate: 1.05,
-          direct: 1.0,
-          referral: 0.85,
-          organicSearch: 0.8,
-          organicSocial: 0.9,
-          search: 1.15,
-          social: 1.1,
-          display: 0.9,
           video: 1.0
         }[channel] || 1;
         
