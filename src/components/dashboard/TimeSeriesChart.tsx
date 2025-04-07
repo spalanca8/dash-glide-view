@@ -15,7 +15,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 type TimeSeriesChartProps = {
   data: any[];
-  lines: {
+  lines?: {
     dataKey: string;
     color: string;
     label?: string;
@@ -50,7 +50,7 @@ type TimeSeriesChartProps = {
 
 export function TimeSeriesChart({
   data,
-  lines,
+  lines = [],
   loading,
   height = 300,
   xAxisKey = "name",
