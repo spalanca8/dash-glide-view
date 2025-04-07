@@ -30,7 +30,7 @@ export function CostRevenueComparisonChart({
             {description && <p className="text-sm text-muted-foreground">{description}</p>}
           </div>}
         <div className="w-full h-[400px] relative">
-          <div className="absolute inset-0">
+          <div className="absolute inset-0 mx-0 py-[50px]">
             <ChartContainer config={{
             cost: {
               label: "Cost",
