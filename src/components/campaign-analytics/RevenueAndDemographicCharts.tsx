@@ -25,11 +25,11 @@ export const RevenueAndDemographicCharts = () => {
           <CardDescription>Comparing campaign costs against their incremental revenue contribution</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="h-[400px]">
+          <div className="h-[450px]">
             <CostRevenueComparisonChart 
               channelData={campaignData} 
               loading={false} 
-              height={400}
+              height={450}
               title=""
               description=""
             />
@@ -44,11 +44,11 @@ export const RevenueAndDemographicCharts = () => {
           <CardDescription>Campaign effectiveness measured by return on investment</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="h-[400px]">
+          <div className="h-[450px]">
             <RoasComparisonChart 
               channelData={campaignData} 
               loading={false} 
-              height={400}
+              height={450}
               title=""
               description=""
             />
