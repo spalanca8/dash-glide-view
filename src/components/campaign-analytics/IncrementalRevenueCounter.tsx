@@ -1,20 +1,17 @@
-
 import React, { useState, useEffect } from "react";
 import { ArrowUp } from "lucide-react";
-
 export const IncrementalRevenueCounter = () => {
   const [count, setCount] = useState(0);
   const targetValue = 3750000; // $3.75M
   const previousValue = 3200000; // $3.2M
-  const percentChange = ((targetValue - previousValue) / previousValue) * 100;
-  
+  const percentChange = (targetValue - previousValue) / previousValue * 100;
+
   // Animate the counter
   useEffect(() => {
     const duration = 2000; // 2 seconds
     const steps = 50;
     const stepTime = duration / steps;
     const increment = targetValue / steps;
-    
     let current = 0;
     const timer = setInterval(() => {
       current += increment;
@@ -25,16 +22,13 @@ export const IncrementalRevenueCounter = () => {
         setCount(Math.floor(current));
       }
     }, stepTime);
-    
     return () => clearInterval(timer);
   }, [targetValue]);
-
-  return (
-    <div className="flex flex-col items-center justify-center h-full w-full p-4">
+  return <div className="flex flex-col items-center justify-center h-full w-full p-4">
       <p className="text-sm text-muted-foreground mb-2">
         Incremental Revenue (YTD) From Promotional Periods
       </p>
-      <div className="text-6xl font-bold mb-4 w-full text-center">
+      <div className="text-4xl font-bold mb-3 w-full text-center px-0 mx-0">
         ${(count / 1000000).toFixed(2)}M
       </div>
       <div className="flex items-center px-3 py-1 bg-green-100 text-green-800 rounded-full">
@@ -44,6 +38,5 @@ export const IncrementalRevenueCounter = () => {
       <div className="mt-4 text-xs text-muted-foreground">
         Previous Year: $3.2M
       </div>
-    </div>
-  );
+    </div>;
 };

@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -11,15 +10,15 @@ import { EfficiencyRatioChart } from "@/components/campaign-analytics/Efficiency
 import { PromotionTypeChart } from "@/components/campaign-analytics/PromotionTypeChart";
 import { Activity, DollarSign, Calendar, BarChart3, DollarSign as DollarIcon, PercentIcon } from "lucide-react";
 import type { CampaignSubPage } from "@/pages/CampaignAnalytics";
-
 interface PromotionAnalyticsProps {
   activeSubPage: CampaignSubPage;
   dateRange: [Date, Date];
 }
-
-export const PromotionAnalytics = ({ activeSubPage, dateRange }: PromotionAnalyticsProps) => {
-  return (
-    <div className="space-y-6">
+export const PromotionAnalytics = ({
+  activeSubPage,
+  dateRange
+}: PromotionAnalyticsProps) => {
+  return <div className="space-y-6">
       <Tabs value={activeSubPage} className="w-full">
         <TabsContent value="impact" className={activeSubPage === "impact" ? "block" : "hidden"}>
           <Card>
@@ -38,7 +37,7 @@ export const PromotionAnalytics = ({ activeSubPage, dateRange }: PromotionAnalyt
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                <Card className="col-span-3 md:col-span-1">
+                <Card className="col-span-32 md:col-span-">
                   <CardContent className="pt-6">
                     <IncrementalRevenueCounter />
                   </CardContent>
@@ -120,6 +119,5 @@ export const PromotionAnalytics = ({ activeSubPage, dateRange }: PromotionAnalyt
           </Card>
         </TabsContent>
       </Tabs>
-    </div>
-  );
+    </div>;
 };
