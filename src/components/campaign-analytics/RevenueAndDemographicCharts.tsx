@@ -18,7 +18,7 @@ const campaignData = [
 export const RevenueAndDemographicCharts = () => {
   return (
     <div className="grid grid-cols-1 gap-6 mt-6">
-      {/* Cost and Incremental Revenue Chart - Full width and above ROAS */}
+      {/* Cost and Incremental Revenue Chart - Now in a vertical stack */}
       <Card>
         <CardHeader>
           <CardTitle>Cost and Incremental Revenue by Campaign</CardTitle>
@@ -37,7 +37,7 @@ export const RevenueAndDemographicCharts = () => {
         </CardContent>
       </Card>
 
-      {/* ROAS Chart - Now below and full width */}
+      {/* ROAS Chart - Now in a vertical stack below cost/revenue */}
       <Card>
         <CardHeader>
           <CardTitle>Return on Ad Spend (ROAS) by Campaign</CardTitle>
@@ -56,7 +56,7 @@ export const RevenueAndDemographicCharts = () => {
         </CardContent>
       </Card>
 
-      {/* Original grid with leaderboard and demographic chart */}
+      {/* Leaderboard and Demographic chart section */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <Card>
           <CardHeader>
