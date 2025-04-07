@@ -227,6 +227,7 @@ export function MonthOverMonthComparisonChart({
           series={chartSeries}
           xAxisKey="date"
           height={height}
+          loading={loading}
           showAverageLines={true}
           legendSpacing={true}
         />
