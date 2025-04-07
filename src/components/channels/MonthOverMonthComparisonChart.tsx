@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -43,7 +42,6 @@ export function MonthOverMonthComparisonChart({
   const [selectedFactor, setSelectedFactor] = useState("all");
   const [filteredData, setFilteredData] = useState(data);
   
-  // Apply filtering whenever data changes or filters change
   useEffect(() => {
     let result = [...data];
     
@@ -55,8 +53,6 @@ export function MonthOverMonthComparisonChart({
       result = result.filter(item => item.factor === selectedFactor);
     }
     
-    // Aggregate data by month after filtering by channel and factor
-    // This ensures we get one data point per month after filtering
     if (result.length > 0) {
       const monthlyAggregated = new Map();
       
@@ -76,7 +72,6 @@ export function MonthOverMonthComparisonChart({
         monthData.count += 1;
       });
       
-      // Convert aggregated data back to array format
       const aggregatedResult = Array.from(monthlyAggregated.values()).map(item => {
         const currentYear = Math.round(item.currentYearTotal / item.count);
         const previousYear = Math.round(item.previousYearTotal / item.count);
@@ -90,7 +85,6 @@ export function MonthOverMonthComparisonChart({
         };
       });
       
-      // Sort by month sequence
       const monthOrder = {
         "Jan": 0, "Feb": 1, "Mar": 2, "Apr": 3, "May": 4, "Jun": 5,
         "Jul": 6, "Aug": 7, "Sep": 8, "Oct": 9, "Nov": 10, "Dec": 11
@@ -122,18 +116,15 @@ export function MonthOverMonthComparisonChart({
     return <Skeleton className="w-full h-[400px]" />;
   }
 
-  // Calculate overall trend for insights using filtered data
   const overallTrend = filteredData.length > 0 
     ? filteredData.reduce((acc, item) => acc + item.change, 0) / filteredData.length 
     : 0;
   const trendDirection = overallTrend > 0 ? "positive" : "negative";
   
-  // Find the best and worst months from filtered data
   const sortedByChange = [...filteredData].sort((a, b) => b.change - a.change);
   const bestMonth = sortedByChange.length > 0 ? sortedByChange[0] : null;
   const worstMonth = sortedByChange.length > 0 ? sortedByChange[sortedByChange.length - 1] : null;
   
-  // Prepare chart series 
   const chartSeries = [
     {
       dataKey: "currentYear",
@@ -150,7 +141,6 @@ export function MonthOverMonthComparisonChart({
     }
   ];
   
-  // Only add change metric series if not hidden
   if (!hideChangeMetric) {
     chartSeries.push({
       dataKey: "change",
@@ -227,6 +217,7 @@ export function MonthOverMonthComparisonChart({
           series={chartSeries}
           xAxisKey="date"
           height={height}
+          loading={false}
           showAverageLines={true}
           legendSpacing={true}
         />
