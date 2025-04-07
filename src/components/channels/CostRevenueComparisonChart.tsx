@@ -24,7 +24,7 @@ export function CostRevenueComparisonChart({
   // Sort channels by revenue for better visualization
   const sortedData = [...channelData].sort((a, b) => b.revenue - a.revenue);
   return <Card className="overflow-hidden border-border/40 shadow-sm w-full">
-      <CardContent className="p-1 px-[49px] py-[25px]">
+      <CardContent className="p-1 py-[24px] px-[93px] my-0 mx-[38px]">
         {(title || description) && <div className="mb-1">
             {title && <h3 className="text-lg font-medium">{title}</h3>}
             {description && <p className="text-sm text-muted-foreground">{description}</p>}
