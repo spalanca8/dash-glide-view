@@ -1,11 +1,9 @@
-
 import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import * as RechartsPrimitive from "recharts";
 import { Skeleton } from "@/components/ui/skeleton";
 import { channelColors } from "@/data/mockData";
-
 interface RoasComparisonChartProps {
   channelData: any[];
   loading: boolean;
@@ -14,7 +12,6 @@ interface RoasComparisonChartProps {
   description?: string;
   data?: any[]; // Added for compatibility with other components
 }
-
 export function RoasComparisonChart({
   channelData,
   loading,
@@ -26,28 +23,23 @@ export function RoasComparisonChart({
   if (loading) {
     return <Skeleton className="w-full h-[400px]" />;
   }
-  
+
   // Use data prop if provided, otherwise use channelData
   const chartData = data || channelData;
 
   // Prevent errors with null/undefined data
   if (!chartData || chartData.length === 0) {
-    return (
-      <Card className="overflow-hidden border-border/40 shadow-sm">
+    return <Card className="overflow-hidden border-border/40 shadow-sm">
         <CardContent className="p-6">
           <div className="text-center h-[300px] flex items-center justify-center">
             <p className="text-muted-foreground">No ROAS data available</p>
           </div>
         </CardContent>
-      </Card>
-    );
+      </Card>;
   }
 
   // Sort channels by ROAS for better visualization
-  const sortedData = [...chartData]
-    .filter(item => item && item.roas !== undefined)
-    .sort((a, b) => (b.roas || 0) - (a.roas || 0));
-
+  const sortedData = [...chartData].filter(item => item && item.roas !== undefined).sort((a, b) => (b.roas || 0) - (a.roas || 0));
   return <Card className="overflow-hidden border-border/40 shadow-sm">
       <CardContent className="p-1">
         {(title || description) && <div className="mb-1">
@@ -55,7 +47,7 @@ export function RoasComparisonChart({
             {description && <p className="text-sm text-muted-foreground">{description}</p>}
           </div>}
         <div className="w-full h-[400px] relative">
-          <div className="absolute inset-0">
+          <div className="absolute inset-0 py-[50px] my-0">
             <ChartContainer config={{
             roas: {
               label: "ROAS",
