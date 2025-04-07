@@ -29,6 +29,14 @@ type TimeSeriesChartProps = {
   tooltipFormatter?: (value: number) => string;
   yAxisFormatter?: (value: number) => string;
   showGrid?: boolean;
+  // Add this new property to make the component compatible with the outdated "series" props
+  series?: {
+    dataKey: string;
+    color: string;
+    label: string;
+    type?: string;
+    strokeDasharray?: string;
+  }[];
 };
 
 export function TimeSeriesChart({
@@ -41,7 +49,16 @@ export function TimeSeriesChart({
   tooltipFormatter,
   yAxisFormatter,
   showGrid = true,
+  series, // Accept the series prop for backward compatibility
 }: TimeSeriesChartProps) {
+  // If series is provided, convert it to the lines format
+  const actualLines = series ? series.map(s => ({
+    dataKey: s.dataKey,
+    color: s.color,
+    label: s.label,
+    strokeDasharray: s.strokeDasharray
+  })) : lines;
+
   if (loading) {
     return <Skeleton className="w-full h-[300px]" />;
   }
@@ -92,7 +109,7 @@ export function TimeSeriesChart({
           axisLine={false}
           tickFormatter={yAxisFormatter}
         />
-        {lines.map((line) => (
+        {actualLines.map((line) => (
           <YAxis
             key={`y-${line.dataKey}`}
             yAxisId={line.yAxisId || "left"}
@@ -119,7 +136,7 @@ export function TimeSeriesChart({
           }}
         />
         {showLegend && <Legend />}
-        {lines.map((line, index) => (
+        {actualLines.map((line, index) => (
           <Line
             key={line.dataKey}
             type="monotone"

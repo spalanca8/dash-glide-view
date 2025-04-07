@@ -3,6 +3,7 @@ import React from "react";
 import { EnhancedWaterfallChart } from "@/components/dashboard/EnhancedWaterfallChart";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { InfoIcon } from "lucide-react";
+import { channelColors } from "@/data/mockData";
 
 // Define type for waterfall data items
 export type WaterfallDataItem = {
@@ -31,46 +32,46 @@ export const prepareWaterfallData = (data: any[]): WaterfallDataItem[] => {
       ratio: '70%',
     },
     { 
-      name: 'Search', 
-      value: 100000, 
-      fill: '#ec4899',
-      displayValue: 100000,
-      ratio: '10%',
+      name: 'Google Ads', 
+      value: 80000, 
+      fill: channelColors.google,
+      displayValue: 80000,
+      ratio: '8%',
     },
     { 
-      name: 'Social', 
-      value: 60000, 
-      fill: '#ec4899',
-      displayValue: 60000,
-      ratio: '6%',
+      name: 'Facebook Ads', 
+      value: 70000, 
+      fill: channelColors.facebook,
+      displayValue: 70000,
+      ratio: '7%',
     },
     { 
-      name: 'Video', 
-      value: 40000, 
-      fill: '#ec4899',
-      displayValue: 40000,
-      ratio: '4%',
-    },
-    { 
-      name: 'Display', 
+      name: 'TikTok Ads', 
       value: 50000, 
-      fill: '#ec4899',
+      fill: channelColors.tiktok,
       displayValue: 50000,
       ratio: '5%',
     },
     { 
-      name: 'Email', 
+      name: 'Video Advertising', 
+      value: 60000, 
+      fill: channelColors.video,
+      displayValue: 60000,
+      ratio: '6%',
+    },
+    { 
+      name: 'Email Marketing', 
       value: 30000, 
-      fill: '#ec4899',
+      fill: channelColors.email,
       displayValue: 30000,
       ratio: '3%',
     },
     { 
-      name: 'Affiliate', 
-      value: 20000, 
-      fill: '#ec4899', 
-      displayValue: 20000,
-      ratio: '2%',
+      name: 'Affiliate Marketing', 
+      value: 10000, 
+      fill: channelColors.affiliate, 
+      displayValue: 10000,
+      ratio: '1%',
     },
     { 
       name: 'Total', 
@@ -86,110 +87,130 @@ export const prepareWaterfallData = (data: any[]): WaterfallDataItem[] => {
     return defaultData;
   }
 
-  // Safely calculate total revenue
-  const totalRevenue = data.reduce((sum, channel) => {
-    const revenue = Number(channel?.revenue) || 0;
-    return sum + revenue;
+  // Calculate total revenue from all the specified channels and baseline
+  const totalChannelsRevenue = data.reduce((sum, channel) => {
+    if (channel && typeof channel.revenue === 'number') {
+      return sum + channel.revenue;
+    }
+    return sum;
   }, 0);
   
   // If total revenue is 0 or NaN, use default values
-  if (!totalRevenue || isNaN(totalRevenue)) {
+  if (!totalChannelsRevenue || isNaN(totalChannelsRevenue)) {
     return defaultData;
   }
   
-  // Calculate baseline (70% of total as per example)
-  const baselineRevenue = totalRevenue * 0.7;
+  // Calculate baseline as 70% of the total
+  const baselineRevenue = totalChannelsRevenue * 0.7;
   
-  // Safely get channel revenue
+  // The remaining 30% will be distributed among the channels
+  const incrementalRevenue = totalChannelsRevenue - baselineRevenue;
+  
+  // Get revenue for each requested channel
   const getChannelRevenue = (id: string) => {
     const channel = data.find(c => c.id === id);
-    const revenue = Number(channel?.revenue) || 0;
-    return isNaN(revenue) ? 0 : revenue;
+    return channel && typeof channel.revenue === 'number' ? channel.revenue : 0;
   };
   
-  const groupedData = {
-    baseline: baselineRevenue,
-    search: getChannelRevenue('search'),
-    social: getChannelRevenue('social'),
-    video: getChannelRevenue('video'),
-    display: getChannelRevenue('display'),
-    email: getChannelRevenue('email'),
-    affiliate: getChannelRevenue('affiliate'),
-    total: totalRevenue,
+  // Get the sum of all incremental channel revenues to calculate proportions
+  const googleRevenue = getChannelRevenue('google');
+  const facebookRevenue = getChannelRevenue('facebook');
+  const tiktokRevenue = getChannelRevenue('tiktok');
+  const videoRevenue = getChannelRevenue('video');
+  const emailRevenue = getChannelRevenue('email');
+  const affiliateRevenue = getChannelRevenue('affiliate');
+  
+  const totalIncrementalRaw = googleRevenue + facebookRevenue + tiktokRevenue + 
+                              videoRevenue + emailRevenue + affiliateRevenue;
+  
+  // Calculate proportions for each channel of the incremental 30%
+  const calculateAdjustedValue = (channelRevenue: number) => {
+    if (totalIncrementalRaw === 0) return 0;
+    return (channelRevenue / totalIncrementalRaw) * incrementalRevenue;
   };
   
-  // Safely calculate ratios with additional validation
+  // Adjusted revenues to ensure they sum to exactly 30% of total
+  const adjustedGoogleRevenue = calculateAdjustedValue(googleRevenue);
+  const adjustedFacebookRevenue = calculateAdjustedValue(facebookRevenue);
+  const adjustedTiktokRevenue = calculateAdjustedValue(tiktokRevenue);
+  const adjustedVideoRevenue = calculateAdjustedValue(videoRevenue);
+  const adjustedEmailRevenue = calculateAdjustedValue(emailRevenue);
+  const adjustedAffiliateRevenue = calculateAdjustedValue(affiliateRevenue);
+  
+  // Ensure we have valid numbers
+  const safeValue = (value: number) => isNaN(value) || value === null ? 0 : Math.max(0, value);
+  
+  // Calculate percentage of total for each channel
   const calculateRatio = (value: number) => {
-    if (!totalRevenue || isNaN(value) || value === 0) return '0%';
-    const ratio = (value / totalRevenue) * 100;
+    if (!totalChannelsRevenue || isNaN(value) || value === 0) return '0%';
+    const ratio = (value / totalChannelsRevenue) * 100;
     return `${Math.max(0, Math.min(100, ratio)).toFixed(1)}%`;
   };
 
-  // Ensure all values are valid numbers
-  const safeValue = (value: number) => isNaN(value) || value === null ? 0 : Math.max(0, value);
-
+  // Create the waterfall data array with the specified channels only
   const waterfallData: WaterfallDataItem[] = [
     { 
       name: 'Baseline', 
       value: safeValue(baselineRevenue),
       fill: '#1e293b',
       displayValue: safeValue(baselineRevenue),
-      ratio: '70%',
+      ratio: calculateRatio(baselineRevenue),
     },
     { 
-      name: 'Search', 
-      value: safeValue(groupedData.search),
-      fill: '#ec4899',
-      displayValue: safeValue(groupedData.search),
-      ratio: calculateRatio(groupedData.search),
+      name: 'Video Advertising', 
+      value: safeValue(adjustedVideoRevenue),
+      fill: channelColors.video,
+      displayValue: safeValue(adjustedVideoRevenue),
+      ratio: calculateRatio(adjustedVideoRevenue),
     },
     { 
-      name: 'Social', 
-      value: safeValue(groupedData.social),
-      fill: '#ec4899',
-      displayValue: safeValue(groupedData.social),
-      ratio: calculateRatio(groupedData.social),
+      name: 'Google Ads', 
+      value: safeValue(adjustedGoogleRevenue),
+      fill: channelColors.google,
+      displayValue: safeValue(adjustedGoogleRevenue),
+      ratio: calculateRatio(adjustedGoogleRevenue),
     },
     { 
-      name: 'Video', 
-      value: safeValue(groupedData.video),
-      fill: '#ec4899',
-      displayValue: safeValue(groupedData.video),
-      ratio: calculateRatio(groupedData.video),
+      name: 'TikTok Ads', 
+      value: safeValue(adjustedTiktokRevenue),
+      fill: channelColors.tiktok,
+      displayValue: safeValue(adjustedTiktokRevenue),
+      ratio: calculateRatio(adjustedTiktokRevenue),
     },
     { 
-      name: 'Display', 
-      value: safeValue(groupedData.display),
-      fill: '#ec4899',
-      displayValue: safeValue(groupedData.display),
-      ratio: calculateRatio(groupedData.display),
+      name: 'Facebook Ads', 
+      value: safeValue(adjustedFacebookRevenue),
+      fill: channelColors.facebook,
+      displayValue: safeValue(adjustedFacebookRevenue),
+      ratio: calculateRatio(adjustedFacebookRevenue),
     },
     { 
-      name: 'Email', 
-      value: safeValue(groupedData.email),
-      fill: '#ec4899',
-      displayValue: safeValue(groupedData.email),
-      ratio: calculateRatio(groupedData.email),
+      name: 'Email Marketing', 
+      value: safeValue(adjustedEmailRevenue),
+      fill: channelColors.email,
+      displayValue: safeValue(adjustedEmailRevenue),
+      ratio: calculateRatio(adjustedEmailRevenue),
     },
     { 
-      name: 'Affiliate', 
-      value: safeValue(groupedData.affiliate),
-      fill: '#ec4899', 
-      displayValue: safeValue(groupedData.affiliate),
-      ratio: calculateRatio(groupedData.affiliate),
+      name: 'Affiliate Marketing', 
+      value: safeValue(adjustedAffiliateRevenue),
+      fill: channelColors.affiliate, 
+      displayValue: safeValue(adjustedAffiliateRevenue),
+      ratio: calculateRatio(adjustedAffiliateRevenue),
     },
     { 
       name: 'Total', 
-      value: safeValue(totalRevenue),
+      value: safeValue(totalChannelsRevenue),
       fill: '#ec4899', 
       isTotal: true,
-      displayValue: safeValue(totalRevenue),
+      displayValue: safeValue(totalChannelsRevenue),
       ratio: '100%',
     },
   ];
 
   return waterfallData;
 };
+
 export function IncrementalRevenueWaterfallChart({ 
   data, 
   loading = false 
