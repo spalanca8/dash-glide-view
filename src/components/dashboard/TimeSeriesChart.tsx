@@ -37,6 +37,15 @@ type TimeSeriesChartProps = {
     type?: string;
     strokeDasharray?: string;
   }[];
+  // Add the missing properties based on the error messages
+  showAverageLines?: boolean;
+  legendSpacing?: boolean;
+  stacked?: boolean;
+  showBrush?: boolean;
+  showRollingAverage?: boolean;
+  comparisonPeriod?: { start: number; end: number } | null;
+  roasScatterVisible?: boolean;
+  chartType?: string;
 };
 
 export function TimeSeriesChart({
@@ -50,6 +59,15 @@ export function TimeSeriesChart({
   yAxisFormatter,
   showGrid = true,
   series, // Accept the series prop for backward compatibility
+  // Add the new properties with default values
+  showAverageLines = false,
+  legendSpacing = false,
+  stacked = false,
+  showBrush = false,
+  showRollingAverage = false,
+  comparisonPeriod = null,
+  roasScatterVisible = false,
+  chartType = 'combined',
 }: TimeSeriesChartProps) {
   // If series is provided, convert it to the lines format
   const actualLines = series ? series.map(s => ({
