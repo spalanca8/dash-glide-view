@@ -62,7 +62,7 @@ export const CampaignSidebar = ({
       <div className="space-y-1">
         <div className="px-4 mb-1">
           <h3 className="text-xs uppercase tracking-wider text-muted-foreground font-medium">
-            Promotion Analytics
+            Analytics Views
           </h3>
         </div>
         <NavItem 
