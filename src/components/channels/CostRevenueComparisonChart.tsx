@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
@@ -31,7 +30,7 @@ export function CostRevenueComparisonChart({
             {description && <p className="text-sm text-muted-foreground">{description}</p>}
           </div>}
         <div className="w-full h-[400px] relative">
-          <div className="absolute inset-0 mx-0 py-[50px]">
+          <div className="absolute inset-0 mx-0 py-0 my-0">
             <ChartContainer config={{
             cost: {
               label: "Cost",
@@ -49,27 +48,19 @@ export function CostRevenueComparisonChart({
                 left: 20,
                 bottom: 70
               }}>
-                  <RechartsPrimitive.XAxis 
-                    dataKey="name" 
-                    angle={-45} 
-                    textAnchor="end" 
-                    tick={{
-                      fontSize: 12
-                    }} 
-                    height={10} 
-                    interval={0} 
-                    label={{
-                      value: 'Campaign',
-                      position: 'insideBottom',
-                      offset: 0,
-                      style: {
-                        textAnchor: 'middle',
-                        fontSize: 12,
-                        fill: '#94a3b8',
-                        dy: 60
-                      }
-                    }}
-                  />
+                  <RechartsPrimitive.XAxis dataKey="name" angle={-45} textAnchor="end" tick={{
+                  fontSize: 12
+                }} height={10} interval={0} label={{
+                  value: 'Campaign',
+                  position: 'insideBottom',
+                  offset: 0,
+                  style: {
+                    textAnchor: 'middle',
+                    fontSize: 12,
+                    fill: '#94a3b8',
+                    dy: 60
+                  }
+                }} />
                   <RechartsPrimitive.YAxis stroke="#94a3b8" label={{
                   value: 'Amount ($)',
                   angle: -90,
