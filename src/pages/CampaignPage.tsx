@@ -198,12 +198,12 @@ const ChannelDetailsPage = () => {
             };
           }),
           geographicData: [
-            { region: "North America", value: Math.round(30 + Math.random() * 40) },
-            { region: "Europe", value: Math.round(20 + Math.random() * 30) },
-            { region: "Asia", value: Math.round(10 + Math.random() * 20) },
-            { region: "South America", value: Math.round(5 + Math.random() * 15) },
-            { region: "Africa", value: Math.round(2 + Math.random() * 8) },
-            { region: "Oceania", value: Math.round(1 + Math.random() * 5) },
+            { region: "New York", value: Math.round(30 + Math.random() * 40) },
+            { region: "Los Angeles", value: Math.round(20 + Math.random() * 30) },
+            { region: "Chicago", value: Math.round(10 + Math.random() * 20) },
+            { region: "Miami", value: Math.round(5 + Math.random() * 15) },
+            { region: "Houston", value: Math.round(2 + Math.random() * 8) },
+            { region: "San Francisco", value: Math.round(1 + Math.random() * 5) },
           ]
         };
         

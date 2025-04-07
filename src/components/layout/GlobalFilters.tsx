@@ -21,18 +21,15 @@ export function GlobalFilters() {
   const [isStartCalendarOpen, setIsStartCalendarOpen] = useState(false);
   const [isEndCalendarOpen, setIsEndCalendarOpen] = useState(false);
 
-  // Get predefined date range from the selected range option
   const getDateRangeLabel = () => {
     if (startDate && endDate) {
       return `${format(startDate, 'MMM d, yyyy')} - ${format(endDate, 'MMM d, yyyy')}`;
     }
     return 'Select Date Range';
   };
-  // Apply the date range and automatically update the predefined range if it matches
+
   const applyDateRange = () => {
     if (startDate && endDate) {
-      // Logic to find if the selected range matches any predefined options could be added here
-      // For now, we'll just use the custom range
       const daysDiff = Math.round((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
       
       if (daysDiff <= 7) {
@@ -150,7 +147,7 @@ export function GlobalFilters() {
         value={selectedGeo}
         onChange={setSelectedGeo}
         icon={<Globe className="h-4 w-4 mr-2" />}
-        label="Region"
+        label="Country"
         className="bg-white hover:bg-gray-50 text-gray-800 border border-gray-200 shadow-sm"
       />
       

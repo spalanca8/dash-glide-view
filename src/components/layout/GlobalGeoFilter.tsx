@@ -13,7 +13,7 @@ export function GlobalGeoFilter() {
       value={selectedGeo}
       onChange={setSelectedGeo}
       icon={<Globe className="h-4 w-4 mr-2" />}
-      label="Region"
+      label="Country"
       className="bg-white hover:bg-gray-50 text-gray-800 border border-gray-200 shadow-sm"
     />
   );

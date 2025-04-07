@@ -7,14 +7,21 @@ export interface GeoOption {
   label: string;
 }
 
-// Default geographical options
+// Updated options from regions to countries
 export const geoOptions: GeoOption[] = [
-  { value: "all", label: "All Regions" },
-  { value: "europe", label: "Europe" },
-  { value: "na", label: "North America" },
-  { value: "apac", label: "APAC" },
-  { value: "latam", label: "Latin America" },
-  { value: "mena", label: "Middle East & North Africa" },
+  { value: "all", label: "All Countries" },
+  { value: "usa", label: "United States" },
+  { value: "canada", label: "Canada" },
+  { value: "uk", label: "United Kingdom" },
+  { value: "germany", label: "Germany" },
+  { value: "france", label: "France" },
+  { value: "italy", label: "Italy" },
+  { value: "spain", label: "Spain" },
+  { value: "japan", label: "Japan" },
+  { value: "australia", label: "Australia" },
+  { value: "brazil", label: "Brazil" },
+  { value: "china", label: "China" },
+  { value: "india", label: "India" },
 ];
 
 // Create the context interface
