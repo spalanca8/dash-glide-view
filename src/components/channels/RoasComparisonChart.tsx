@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
@@ -29,7 +30,7 @@ export function RoasComparisonChart({
 
   // Prevent errors with null/undefined data
   if (!chartData || chartData.length === 0) {
-    return <Card className="overflow-hidden border-border/40 shadow-sm">
+    return <Card className="overflow-hidden border-border/40 shadow-sm w-full">
         <CardContent className="p-6">
           <div className="text-center h-[300px] flex items-center justify-center">
             <p className="text-muted-foreground">No ROAS data available</p>
@@ -41,13 +42,13 @@ export function RoasComparisonChart({
   // Sort channels by ROAS for better visualization
   const sortedData = [...chartData].filter(item => item && item.roas !== undefined).sort((a, b) => (b.roas || 0) - (a.roas || 0));
   return <Card className="overflow-hidden border-border/40 shadow-sm w-full">
-      <CardContent className="p-1 px-[62px] py-[20px] my-[19px]">
-        {(title || description) && <div className="mb-1">
+      <CardContent className="p-4 sm:p-6">
+        {(title || description) && <div className="mb-4">
             {title && <h3 className="text-lg font-medium">{title}</h3>}
             {description && <p className="text-sm text-muted-foreground">{description}</p>}
           </div>}
-        <div className="w-full h-[400px] relative">
-          <div className="absolute inset-0 my-[55px] py-[4px] mx-0 px-0">
+        <div className="w-full h-[450px] relative">
+          <div className="absolute inset-0">
             <ChartContainer config={{
             roas: {
               label: "ROAS",
@@ -59,21 +60,29 @@ export function RoasComparisonChart({
                 top: 20,
                 right: 30,
                 left: 20,
-                bottom: 90
+                bottom: 120
               }}>
-                  <RechartsPrimitive.XAxis dataKey="name" angle={-45} textAnchor="end" tick={{
-                  fontSize: 12
-                }} height={80} interval={0} label={{
-                  value: 'Campaign',
-                  position: 'insideBottom',
-                  offset: 0,
-                  style: {
-                    textAnchor: 'middle',
-                    fontSize: 12,
-                    fill: '#94a3b8',
-                    dy: 70
-                  }
-                }} />
+                  <RechartsPrimitive.XAxis 
+                    dataKey="name" 
+                    angle={-45} 
+                    textAnchor="end" 
+                    tick={{
+                      fontSize: 12
+                    }} 
+                    height={100}
+                    interval={0} 
+                    label={{
+                      value: 'Channel',
+                      position: 'insideBottom',
+                      offset: -10,
+                      style: {
+                        textAnchor: 'middle',
+                        fontSize: 12,
+                        fill: '#94a3b8',
+                        dy: 100
+                      }
+                    }} 
+                  />
                   <RechartsPrimitive.YAxis stroke="#94a3b8" label={{
                   value: 'ROAS (Return on Ad Spend)',
                   angle: -90,
@@ -86,7 +95,7 @@ export function RoasComparisonChart({
                   }
                 }} />
                   <RechartsPrimitive.CartesianGrid strokeDasharray="3 3" opacity={0.5} />
-                  <RechartsPrimitive.Bar dataKey="roas" name="ROAS" barSize={30} radius={[4, 4, 0, 0]} shape={props => {
+                  <RechartsPrimitive.Bar dataKey="roas" name="ROAS" barSize={60} radius={[4, 4, 0, 0]} shape={props => {
                   const {
                     x,
                     y,

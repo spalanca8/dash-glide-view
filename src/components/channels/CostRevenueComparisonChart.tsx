@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
@@ -15,7 +16,7 @@ export function CostRevenueComparisonChart({
   loading,
   height = 500,
   title = "Cost and Incremental Revenue Comparison",
-  description = "Comparing cost and incremental revenue across channels"
+  description = "Comparing cost and revenue across channels"
 }: CostRevenueComparisonChartProps) {
   if (loading) {
     return <Skeleton className="w-full h-[450px]" />;
@@ -24,12 +25,12 @@ export function CostRevenueComparisonChart({
   // Sort channels by revenue for better visualization
   const sortedData = [...channelData].sort((a, b) => b.revenue - a.revenue);
   return <Card className="overflow-hidden border-border/40 shadow-sm w-full">
-      <CardContent className="p-1 py-[24px] px-[93px] my-0 mx-[38px]">
-        {(title || description) && <div className="mb-1">
+      <CardContent className="p-4 sm:p-6">
+        {(title || description) && <div className="mb-4">
             {title && <h3 className="text-lg font-medium">{title}</h3>}
             {description && <p className="text-sm text-muted-foreground">{description}</p>}
           </div>}
-        <div className="w-full h-[400px] relative">
+        <div className="w-full h-[450px] relative">
           <div className="absolute inset-0">
             <ChartContainer config={{
             cost: {
@@ -46,21 +47,29 @@ export function CostRevenueComparisonChart({
                 top: 20,
                 right: 30,
                 left: 20,
-                bottom: 90
+                bottom: 120
               }}>
-                  <RechartsPrimitive.XAxis dataKey="name" angle={-45} textAnchor="end" tick={{
-                  fontSize: 12
-                }} height={80} interval={0} label={{
-                  value: 'Campaign',
-                  position: 'insideBottom',
-                  offset: 0,
-                  style: {
-                    textAnchor: 'middle',
-                    fontSize: 12,
-                    fill: '#94a3b8',
-                    dy: 70
-                  }
-                }} />
+                  <RechartsPrimitive.XAxis 
+                    dataKey="name" 
+                    angle={-45} 
+                    textAnchor="end" 
+                    tick={{
+                      fontSize: 12
+                    }} 
+                    height={100} 
+                    interval={0} 
+                    label={{
+                      value: 'Channel',
+                      position: 'insideBottom',
+                      offset: -10,
+                      style: {
+                        textAnchor: 'middle',
+                        fontSize: 12,
+                        fill: '#94a3b8',
+                        dy: 100
+                      }
+                    }} 
+                  />
                   <RechartsPrimitive.YAxis stroke="#94a3b8" label={{
                   value: 'Amount ($)',
                   angle: -90,
@@ -73,7 +82,7 @@ export function CostRevenueComparisonChart({
                   }
                 }} />
                   <RechartsPrimitive.CartesianGrid strokeDasharray="3 3" opacity={0.5} />
-                  <RechartsPrimitive.Bar dataKey="cost" name="Cost" barSize={30} radius={[4, 4, 0, 0]} fill="rgb(239, 68, 68, 0.7)" label={{
+                  <RechartsPrimitive.Bar dataKey="cost" name="Cost" barSize={60} radius={[4, 4, 0, 0]} fill="rgb(239, 68, 68, 0.7)" label={{
                   position: 'top',
                   formatter: (value: number) => `$${value.toLocaleString()}`,
                   style: {
@@ -82,7 +91,7 @@ export function CostRevenueComparisonChart({
                     fontWeight: 'bold'
                   }
                 }} />
-                  <RechartsPrimitive.Bar dataKey="incremental" name="Incremental Outcome" barSize={30} radius={[4, 4, 0, 0]} fill="rgb(139, 92, 246, 0.7)" label={{
+                  <RechartsPrimitive.Bar dataKey="incremental" name="Incremental Outcome" barSize={60} radius={[4, 4, 0, 0]} fill="rgb(139, 92, 246, 0.7)" label={{
                   position: 'top',
                   formatter: (value: number) => `$${value.toLocaleString()}`,
                   style: {
