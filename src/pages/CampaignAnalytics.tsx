@@ -1,7 +1,6 @@
 
 import React, { useState } from "react";
 import { Helmet } from "react-helmet";
-import { CampaignSidebar } from "@/components/campaign-analytics/CampaignSidebar";
 import { PromotionAnalytics } from "@/components/campaign-analytics/PromotionAnalytics";
 import { DateRangeSelector } from "@/components/campaign-analytics/DateRangeSelector";
 import { Button } from "@/components/ui/button";
@@ -20,23 +19,13 @@ const CampaignAnalytics = () => {
   ]);
 
   return (
-    <div className="flex h-full">
+    <div className="h-full bg-background">
       <Helmet>
         <title>Promotional Analytics Dashboard</title>
       </Helmet>
 
-      {/* Left Sidebar Navigation */}
-      <div className="w-64 border-r border-border bg-card min-h-[calc(100vh-65px)]">
-        <CampaignSidebar 
-          activeTab={activeTab} 
-          setActiveTab={setActiveTab} 
-          activeSubPage={activeSubPage}
-          setActiveSubPage={setActiveSubPage}
-        />
-      </div>
-
-      {/* Main Content Area */}
-      <div className="flex-1 p-6 bg-background overflow-y-auto">
+      {/* Main Content Area (now full-width) */}
+      <div className="p-6 overflow-y-auto">
         <div className="mb-6">
           <h1 className="text-2xl font-bold mb-3">Promotional Analytics</h1>
           <DateRangeSelector dateRange={dateRange} setDateRange={setDateRange} />
