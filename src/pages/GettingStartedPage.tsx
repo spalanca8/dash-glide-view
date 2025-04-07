@@ -19,7 +19,7 @@ const GettingStartedPage = () => {
               className="h-20 w-20 object-contain"
             />
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-center">Welcome to Your Marketing Intelligence Platform</h1>
+          <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-center">Welcome to Your MROI Lighthouse Platform</h1>
           <p className="text-xl text-muted-foreground text-center">
             Transform raw marketing data into actionable insights to drive revenue growth and optimize marketing ROI
           </p>

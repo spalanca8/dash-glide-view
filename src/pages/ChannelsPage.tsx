@@ -309,37 +309,40 @@ export default function ChannelsPage() {
                 <FilterExportControls />
               </div>
             </CardHeader>
-            <CardContent>
-              <div className="mb-6 p-4 bg-muted/30 rounded-lg">
-                <div className="flex items-start gap-2">
-                  <Info className="h-5 w-5 text-primary mt-0.5" />
-                  <div>
-                    <h3 className="text-sm font-medium mb-1">About Channel Overview</h3>
-                    <p className="text-sm text-muted-foreground">
-                      This dashboard provides a comprehensive view of your marketing channel performance. 
-                      ROAS (Return on Ad Spend) is the primary metric used to evaluate efficiency across channels.
-                      Use the tabs below to explore different visualizations and insights about your marketing mix.
-                    </p>
-                  </div>
-                </div>
+            <CardContent className="h-auto">
+              <div className="grid grid-cols-2 gap-6 h-full">
+                <Card className="shadow-lg">
+                  <CardHeader className="flex flex-row items-center">
+                    <div className="flex flex-col space-y-1.5">
+                      <CardTitle className="flex items-center gap-2">
+                        <BarChart className="h-5 w-5" /> Cost vs Revenue
+                      </CardTitle>
+                      <CardDescription>
+                        Compare cost and revenue across marketing channels
+                      </CardDescription>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <CostRevenueComparisonChart channelData={channelData} loading={loading} />
+                  </CardContent>
+                </Card>
+
+                <Card className="shadow-lg">
+                  <CardHeader className="flex flex-row items-center">
+                    <div className="flex flex-col space-y-1.5">
+                      <CardTitle className="flex items-center gap-2">
+                        <BarChart className="h-5 w-5" /> ROAS by Channel
+                      </CardTitle>
+                      <CardDescription>
+                        Compare return on ad spend across your marketing channels. Higher values indicate more efficient spending.
+                      </CardDescription>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <RoasComparisonChart channelData={channelData} loading={loading} />
+                  </CardContent>
+                </Card>
               </div>
-              
-              <div className="mb-6">
-                <h3 className="text-lg font-medium mb-3">Revenue and Cost by Channel</h3>
-                <p className="text-sm text-muted-foreground mb-4">
-                  Compare both cost and incremental revenue across your marketing channels.
-                </p>
-                <CostRevenueComparisonChart channelData={channelData} loading={loading} />
-              </div>
-              
-              <div className="mb-6">
-                <h3 className="text-lg font-medium mb-3">ROAS by Channel</h3>
-                <p className="text-sm text-muted-foreground mb-4">
-                  Compare return on ad spend across your marketing channels. Higher values indicate more efficient spending.
-                </p>
-                <RoasComparisonChart channelData={channelData} loading={loading} />
-              </div>
-              
               <Tabs value={activeTab} onValueChange={setActiveTab}>
                 <TabsList className="w-full md:w-auto">
                   <TabsTrigger value="performance" className="flex items-center gap-1">
@@ -403,6 +406,7 @@ export default function ChannelsPage() {
             </CardContent>
           </Card>
         </TabsContent>
+
 
         <TabsContent value="detailed" className="space-y-6 mt-6">
           <Card>

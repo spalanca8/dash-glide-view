@@ -460,8 +460,8 @@ const ChannelDetailsPage = () => {
               <CardDescription>Performance metrics by campaign</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="space-y-6">
-                <div className="mb-6">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div>
                   <CostRevenueComparisonChart 
                     channelData={campaignMetricsData} 
                     loading={loading}
@@ -469,7 +469,7 @@ const ChannelDetailsPage = () => {
                     description="Comparing marketing spend versus incremental outcomes across campaigns"
                   />
                 </div>
-                <div className="mb-6">
+                <div>
                   <RoasComparisonChart 
                     channelData={campaignMetricsData} 
                     loading={loading}
@@ -480,7 +480,6 @@ const ChannelDetailsPage = () => {
               </div>
             </CardContent>
           </Card>
-          
           <Card className="mb-6 overflow-hidden shadow-sm border-border/40">
             <div className="h-1 bg-gradient-to-r from-[#4361ee] to-[#7209b7]"></div>
             <CardHeader>

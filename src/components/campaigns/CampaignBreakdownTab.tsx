@@ -322,7 +322,6 @@ export const CampaignBreakdownTab: React.FC<CampaignBreakdownTabProps> = ({
           change={7.2}
           description="vs. previous period"
           icon={<DollarSign className="h-4 w-4" />}
-          className="font-normal"
         />
         <MetricCard
           title="Campaign ROAS"
@@ -330,7 +329,6 @@ export const CampaignBreakdownTab: React.FC<CampaignBreakdownTabProps> = ({
           change={4.5}
           description="vs. previous period"
           icon={<BarChart3 className="h-4 w-4" />}
-          className="font-normal"
         />
         <MetricCard
           title="Conversion Rate"
@@ -338,7 +336,6 @@ export const CampaignBreakdownTab: React.FC<CampaignBreakdownTabProps> = ({
           change={2.3}
           description="vs. previous period"
           icon={<Percent className="h-4 w-4" />}
-          className="font-normal"
         />
         <MetricCard
           title="CTR"
@@ -346,9 +343,9 @@ export const CampaignBreakdownTab: React.FC<CampaignBreakdownTabProps> = ({
           change={-1.1}
           description="vs. previous period"
           icon={<Users className="h-4 w-4" />}
-          className="font-normal"
         />
       </div>
+      
       {/* Performance over time */}
       <Card>
         <CardHeader>

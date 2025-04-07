@@ -23,15 +23,14 @@ export function RoasComparisonChart({
   if (loading) {
     return <Skeleton className="w-full h-[400px]" />;
   }
-
   // Use data prop if provided, otherwise use channelData
   const chartData = data || channelData;
 
   // Sort channels by ROAS for better visualization
   const sortedData = [...chartData].sort((a, b) => b.roas - a.roas);
   return <Card className="overflow-hidden border-border/40 shadow-sm">
-      <CardContent className="p-20 py-[24px] mx-0 my-0">
-        {(title || description) && <div className="mb-4">
+      <CardContent className="p-1">
+        {(title || description) && <div className="mb-1">
             {title && <h3 className="text-lg font-medium">{title}</h3>}
             {description && <p className="text-sm text-muted-foreground">{description}</p>}
           </div>}
@@ -40,22 +39,19 @@ export function RoasComparisonChart({
             <ChartContainer config={{
             roas: {
               label: "ROAS",
-              color: "#8B5CF6"
+              color: "rgb(139, 92, 246, 0.7)"
             }
           }}>
-              <RechartsPrimitive.ResponsiveContainer width="100%" height="100%">
+              <RechartsPrimitive.ResponsiveContainer width="www" height="100%">
                 <RechartsPrimitive.BarChart data={sortedData} margin={{
                 top: 20,
                 right: 30,
                 left: 20,
                 bottom: 70
-              }} // Increased bottom margin
-              >
+              }}>
                   <RechartsPrimitive.XAxis dataKey="name" angle={-45} textAnchor="end" tick={{
                   fontSize: 12
-                }} height={70} // Increased height for x-axis
-                interval={0} // Force display all labels
-                />
+                }} height={10} interval={0} />
                   <RechartsPrimitive.YAxis stroke="#94a3b8" label={{
                   value: 'ROAS (x)',
                   angle: -90,
@@ -76,14 +72,14 @@ export function RoasComparisonChart({
                     payload
                   } = props;
                   const channelId = payload.id;
-                  const color = channelColors[channelId as keyof typeof channelColors] || "#8B5CF6";
+                  const color = channelColors[channelId as keyof typeof channelColors] || "rgb(139, 92, 246, 0.7)";
                   return <rect x={x} y={y} width={width} height={height} fill={color} rx={4} ry={4} />;
                 }} label={{
                   position: 'top',
                   formatter: (value: number) => `${value.toFixed(1)}x`,
                   style: {
                     fontSize: 10,
-                    fill: '#8B5CF6',
+                    fill: 'rgb(139, 92, 246)',
                     fontWeight: 'bold'
                   }
                 }} />
@@ -92,7 +88,6 @@ export function RoasComparisonChart({
                 }} content={<ChartTooltipContent />} wrapperStyle={{
                   outline: "none"
                 }} />
-                  <RechartsPrimitive.Legend verticalAlign="top" height={36} />
                 </RechartsPrimitive.BarChart>
               </RechartsPrimitive.ResponsiveContainer>
             </ChartContainer>

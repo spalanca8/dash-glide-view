@@ -13,19 +13,19 @@ interface CostRevenueComparisonChartProps {
 export function CostRevenueComparisonChart({
   channelData,
   loading,
-  height = 400,
+  height = 500,
   title = "Cost and Incremental Revenue Comparison",
   description = "Comparing cost and incremental revenue across channels"
 }: CostRevenueComparisonChartProps) {
   if (loading) {
-    return <Skeleton className="w-full h-[400px]" />;
+    return <Skeleton className="w-full h-[450px]" />;
   }
 
   // Sort channels by revenue for better visualization
   const sortedData = [...channelData].sort((a, b) => b.revenue - a.revenue);
   return <Card className="overflow-hidden border-border/40 shadow-sm">
-      <CardContent className="p-16">
-        {(title || description) && <div className="mb-4">
+      <CardContent className="p-1">
+        {(title || description) && <div className="mb-1">
             {title && <h3 className="text-lg font-medium">{title}</h3>}
             {description && <p className="text-sm text-muted-foreground">{description}</p>}
           </div>}
@@ -34,11 +34,11 @@ export function CostRevenueComparisonChart({
             <ChartContainer config={{
             cost: {
               label: "Cost",
-              color: "rgb(147, 197, 253, 0.7)"
+              color: "rgb(239, 68, 68, 0.7)"
             },
             incremental: {
               label: "Incremental Outcome",
-              color: "rgb(74, 222, 128, 0.7)"
+              color: "rgb(139, 92, 246, 0.7)"
             }
           }}>
               <RechartsPrimitive.ResponsiveContainer width="100%" height="100%">
@@ -46,11 +46,11 @@ export function CostRevenueComparisonChart({
                 top: 20,
                 right: 30,
                 left: 20,
-                bottom: 60
+                bottom: 70
               }}>
                   <RechartsPrimitive.XAxis dataKey="name" angle={-45} textAnchor="end" tick={{
                   fontSize: 12
-                }} height={60} />
+                }} height={10} interval={0} />
                   <RechartsPrimitive.YAxis stroke="#94a3b8" label={{
                   value: 'Amount ($)',
                   angle: -90,
@@ -62,8 +62,24 @@ export function CostRevenueComparisonChart({
                   }
                 }} />
                   <RechartsPrimitive.CartesianGrid strokeDasharray="3 3" opacity={0.5} />
-                  <RechartsPrimitive.Bar dataKey="cost" fill="rgb(147, 197, 253, 0.7)" name="Cost" barSize={30} />
-                  <RechartsPrimitive.Bar dataKey="incremental" fill="rgb(74, 222, 128, 0.7)" name="Incremental Outcome" barSize={30} />
+                  <RechartsPrimitive.Bar dataKey="cost" name="Cost" barSize={2000} radius={[4, 4, 0, 0]} fill="rgb(239, 68, 68, 0.7)" label={{
+                  position: 'top',
+                  formatter: (value: number) => `$${value.toLocaleString()}`,
+                  style: {
+                    fontSize: 10,
+                    fill: 'rgb(239, 68, 68)',
+                    fontWeight: 'bold'
+                  }
+                }} />
+                  <RechartsPrimitive.Bar dataKey="incremental" name="Incremental Outcome" barSize={2000} radius={[4, 4, 0, 0]} fill="rgb(139, 92, 246, 0.7)" label={{
+                  position: 'top',
+                  formatter: (value: number) => `$${value.toLocaleString()}`,
+                  style: {
+                    fontSize: 10,
+                    fill: 'rgb(139, 92, 246)',
+                    fontWeight: 'bold'
+                  }
+                }} />
                   <ChartTooltip cursor={{
                   strokeDasharray: "3 3"
                 }} content={<ChartTooltipContent />} wrapperStyle={{
