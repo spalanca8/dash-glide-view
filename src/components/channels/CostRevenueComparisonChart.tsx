@@ -47,7 +47,7 @@ export function CostRevenueComparisonChart({
                 top: 20,
                 right: 30,
                 left: 20,
-                bottom: 120
+                bottom: 150
               }}>
                   <RechartsPrimitive.XAxis 
                     dataKey="name" 
@@ -56,17 +56,17 @@ export function CostRevenueComparisonChart({
                     tick={{
                       fontSize: 12
                     }} 
-                    height={100} 
+                    height={120} 
                     interval={0} 
                     label={{
-                      value: 'Channel',
+                      value: 'Campaign',
                       position: 'insideBottom',
-                      offset: -10,
+                      offset: -20,
                       style: {
                         textAnchor: 'middle',
                         fontSize: 12,
                         fill: '#94a3b8',
-                        dy: 100
+                        dy: 130
                       }
                     }} 
                   />
@@ -82,7 +82,7 @@ export function CostRevenueComparisonChart({
                   }
                 }} />
                   <RechartsPrimitive.CartesianGrid strokeDasharray="3 3" opacity={0.5} />
-                  <RechartsPrimitive.Bar dataKey="cost" name="Cost" barSize={60} radius={[4, 4, 0, 0]} fill="rgb(239, 68, 68, 0.7)" label={{
+                  <RechartsPrimitive.Bar dataKey="cost" name="Cost" barSize={70} radius={[4, 4, 0, 0]} fill="rgb(239, 68, 68, 0.7)" label={{
                   position: 'top',
                   formatter: (value: number) => `$${value.toLocaleString()}`,
                   style: {
@@ -91,7 +91,7 @@ export function CostRevenueComparisonChart({
                     fontWeight: 'bold'
                   }
                 }} />
-                  <RechartsPrimitive.Bar dataKey="incremental" name="Incremental Outcome" barSize={60} radius={[4, 4, 0, 0]} fill="rgb(139, 92, 246, 0.7)" label={{
+                  <RechartsPrimitive.Bar dataKey="incremental" name="Incremental Outcome" barSize={70} radius={[4, 4, 0, 0]} fill="rgb(139, 92, 246, 0.7)" label={{
                   position: 'top',
                   formatter: (value: number) => `$${value.toLocaleString()}`,
                   style: {
