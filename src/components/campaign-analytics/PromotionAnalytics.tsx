@@ -11,15 +11,18 @@ import { EfficiencyRatioChart } from "@/components/campaign-analytics/Efficiency
 import { PromotionTypeChart } from "@/components/campaign-analytics/PromotionTypeChart";
 import { Activity, DollarSign, Calendar, BarChart3, DollarSign as DollarIcon, PercentIcon } from "lucide-react";
 import type { CampaignSubPage } from "@/pages/CampaignAnalytics";
+
 interface PromotionAnalyticsProps {
   activeSubPage: CampaignSubPage;
   dateRange: [Date, Date];
 }
+
 export const PromotionAnalytics = ({
   activeSubPage,
   dateRange
 }: PromotionAnalyticsProps) => {
-  return <div className="space-y-6">
+  return (
+    <div className="space-y-6">
       <Tabs value={activeSubPage} className="w-full">
         <TabsContent value="impact" className={activeSubPage === "impact" ? "block" : "hidden"}>
           <Card>
@@ -120,5 +123,6 @@ export const PromotionAnalytics = ({
           </Card>
         </TabsContent>
       </Tabs>
-    </div>;
+    </div>
+  );
 };

@@ -6,6 +6,7 @@ import { DateRangeSelector } from "@/components/campaign-analytics/DateRangeSele
 import { Button } from "@/components/ui/button";
 import { Activity, PieChart } from "lucide-react";
 import { useSearchParams, useNavigate } from "react-router-dom";
+import { PageHeader } from "@/components/layout/PageHeader";
 
 export type CampaignTab = "promotion";
 // Update the CampaignSubPage type to include all possible subpages
@@ -49,10 +50,15 @@ const CampaignAnalytics = () => {
         <title>Promotional Analytics Dashboard</title>
       </Helmet>
 
-      {/* Main Content Area (now full-width) */}
+      {/* Main Content Area */}
       <div className="p-6 overflow-y-auto">
+        {/* Header Section */}
         <div className="mb-6">
-          <h1 className="text-2xl font-bold mb-3">Promotional Analytics</h1>
+          <PageHeader
+            title="Promotional Analytics"
+            description="Analyze the performance of your promotional campaigns"
+            className="mb-4"
+          />
           <DateRangeSelector dateRange={dateRange} setDateRange={setDateRange} />
         </div>
         
