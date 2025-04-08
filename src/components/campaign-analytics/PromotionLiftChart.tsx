@@ -1,5 +1,5 @@
 import React from "react";
-import { BarChart, AreaChart, Area, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, ReferenceLine } from "recharts";
+import { BarChart, AreaChart, Area, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, ReferenceLine, ReferenceArea } from "recharts";
 
 // Mock data showing average promotional lift pattern from t-4 to t+6
 const data = [
@@ -107,15 +107,21 @@ export const PromotionLiftChart = () => {
                 fillOpacity={0.8}
               />
               <ReferenceLine y={0} stroke="#475569" />
-              <ReferenceLine 
-                x="t" 
-                stroke="#ef4444" 
-                strokeDasharray="3 3" 
-                label={{ 
-                  value: 'Promo Period', 
-                  position: 'top', 
+              <ReferenceArea 
+                x1="t" 
+                x2="t+2" 
+                fill="#ef4444" 
+                fillOpacity={0.2}
+                stroke="#ef4444"
+                strokeWidth={2}
+                strokeDasharray="3 3"
+                label={{
+                  value: 'Promo Period',
+                  position: 'insideBottom',
                   fill: '#ef4444',
-                  fontSize: 12
+                  fontSize: 14,
+                  fontWeight: 'bold',
+                  offset: 10
                 }}
               />
             </AreaChart>
@@ -145,13 +151,16 @@ export const PromotionLiftChart = () => {
                 fill="#82ca9d" 
               />
               <ReferenceLine y={0} stroke="#475569" />
-              <ReferenceLine 
-                x="t" 
-                stroke="#ef4444" 
-                strokeDasharray="3 3" 
-                label={{ 
-                  value: 'Promo Period', 
-                  position: 'top', 
+              <ReferenceArea 
+                x1="t1" 
+                x2="t2" 
+                fill="#ef4444" 
+                fillOpacity={0.1}
+                stroke="#ef4444"
+                strokeDasharray="3 3"
+                label={{
+                  value: 'Promo Period',
+                  position: 'top',
                   fill: '#ef4444',
                   fontSize: 12
                 }}

@@ -28,7 +28,7 @@ export const IncrementalRevenueCounter = () => {
       <p className="text-sm text-muted-foreground mb-2">
         Incremental Revenue (YTD) From Promotional Periods
       </p>
-      <div className="text-6xl font-bold mb-3 w-full text-center px-0 mx-0 my-0 py-[22px]">
+      <div className="text-6xl font-bold mb-3 w-full text-center px-0 mx-0 my-0 py-[100px]">
         ${(count / 1000000).toFixed(2)}M
       </div>
       <div className="flex items-center px-3 py-1 bg-green-100 text-green-800 rounded-full">

@@ -57,7 +57,7 @@ export function RoasComparisonChart({
             {description && <p className="text-sm text-muted-foreground">{description}</p>}
           </div>
         )}
-        <div className="w-full h-[450px] relative">
+        <div className="w-full h-[600px] relative">
           <div className="absolute inset-0">
             <ChartContainer 
               config={{
@@ -152,14 +152,6 @@ export function RoasComparisonChart({
                     content={<ChartTooltipContent />} 
                     wrapperStyle={{
                       outline: "none"
-                    }}
-                  />
-                  <RechartsPrimitive.Legend 
-                    verticalAlign="top" 
-                    height={36}
-                    wrapperStyle={{
-                      paddingTop: '10px',
-                      fontWeight: 500
                     }}
                   />
                 </RechartsPrimitive.BarChart>

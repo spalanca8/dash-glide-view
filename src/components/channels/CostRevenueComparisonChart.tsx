@@ -36,7 +36,7 @@ export function CostRevenueComparisonChart({
             {description && <p className="text-sm text-muted-foreground">{description}</p>}
           </div>
         )}
-        <div className="w-full h-[450px] relative">
+        <div className="w-full h-[600px] relative">
           <div className="absolute inset-0">
             <ChartContainer 
               config={{

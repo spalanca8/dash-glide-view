@@ -310,38 +310,13 @@ export default function ChannelsPage() {
               </div>
             </CardHeader>
             <CardContent className="h-auto">
-              <div className="grid grid-cols-1 gap-6 h-full">
-                <Card className="shadow-lg">
-                  <CardHeader className="flex flex-row items-center">
-                    <div className="flex flex-col space-y-1.5">
-                      <CardTitle className="flex items-center gap-2">
-                        <BarChart className="h-5 w-5" /> Cost vs Revenue
-                      </CardTitle>
-                      <CardDescription>
-                        Compare cost and revenue across marketing channels
-                      </CardDescription>
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <CostRevenueComparisonChart channelData={channelData} loading={loading} />
-                  </CardContent>
-                </Card>
-
-                <Card className="shadow-lg">
-                  <CardHeader className="flex flex-row items-center">
-                    <div className="flex flex-col space-y-1.5">
-                      <CardTitle className="flex items-center gap-2">
-                        <BarChart className="h-5 w-5" /> ROAS by Channel
-                      </CardTitle>
-                      <CardDescription>
-                        Compare return on ad spend across your marketing channels. Higher values indicate more efficient spending.
-                      </CardDescription>
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <RoasComparisonChart channelData={channelData} loading={loading} />
-                  </CardContent>
-                </Card>
+              <div className="grid grid-cols-1 gap-8 h-full min-h-[600px]">
+                <div className="h-[800px]">
+                  <CostRevenueComparisonChart channelData={channelData} loading={loading} />
+                </div>
+                <div className="h-[800px]">
+                  <RoasComparisonChart channelData={channelData} loading={loading} />
+                </div>
               </div>
               <Tabs value={activeTab} onValueChange={setActiveTab}>
                 <TabsList className="w-full md:w-auto">

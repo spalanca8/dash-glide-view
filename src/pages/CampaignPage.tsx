@@ -392,10 +392,6 @@ const ChannelDetailsPage = () => {
             <BarChart3 className="w-4 h-4 mr-2" />
             Detailed Analytics
           </TabsTrigger>
-          <TabsTrigger value="promotional" className="data-[state=active]:shadow-sm">
-            <Target className="w-4 h-4 mr-2" />
-            Promotional Analytics
-          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview" className="space-y-8 mt-6">
@@ -435,9 +431,9 @@ const ChannelDetailsPage = () => {
               <CardTitle>Campaign Insights</CardTitle>
               <CardDescription>Performance metrics by campaign</CardDescription>
             </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div>
+            <CardContent className="h-auto">
+              <div className="grid grid-cols-1 gap-8 h-full min-h-[600px]">
+                <div className="h-[800px]">
                   <CostRevenueComparisonChart 
                     channelData={campaignMetricsData} 
                     loading={loading}
@@ -445,7 +441,7 @@ const ChannelDetailsPage = () => {
                     description="Comparing marketing spend versus incremental outcomes across campaigns"
                   />
                 </div>
-                <div>
+                <div className="h-[800px]">
                   <RoasComparisonChart 
                     channelData={campaignMetricsData} 
                     loading={loading}
@@ -604,92 +600,6 @@ const ChannelDetailsPage = () => {
           </div>
         </TabsContent>
 
-        <TabsContent value="promotional" className="space-y-8 mt-6">
-          <Card>
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <div>
-                  <CardTitle className="text-xl flex items-center gap-2">
-                    <Target className="h-5 w-5 text-primary" />
-                    Promotion Analytics
-                  </CardTitle>
-                  <CardDescription>
-                    Detailed analysis of promotion performance and impact
-                  </CardDescription>
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                <Card className="col-span-3 md:col-span-1">
-                  <CardContent className="pt-6">
-                    <IncrementalRevenueCounter />
-                  </CardContent>
-                </Card>
-                <Card className="col-span-3 md:col-span-2">
-                  <CardHeader className="pb-2">
-                    <CardTitle className="text-base">Average Promotion Lift Analysis</CardTitle>
-                    <CardDescription>
-                      Baseline vs Actual revenue comparison
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <PromotionLiftChart />
-                  </CardContent>
-                </Card>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <div>
-                  <CardTitle className="text-xl flex items-center gap-2">
-                    <DollarSign className="h-5 w-5 text-primary" />
-                    Cost Analysis
-                  </CardTitle>
-                  <CardDescription>
-                    Detailed breakdown of promotion costs and efficiency
-                  </CardDescription>
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="mb-8">
-                <h3 className="text-lg font-medium mb-2 flex items-center gap-2">
-                  <BarChart3 className="h-5 w-5 text-primary" /> Promotion Cost Timeseries
-                </h3>
-                <p className="text-sm text-muted-foreground mb-4">
-                  Area chart with cohort overlays
-                </p>
-                <PromotionCostChart />
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
-                <div>
-                  <h3 className="text-lg font-medium mb-2 flex items-center gap-2">
-                    <DollarSign className="h-5 w-5 text-primary" /> Promotion Efficiency Ratio
-                  </h3>
-                  <p className="text-sm text-muted-foreground mb-4">
-                    Revenue per $1 spent histogram
-                  </p>
-                  <EfficiencyRatioChart />
-                </div>
-                
-                <div>
-                  <h3 className="text-lg font-medium mb-2 flex items-center gap-2">
-                    <PercentIcon className="h-5 w-5 text-primary" /> Promotion Type Breakdown
-                  </h3>
-                  <p className="text-sm text-muted-foreground mb-4">
-                    Flash Sale vs BOGO vs %-Off comparison
-                  </p>
-                  <PromotionTypeChart />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
       </Tabs>
     </div>
   );
