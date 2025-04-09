@@ -11,34 +11,39 @@ import {
   ResponsiveContainer,
   ReferenceLine,
   ReferenceArea,
-  Label
+  Label,
+  Scatter
 } from "recharts";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { TrendingDown } from "lucide-react";
 
-// Generate mock data for promotion saturation curve
+// Generate mock data for promotion saturation curve with more pronounced curve shape
 const generateSaturationData = () => {
   const data = [];
   
-  // Starting with strong returns that gradually diminish
-  const diminishingPoint = 65000; // Point where returns start diminishing significantly
+  // Constants for the S-curve shape
+  const minSpend = 10000;
+  const maxSpend = 100000;
+  const step = 2500;
+  const midpoint = 40000; // Where the curve inflection occurs
+  const steepness = 0.00008; // Controls the steepness of the curve
+  const maxRevenue = 50000; // Maximum revenue at full saturation
   
-  for (let spend = 10000; spend <= 100000; spend += 5000) {
-    let revenue;
+  for (let spend = minSpend; spend <= maxSpend; spend += step) {
+    // S-curve formula (logistic function) with adjusted parameters
+    let revenue = maxRevenue / (1 + Math.exp(-steepness * (spend - midpoint)));
     
-    if (spend < diminishingPoint) {
-      // Linear growth with slight curve before diminishing point
-      revenue = spend * 2.5 * (1 - (spend / (diminishingPoint * 2.5)));
-    } else {
-      // Diminishing returns after the threshold
-      const excessSpend = spend - diminishingPoint;
-      revenue = diminishingPoint * 1.8 + (excessSpend * 0.8 * Math.exp(-excessSpend / 40000));
-    }
+    // Add slight noise for data points (optional)
+    const noise = spend > 25000 && spend < 85000 ? (Math.random() * 0.05 - 0.025) * revenue : 0;
+    revenue = revenue + noise;
+    
+    // Calculate ROI
+    const roi = revenue / spend;
     
     data.push({
       spend,
       revenue: Math.round(revenue),
-      roi: +(revenue / spend).toFixed(2)
+      roi: +roi.toFixed(2)
     });
   }
   
@@ -47,25 +52,81 @@ const generateSaturationData = () => {
 
 const saturationData = generateSaturationData();
 
-// Find the optimal point (where ROI starts decreasing significantly)
-const findDiminishingPoint = (data) => {
+// Find the marginal point (max slope - steepest part of curve)
+const findMarginalPoint = (data) => {
+  let maxSlope = 0;
+  let marginalIndex = 0;
+  
+  for (let i = 1; i < data.length; i++) {
+    const slope = (data[i].revenue - data[i-1].revenue) / (data[i].spend - data[i-1].spend);
+    if (slope > maxSlope) {
+      maxSlope = slope;
+      marginalIndex = i;
+    }
+  }
+  
+  return data[marginalIndex];
+};
+
+// Find the most efficient point (highest ROI)
+const findEfficientPoint = (data) => {
   let maxRoi = 0;
-  let diminishingIndex = 0;
+  let efficientIndex = 0;
   
   for (let i = 0; i < data.length; i++) {
     if (data[i].roi > maxRoi) {
       maxRoi = data[i].roi;
-    } else if (data[i].roi < maxRoi * 0.8) {
-      // When ROI drops to 80% of max, consider it diminishing
+      efficientIndex = i;
+    }
+  }
+  
+  return data[efficientIndex];
+};
+
+// Find the point of diminishing returns
+const findDiminishingPoint = (data) => {
+  // Find where the second derivative changes sign (inflection point)
+  let diminishingIndex = 0;
+  
+  // Calculate point where the curve starts to flatten
+  for (let i = 2; i < data.length; i++) {
+    const firstDeriv1 = (data[i-1].revenue - data[i-2].revenue) / (data[i-1].spend - data[i-2].spend);
+    const firstDeriv2 = (data[i].revenue - data[i-1].revenue) / (data[i].spend - data[i-1].spend);
+    
+    // When the rate of change starts significantly decreasing
+    if (firstDeriv2 < firstDeriv1 * 0.7 && data[i].spend > 60000) {
       diminishingIndex = i;
       break;
     }
   }
   
-  return data[diminishingIndex > 0 ? diminishingIndex - 1 : 0];
+  return data[diminishingIndex > 0 ? diminishingIndex : data.length - 1];
 };
 
+// Find saturation point (where the curve becomes almost flat)
+const findSaturationPoint = (data) => {
+  // Find where the curve becomes very flat (very small slope)
+  for (let i = data.length - 2; i >= 0; i--) {
+    const slope = (data[i+1].revenue - data[i].revenue) / (data[i+1].spend - data[i].spend);
+    if (slope > 0.1) { // threshold for "flat enough"
+      return data[i+1];
+    }
+  }
+  return data[data.length - 1]; // Default to last point if no clear saturation
+};
+
+const marginalPoint = findMarginalPoint(saturationData);
+const efficientPoint = findEfficientPoint(saturationData);
 const diminishingPoint = findDiminishingPoint(saturationData);
+const saturationPoint = findSaturationPoint(saturationData);
+
+// Create key points array for scatter plot markers
+const keyPoints = [
+  { ...efficientPoint, label: "Most efficient" },
+  { ...marginalPoint, label: "Max Marginal" },
+  { ...diminishingPoint, label: "Point of diminishing return" },
+  { ...saturationPoint, label: "Saturation" },
+];
 
 export const PromotionSaturationChart = () => {
   return (
@@ -130,17 +191,30 @@ export const PromotionSaturationChart = () => {
                 fillOpacity={0.2}
               />
               
-              {/* Reference line for the optimal point */}
+              {/* Reference lines for key points */}
+              <ReferenceLine
+                x={efficientPoint.spend}
+                stroke="#4361ee"
+                strokeWidth={1}
+                strokeDasharray="3 3"
+                label={{
+                  value: 'Most efficient',
+                  position: 'top',
+                  fill: '#4361ee',
+                  fontSize: 11
+                }}
+              />
+              
               <ReferenceLine
                 x={diminishingPoint.spend}
                 stroke="#ff0000"
-                strokeWidth={2}
+                strokeWidth={1.5}
                 strokeDasharray="5 5"
                 label={{
-                  value: 'Optimal Spend',
+                  value: 'Diminishing returns',
                   position: 'top',
                   fill: '#ff0000',
-                  fontSize: 12
+                  fontSize: 11
                 }}
               />
               
@@ -148,20 +222,45 @@ export const PromotionSaturationChart = () => {
                 type="monotone"
                 dataKey="revenue"
                 name="Incremental Revenue"
-                stroke="#4361ee"
+                stroke="#ff4d8f"
                 strokeWidth={3}
-                dot={{ stroke: '#4361ee', strokeWidth: 2, r: 4 }}
+                dot={false}
                 activeDot={{ r: 6 }}
+              />
+              
+              {/* Add a scatter plot for key points */}
+              <Scatter
+                name="Key Points"
+                data={keyPoints}
+                fill="#2b2d42"
+                line={false}
+                shape={(props) => {
+                  const { cx, cy, fill } = props;
+                  return (
+                    <svg x={cx - 8} y={cy - 8} width={16} height={16} viewBox="0 0 24 24">
+                      <path
+                        fill={fill}
+                        d="M12,2L4,12L12,22L20,12L12,2Z"
+                      />
+                    </svg>
+                  );
+                }}
               />
             </LineChart>
           </ResponsiveContainer>
         </div>
         
         <div className="mt-4 text-sm text-muted-foreground">
-          <p><strong>Optimal Promotion Spend:</strong> ${diminishingPoint.spend.toLocaleString()} with a return of ${diminishingPoint.revenue.toLocaleString()} (ROI: {diminishingPoint.roi}x)</p>
-          <p className="mt-1"><strong>Interpretation:</strong> After the optimal spend point (red dashed line), each additional dollar spent generates diminishing incremental revenue (pink area).</p>
+          <p><strong>Curve Interpretation:</strong></p>
+          <ul className="mt-2 space-y-1 list-disc list-inside">
+            <li><strong>Most efficient point:</strong> ${efficientPoint.spend.toLocaleString()} (highest ROI at {efficientPoint.roi}x)</li>
+            <li><strong>Max marginal impact:</strong> ${marginalPoint.spend.toLocaleString()} (steepest part of the curve)</li>
+            <li><strong>Diminishing returns:</strong> ${diminishingPoint.spend.toLocaleString()} (incremental revenue growth begins to flatten)</li>
+            <li><strong>Saturation point:</strong> ${saturationPoint.spend.toLocaleString()} (additional spend generates minimal returns)</li>
+          </ul>
         </div>
       </CardContent>
     </Card>
   );
 };
+
