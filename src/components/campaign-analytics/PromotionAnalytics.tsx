@@ -10,6 +10,7 @@ import { PromotionCostChart } from "@/components/campaign-analytics/PromotionCos
 import { EfficiencyRatioChart } from "@/components/campaign-analytics/EfficiencyRatioChart";
 import { PromotionTypeChart } from "@/components/campaign-analytics/PromotionTypeChart";
 import { PromotionElasticityPlot } from "@/components/campaign-analytics/PromotionElasticityPlot";
+import { PromotionSaturationChart } from "@/components/campaign-analytics/PromotionSaturationChart";
 import { Activity, DollarSign, Calendar, BarChart3, DollarSign as DollarIcon, PercentIcon, TrendingUp } from "lucide-react";
 import type { CampaignSubPage } from "@/pages/CampaignAnalytics";
 
@@ -78,6 +79,10 @@ export const PromotionAnalytics = ({
                   Impact of promotion investment on incremental revenue
                 </p>
                 <PromotionElasticityPlot />
+              </div>
+              
+              <div className="mt-8">
+                <PromotionSaturationChart />
               </div>
             </CardContent>
           </Card>
