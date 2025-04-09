@@ -97,16 +97,6 @@ export const PromotionAnalytics = ({
               </div>
               
               <div className="mt-8">
-                <h3 className="text-lg font-medium mb-2 flex items-center gap-2">
-                  <TrendingUp className="h-5 w-5 text-primary" /> Promotion Elasticity
-                </h3>
-                <p className="text-sm text-muted-foreground mb-4">
-                  Impact of promotion investment on incremental revenue
-                </p>
-                <PromotionElasticityPlot />
-              </div>
-              
-              <div className="mt-8">
                 <PromotionRevenueHeatmap />
               </div>
             </CardContent>
