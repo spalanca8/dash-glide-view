@@ -85,10 +85,6 @@ export const PromotionAnalytics = ({
               </div>
               
               <div className="mt-8">
-                <PromotionSaturationChart />
-              </div>
-              
-              <div className="mt-8">
                 <PromotionRevenueHeatmap />
               </div>
             </CardContent>
