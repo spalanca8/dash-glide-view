@@ -2,7 +2,8 @@
 import React from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChannelPromotionInteractionChart } from "@/components/campaign-analytics/ChannelPromotionInteractionChart";
-import { GitCompare, Radio } from "lucide-react";
+import { PromotionHaloWaterfallChart } from "@/components/campaign-analytics/PromotionHaloWaterfallChart";
+import { GitCompare, Radio, BarChart } from "lucide-react";
 
 export const PromotionInteraction = () => {
   return (
@@ -32,6 +33,16 @@ export const PromotionInteraction = () => {
             <ChannelPromotionInteractionChart />
           </div>
           
+          <div className="mb-8">
+            <h3 className="text-lg font-medium mb-2 flex items-center gap-2">
+              <BarChart className="h-5 w-5 text-primary" /> Promotion Halo Effect
+            </h3>
+            <p className="text-sm text-muted-foreground mb-4">
+              How promotions drive incremental revenue through direct and indirect effects
+            </p>
+            <PromotionHaloWaterfallChart />
+          </div>
+          
           <div className="bg-muted/50 p-4 rounded-lg mt-8">
             <h3 className="text-base font-medium mb-2">Strategic Implications</h3>
             <ul className="space-y-2 text-sm">
@@ -46,6 +57,10 @@ export const PromotionInteraction = () => {
               <li className="flex items-start gap-2">
                 <span className="bg-primary/20 text-primary rounded-full px-2 py-0.5 text-xs font-medium mt-0.5">3</span>
                 <span><strong>Testing Strategy:</strong> Design future media tests that isolate promotional periods to better understand interaction effects across different channels and promotion types.</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="bg-primary/20 text-primary rounded-full px-2 py-0.5 text-xs font-medium mt-0.5">4</span>
+                <span><strong>Halo Effect:</strong> Promotions drive significant indirect revenue (40.6%) through non-promoted products, demonstrating their value beyond direct impact.</span>
               </li>
             </ul>
           </div>
