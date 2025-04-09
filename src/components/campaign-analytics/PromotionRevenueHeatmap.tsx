@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { format, parse, startOfMonth, endOfMonth, eachWeekOfInterval, eachMonthOfInterval, addDays } from "date-fns";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { CalendarDays, ChartHeatmap } from "lucide-react";
+import { CalendarDays, BarChart3 } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 // Mock data for active promotions
@@ -175,7 +175,7 @@ export const PromotionRevenueHeatmap = () => {
     <Card className="mt-6">
       <CardHeader>
         <CardTitle className="text-lg flex items-center gap-2">
-          <ChartHeatmap className="h-5 w-5 text-primary" /> 
+          <BarChart3 className="h-5 w-5 text-primary" /> 
           Promotion Revenue Heatmap
         </CardTitle>
         <CardDescription>
