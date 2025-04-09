@@ -14,7 +14,8 @@ import { PromotionSaturationChart } from "@/components/campaign-analytics/Promot
 import { PromotionRevenueHeatmap } from "@/components/campaign-analytics/PromotionRevenueHeatmap";
 import { PromotionEffectivenessChart } from "@/components/campaign-analytics/PromotionEffectivenessChart";
 import { PromotionFatigueChart } from "@/components/campaign-analytics/PromotionFatigueChart";
-import { Activity, DollarSign, Calendar, BarChart3, DollarSign as DollarIcon, PercentIcon, TrendingUp } from "lucide-react";
+import { PromotionInteraction } from "@/components/campaign-analytics/PromotionInteraction";
+import { Activity, DollarSign, Calendar, BarChart3, DollarSign as DollarIcon, PercentIcon, TrendingUp, GitCompare } from "lucide-react";
 import type { CampaignSubPage } from "@/pages/CampaignAnalytics";
 
 interface PromotionAnalyticsProps {
@@ -154,6 +155,10 @@ export const PromotionAnalytics = ({
               </div>
             </CardContent>
           </Card>
+        </TabsContent>
+        
+        <TabsContent value="interaction" className={activeSubPage === "interaction" ? "block" : "hidden"}>
+          <PromotionInteraction />
         </TabsContent>
       </Tabs>
     </div>

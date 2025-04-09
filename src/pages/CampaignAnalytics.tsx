@@ -4,13 +4,13 @@ import { Helmet } from "react-helmet";
 import { PromotionAnalytics } from "@/components/campaign-analytics/PromotionAnalytics";
 import { DateRangeSelector } from "@/components/campaign-analytics/DateRangeSelector";
 import { Button } from "@/components/ui/button";
-import { Activity, PieChart } from "lucide-react";
+import { Activity, PieChart, GitCompare } from "lucide-react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { PageHeader } from "@/components/layout/PageHeader";
 
 export type CampaignTab = "promotion";
 // Update the CampaignSubPage type to include all possible subpages
-export type CampaignSubPage = "impact" | "cost-analysis" | "totals" | "journey" | "revenue" | "cost";
+export type CampaignSubPage = "impact" | "cost-analysis" | "interaction" | "totals" | "journey" | "revenue" | "cost";
 
 const CampaignAnalytics = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -19,7 +19,7 @@ const CampaignAnalytics = () => {
   
   const [activeTab, setActiveTab] = useState<CampaignTab>("promotion");
   const [activeSubPage, setActiveSubPage] = useState<CampaignSubPage>(
-    (viewParam === "impact" || viewParam === "cost-analysis") 
+    (viewParam === "impact" || viewParam === "cost-analysis" || viewParam === "interaction") 
       ? (viewParam as CampaignSubPage) 
       : "impact"
   );
@@ -35,7 +35,7 @@ const CampaignAnalytics = () => {
 
   // Update state when URL changes
   useEffect(() => {
-    if (viewParam === "impact" || viewParam === "cost-analysis") {
+    if (viewParam === "impact" || viewParam === "cost-analysis" || viewParam === "interaction") {
       setActiveSubPage(viewParam as CampaignSubPage);
     }
   }, [viewParam]);
@@ -79,6 +79,14 @@ const CampaignAnalytics = () => {
           >
             <PieChart size={18} />
             Cost Analysis
+          </Button>
+          <Button 
+            variant={activeSubPage === "interaction" ? "default" : "outline"}
+            onClick={() => handleSubPageChange("interaction")}
+            className="flex items-center gap-2"
+          >
+            <GitCompare size={18} />
+            Interaction & Strategy
           </Button>
         </div>
         

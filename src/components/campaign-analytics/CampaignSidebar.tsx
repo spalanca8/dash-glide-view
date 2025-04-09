@@ -5,7 +5,8 @@ import {
   Activity, 
   DollarSign, 
   Calendar, 
-  PieChart
+  PieChart,
+  GitCompare
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { CampaignTab, CampaignSubPage } from "@/pages/CampaignAnalytics";
@@ -76,6 +77,12 @@ export const CampaignSidebar = ({
           onClick={() => handleTabChange("promotion", "cost-analysis")}
           icon={<PieChart size={18} />}
           label="Cost Analysis"
+        />
+        <NavItem 
+          isActive={activeSubPage === "interaction"}
+          onClick={() => handleTabChange("promotion", "interaction")}
+          icon={<GitCompare size={18} />}
+          label="Interaction & Strategy"
         />
       </div>
     </div>
