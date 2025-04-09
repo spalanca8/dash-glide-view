@@ -50,7 +50,7 @@ export const ProductCategoryRevenueChart = () => {
     <Card>
       <CardContent className="pt-6">
         <div className="mb-4">
-          <h3 className="text-base font-medium mb-1">Product Category Revenue Comparison</h3>
+          <h3 className="text-base font-medium mb-1">Halo Effect by Product Category</h3>
           <p className="text-sm text-muted-foreground">
             Comparing revenue across product categories during promotion vs. non-promotion periods
           </p>
