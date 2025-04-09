@@ -3,7 +3,8 @@ import React from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChannelPromotionInteractionChart } from "@/components/campaign-analytics/ChannelPromotionInteractionChart";
 import { PromotionHaloWaterfallChart } from "@/components/campaign-analytics/PromotionHaloWaterfallChart";
-import { GitCompare, Radio, BarChart } from "lucide-react";
+import { ProductCategoryRevenueChart } from "@/components/campaign-analytics/ProductCategoryRevenueChart";
+import { GitCompare, Radio, BarChart, Layers } from "lucide-react";
 
 export const PromotionInteraction = () => {
   return (
@@ -35,6 +36,16 @@ export const PromotionInteraction = () => {
           
           <div className="mb-8">
             <h3 className="text-lg font-medium mb-2 flex items-center gap-2">
+              <Layers className="h-5 w-5 text-primary" /> Product Category Revenue Impact
+            </h3>
+            <p className="text-sm text-muted-foreground mb-4">
+              Comparison of revenue across product categories during promotion vs. non-promotion periods
+            </p>
+            <ProductCategoryRevenueChart />
+          </div>
+          
+          <div className="mb-8">
+            <h3 className="text-lg font-medium mb-2 flex items-center gap-2">
               <BarChart className="h-5 w-5 text-primary" /> Promotion Halo Effect
             </h3>
             <p className="text-sm text-muted-foreground mb-4">
@@ -61,6 +72,10 @@ export const PromotionInteraction = () => {
               <li className="flex items-start gap-2">
                 <span className="bg-primary/20 text-primary rounded-full px-2 py-0.5 text-xs font-medium mt-0.5">4</span>
                 <span><strong>Halo Effect:</strong> Promotions drive significant indirect revenue (40.6%) through non-promoted products, demonstrating their value beyond direct impact.</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="bg-primary/20 text-primary rounded-full px-2 py-0.5 text-xs font-medium mt-0.5">5</span>
+                <span><strong>Category Strategy:</strong> Electronics and Home Goods show the highest revenue lift during promotions, suggesting these categories should be focal points for future promotional campaigns.</span>
               </li>
             </ul>
           </div>
