@@ -36,7 +36,7 @@ export const PromotionInteraction = () => {
           
           <div className="mb-8">
             <h3 className="text-lg font-medium mb-2 flex items-center gap-2">
-              <Layers className="h-5 w-5 text-primary" /> Product Category Revenue Impact
+              <Layers className="h-5 w-5 text-primary" /> Promotion Halo Effect
             </h3>
             <p className="text-sm text-muted-foreground mb-4">
               Comparison of revenue across product categories during promotion vs. non-promotion periods
@@ -46,10 +46,10 @@ export const PromotionInteraction = () => {
           
           <div className="mb-8">
             <h3 className="text-lg font-medium mb-2 flex items-center gap-2">
-              <BarChart className="h-5 w-5 text-primary" /> Promotion Halo Effect
+              <BarChart className="h-5 w-5 text-primary" /> Promotion Cannibalization Analysis
             </h3>
             <p className="text-sm text-muted-foreground mb-4">
-              How promotions drive incremental revenue through direct and indirect effects
+              How promotions drive cannibalization effects over different time periods
             </p>
             <PromotionHaloWaterfallChart />
           </div>

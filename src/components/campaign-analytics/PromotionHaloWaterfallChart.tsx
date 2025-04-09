@@ -48,7 +48,7 @@ export const PromotionHaloWaterfallChart = () => {
     <Card>
       <CardContent className="pt-6">
         <div className="mb-4">
-          <h3 className="text-base font-medium mb-1">Promotion Cannibalization Rate</h3>
+          <h3 className="text-base font-medium mb-1">Cannibalization Rate Over Time</h3>
           <p className="text-sm text-muted-foreground">
             Analysis of how promotions affect revenue across product categories and the rate of cannibalization over time
           </p>
