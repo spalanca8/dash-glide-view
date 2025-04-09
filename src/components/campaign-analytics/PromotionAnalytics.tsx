@@ -12,6 +12,7 @@ import { PromotionTypeChart } from "@/components/campaign-analytics/PromotionTyp
 import { PromotionElasticityPlot } from "@/components/campaign-analytics/PromotionElasticityPlot";
 import { PromotionSaturationChart } from "@/components/campaign-analytics/PromotionSaturationChart";
 import { PromotionRevenueHeatmap } from "@/components/campaign-analytics/PromotionRevenueHeatmap";
+import { PromotionEffectivenessChart } from "@/components/campaign-analytics/PromotionEffectivenessChart";
 import { Activity, DollarSign, Calendar, BarChart3, DollarSign as DollarIcon, PercentIcon, TrendingUp } from "lucide-react";
 import type { CampaignSubPage } from "@/pages/CampaignAnalytics";
 
@@ -140,6 +141,8 @@ export const PromotionAnalytics = ({
                   <PromotionTypeChart />
                 </div>
               </div>
+              
+              <PromotionEffectivenessChart />
             </CardContent>
           </Card>
         </TabsContent>
