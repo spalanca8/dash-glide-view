@@ -11,7 +11,6 @@ import { EfficiencyRatioChart } from "@/components/campaign-analytics/Efficiency
 import { PromotionTypeChart } from "@/components/campaign-analytics/PromotionTypeChart";
 import { PromotionElasticityPlot } from "@/components/campaign-analytics/PromotionElasticityPlot";
 import { PromotionSaturationChart } from "@/components/campaign-analytics/PromotionSaturationChart";
-import { PromotionRevenueHeatmap } from "@/components/campaign-analytics/PromotionRevenueHeatmap";
 import { PromotionEffectivenessChart } from "@/components/campaign-analytics/PromotionEffectivenessChart";
 import { PromotionInteraction } from "@/components/campaign-analytics/PromotionInteraction";
 import { Activity, DollarSign, Calendar, BarChart3, DollarSign as DollarIcon, PercentIcon, TrendingUp, GitCompare } from "lucide-react";
@@ -94,10 +93,6 @@ export const PromotionAnalytics = ({
                   Gantt chart of active campaigns
                 </p>
                 <PromotionCalendar />
-              </div>
-              
-              <div className="mt-8">
-                <PromotionRevenueHeatmap />
               </div>
             </CardContent>
           </Card>
