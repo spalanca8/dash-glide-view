@@ -64,6 +64,28 @@ export const PromotionAnalytics = ({
                 </Card>
               </div>
 
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
+                <div>
+                  <h3 className="text-lg font-medium mb-2 flex items-center gap-2">
+                    <DollarIcon className="h-5 w-5 text-primary" /> Promotion Efficiency Ratio
+                  </h3>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Revenue per $1 spent histogram
+                  </p>
+                  <EfficiencyRatioChart />
+                </div>
+                
+                <div>
+                  <h3 className="text-lg font-medium mb-2 flex items-center gap-2">
+                    <PercentIcon className="h-5 w-5 text-primary" /> Promotion Type Breakdown
+                  </h3>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Flash Sale vs BOGO vs %-Off comparison
+                  </p>
+                  <PromotionTypeChart />
+                </div>
+              </div>
+
               <div className="mt-8">
                 <h3 className="text-lg font-medium mb-2 flex items-center gap-2">
                   <Calendar className="h-5 w-5 text-primary" /> Stacked Promotion Calendar
@@ -115,28 +137,6 @@ export const PromotionAnalytics = ({
                   Area chart with cohort overlays
                 </p>
                 <PromotionCostChart />
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
-                <div>
-                  <h3 className="text-lg font-medium mb-2 flex items-center gap-2">
-                    <DollarIcon className="h-5 w-5 text-primary" /> Promotion Efficiency Ratio
-                  </h3>
-                  <p className="text-sm text-muted-foreground mb-4">
-                    Revenue per $1 spent histogram
-                  </p>
-                  <EfficiencyRatioChart />
-                </div>
-                
-                <div>
-                  <h3 className="text-lg font-medium mb-2 flex items-center gap-2">
-                    <PercentIcon className="h-5 w-5 text-primary" /> Promotion Type Breakdown
-                  </h3>
-                  <p className="text-sm text-muted-foreground mb-4">
-                    Flash Sale vs BOGO vs %-Off comparison
-                  </p>
-                  <PromotionTypeChart />
-                </div>
               </div>
               
               <div className="mt-8">
