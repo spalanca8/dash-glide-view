@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, ReferenceLine } from "recharts";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, ReferenceLine, Line, ComposedChart } from "recharts";
 import { cn } from "@/lib/utils";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 
@@ -57,7 +57,7 @@ export const PromotionHaloWaterfallChart = () => {
         <div className="h-[400px]">
           <ChartContainer className="w-full" style={{ height: 400 }} config={chartConfig}>
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart
+              <ComposedChart
                 data={cannibalizationData}
                 margin={{
                   top: 20,
@@ -116,16 +116,19 @@ export const PromotionHaloWaterfallChart = () => {
                   fill={chartConfig.nonPromotedProducts.color} 
                   animationDuration={1250}
                 />
-                <Bar 
+                <Line 
+                  type="monotone"
                   dataKey="cannibalizationRate" 
                   name="Cannibalization Rate" 
                   yAxisId="right"
-                  fill={chartConfig.cannibalizationRate.color}
-                  radius={[4, 4, 0, 0]}
+                  stroke={chartConfig.cannibalizationRate.color}
+                  strokeWidth={2}
+                  dot={{ r: 5 }}
+                  activeDot={{ r: 7 }}
                   animationDuration={1500}
                 />
                 <ReferenceLine y={5} yAxisId="right" stroke="#ff4d6d" strokeDasharray="3 3" label={{ value: "Threshold", position: "insideTopRight", fill: "#ff4d6d", fontSize: 12 }} />
-              </BarChart>
+              </ComposedChart>
             </ResponsiveContainer>
           </ChartContainer>
         </div>
