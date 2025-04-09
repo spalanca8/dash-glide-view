@@ -9,7 +9,8 @@ import { PromotionCalendar } from "@/components/campaign-analytics/PromotionCale
 import { PromotionCostChart } from "@/components/campaign-analytics/PromotionCostChart";
 import { EfficiencyRatioChart } from "@/components/campaign-analytics/EfficiencyRatioChart";
 import { PromotionTypeChart } from "@/components/campaign-analytics/PromotionTypeChart";
-import { Activity, DollarSign, Calendar, BarChart3, DollarSign as DollarIcon, PercentIcon } from "lucide-react";
+import { PromotionElasticityPlot } from "@/components/campaign-analytics/PromotionElasticityPlot";
+import { Activity, DollarSign, Calendar, BarChart3, DollarSign as DollarIcon, PercentIcon, TrendingUp } from "lucide-react";
 import type { CampaignSubPage } from "@/pages/CampaignAnalytics";
 
 interface PromotionAnalyticsProps {
@@ -67,6 +68,16 @@ export const PromotionAnalytics = ({
                   Gantt chart of active campaigns
                 </p>
                 <PromotionCalendar />
+              </div>
+              
+              <div className="mt-8">
+                <h3 className="text-lg font-medium mb-2 flex items-center gap-2">
+                  <TrendingUp className="h-5 w-5 text-primary" /> Promotion Elasticity
+                </h3>
+                <p className="text-sm text-muted-foreground mb-4">
+                  Impact of promotion investment on incremental revenue
+                </p>
+                <PromotionElasticityPlot />
               </div>
             </CardContent>
           </Card>
