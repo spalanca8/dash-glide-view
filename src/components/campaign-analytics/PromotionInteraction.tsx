@@ -2,7 +2,6 @@
 import React from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChannelPromotionInteractionChart } from "@/components/campaign-analytics/ChannelPromotionInteractionChart";
-import { PromotionFatigueChart } from "@/components/campaign-analytics/PromotionFatigueChart";
 import { GitCompare, Radio } from "lucide-react";
 
 export const PromotionInteraction = () => {
@@ -33,10 +32,6 @@ export const PromotionInteraction = () => {
             <ChannelPromotionInteractionChart />
           </div>
           
-          <div className="mt-8">
-            <PromotionFatigueChart />
-          </div>
-          
           <div className="bg-muted/50 p-4 rounded-lg mt-8">
             <h3 className="text-base font-medium mb-2">Strategic Implications</h3>
             <ul className="space-y-2 text-sm">
@@ -46,11 +41,11 @@ export const PromotionInteraction = () => {
               </li>
               <li className="flex items-start gap-2">
                 <span className="bg-primary/20 text-primary rounded-full px-2 py-0.5 text-xs font-medium mt-0.5">2</span>
-                <span><strong>Promotion Fatigue Management:</strong> Given the diminishing returns seen in the fatigue analysis, limit promotion frequency to 5-6 times per customer segment to maintain effectiveness.</span>
+                <span><strong>Budget Allocation:</strong> During promotional periods, consider reallocating budget to high-synergy channels (Email, Paid Social) and away from channels showing minimal lift difference.</span>
               </li>
               <li className="flex items-start gap-2">
                 <span className="bg-primary/20 text-primary rounded-full px-2 py-0.5 text-xs font-medium mt-0.5">3</span>
-                <span><strong>Budget Allocation:</strong> During promotional periods, consider reallocating budget to high-synergy channels (Email, Paid Social) and away from channels showing minimal lift difference.</span>
+                <span><strong>Testing Strategy:</strong> Design future media tests that isolate promotional periods to better understand interaction effects across different channels and promotion types.</span>
               </li>
             </ul>
           </div>
