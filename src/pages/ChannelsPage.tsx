@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { 
   BarChart, 
@@ -213,20 +212,7 @@ export default function ChannelsPage() {
     <div className="space-y-6 pb-8">
       <div className="flex flex-col">
         <PageHeader title="Channels" description="Analyze campaign performance by channel">
-          <div className="flex items-center gap-2">
-            <Select onValueChange={handleTimeframeChange} defaultValue="Q4">
-              <SelectTrigger className="w-[140px]">
-                <SelectValue placeholder="Timeframe" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="Q1">Q1 2023</SelectItem>
-                <SelectItem value="Q2">Q2 2023</SelectItem>
-                <SelectItem value="Q3">Q3 2023</SelectItem>
-                <SelectItem value="Q4">Q4 2023</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </PageHeader>
+          </PageHeader>
       </div>
 
       <ChannelMetricsOverview data={channelData} loading={loading} />
@@ -247,7 +233,7 @@ export default function ChannelsPage() {
         <TabsContent value="overview" className="space-y-8 mt-8">
           <IncrementalRevenueWaterfallChart data={channelData} loading={loading} />
           
-          <Card className="border-blue-100 bg-blue-50/40">
+          <Card className="border-blue-100 bg-white">
             <CardHeader className="pb-2">
               <CardTitle className="text-xl flex items-center gap-2 text-blue-800">
                 <Lightbulb className="h-5 w-5 text-yellow-500" /> Key Takeaways
@@ -298,7 +284,7 @@ export default function ChannelsPage() {
           <Card className="shadow-lg">
             <CardHeader className="flex flex-row items-center">
               <div className="flex flex-col space-y-1.5">
-                <CardTitle className="flex items-center gap-2">
+                <CardTitle className="flex items-center gap-1">
                   <BarChart className="h-5 w-5" /> Channel Overview
                 </CardTitle>
                 <CardDescription>
@@ -310,7 +296,7 @@ export default function ChannelsPage() {
               </div>
             </CardHeader>
             <CardContent className="h-auto">
-              <div className="grid grid-cols-1 gap-8 h-full min-h-[600px]">
+              <div className="grid grid-cols-1 gap-0 h-full min-h-[300px]">
                 <div className="h-[800px]">
                   <CostRevenueComparisonChart channelData={channelData} loading={loading} />
                 </div>
@@ -550,7 +536,7 @@ export default function ChannelsPage() {
                     insights={externalFactorsInsights}
                     bestPerformer={externalFactorsPerformers.best}
                     worstPerformer={externalFactorsPerformers.worst}
-                    contextualInfo={externalFactorsContext}
+
                   />
                 </div>
                 

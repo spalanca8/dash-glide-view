@@ -229,36 +229,7 @@ export function ChannelDetailView({ channelData, trendsData, loading }: ChannelD
                 </div>
               )}
               
-              <div>
-                <h3 className="text-lg font-medium mb-4">Performance Drivers</h3>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div className="border rounded-lg p-4">
-                    <div className="text-sm font-medium mb-1">Top Creative</div>
-                    <div className="text-2xl font-bold">Creative #32</div>
-                    <div className="text-xs text-muted-foreground mt-1">
-                      2.8x ROAS, 5.2% CTR
-                    </div>
-                  </div>
-                  
-                  <div className="border rounded-lg p-4">
-                    <div className="text-sm font-medium mb-1">Top Audience</div>
-                    <div className="text-2xl font-bold">Urban Millennials</div>
-                    <div className="text-xs text-muted-foreground mt-1">
-                      3.1x ROAS, $42 CPA
-                    </div>
-                  </div>
-                  
-                  <div className="border rounded-lg p-4">
-                    <div className="text-sm font-medium mb-1">Peak Performance</div>
-                    <div className="text-2xl font-bold">Weekends</div>
-                    <div className="text-xs text-muted-foreground mt-1">
-                      30% higher conversion rates
-                    </div>
-                  </div>
-                </div>
-              </div>
             </TabsContent>
-            
             <TabsContent value="trends" className="space-y-6">
               <div>
                 <h3 className="text-lg font-medium mb-4">Performance Over Time</h3>

@@ -26,7 +26,6 @@ import ChatAIPage from "./pages/ChatAIPage";
 import RecommendationsPage from "./pages/RecommendationsPage";
 import IncrementalityTestingPage from "./pages/IncrementalityTestingPage";
 import ModelMetricsPage from "./pages/ModelMetricsPage";
-import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
@@ -59,7 +58,6 @@ const App = () => (
             <Route path="/settings" element={<SettingsPage />} />
             <Route path="/getting-started" element={<GettingStartedPage />} />
           </Route>
-          <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
     </TooltipProvider>

@@ -1,4 +1,3 @@
-
 import React from "react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 
@@ -36,14 +35,46 @@ export const PromotionCalendar = () => {
           barGap={0}
           barCategoryGap={10}
         >
-          <CartesianGrid strokeDasharray="3 3" />
+          <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
           <XAxis type="number" hide />
-          <YAxis dataKey="name" type="category" />
-          <Tooltip />
-          <Legend />
-          <Bar dataKey="Flash Sale" stackId="a" fill="#4361ee" />
-          <Bar dataKey="BOGO" stackId="a" fill="#f72585" />
-          <Bar dataKey="% Off" stackId="a" fill="#4cc9f0" />
+          <YAxis dataKey="name" type="category" width={40} />
+          <Tooltip 
+            contentStyle={{
+              backgroundColor: '#ffffff',
+              border: '1px solid #e5e7eb',
+              borderRadius: '6px',
+              boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+            }}
+          />
+          <Legend 
+            wrapperStyle={{
+              paddingTop: '10px'
+            }}
+          />
+          <Bar 
+            dataKey="Flash Sale" 
+            stackId="a" 
+            fill="#4361ee" 
+            radius={[0, 4, 4, 0]}
+            minPointSize={10}
+            barSize={20} // Increased bar thickness
+          />
+          <Bar 
+            dataKey="BOGO" 
+            stackId="a" 
+            fill="#f72585" 
+            radius={[0, 4, 4, 0]}
+            minPointSize={10}
+            barSize={20} // Increased bar thickness
+          />
+          <Bar 
+            dataKey="% Off" 
+            stackId="a" 
+            fill="#4cc9f0" 
+            radius={[0, 4, 4, 0]}
+            minPointSize={10}
+            barSize={20} // Increased bar thickness
+          />
         </BarChart>
       </ResponsiveContainer>
       

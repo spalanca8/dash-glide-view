@@ -18,12 +18,10 @@ import type { CampaignSubPage } from "@/pages/CampaignAnalytics";
 
 interface PromotionAnalyticsProps {
   activeSubPage: CampaignSubPage;
-  dateRange: [Date, Date];
 }
 
 export const PromotionAnalytics = ({
   activeSubPage,
-  dateRange
 }: PromotionAnalyticsProps) => {
   return (
     <div className="space-y-6">

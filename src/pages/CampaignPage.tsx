@@ -21,14 +21,7 @@ import { ChannelJourneyComparison } from "@/components/campaigns/ChannelJourneyC
 import { KeyMetricsGrid } from "@/components/dashboard/KeyMetricsGrid";
 import { RoasComparisonChart } from "@/components/channels/RoasComparisonChart";
 import { CostRevenueComparisonChart } from "@/components/channels/CostRevenueComparisonChart";
-import { CampaignTimeline } from "@/components/campaigns/CampaignTimeline";
 
-import { IncrementalRevenueCounter } from "@/components/campaign-analytics/IncrementalRevenueCounter";
-import { PromotionLiftChart } from "@/components/campaign-analytics/PromotionLiftChart";
-import { PromotionCalendar } from "@/components/campaign-analytics/PromotionCalendar";
-import { PromotionCostChart } from "@/components/campaign-analytics/PromotionCostChart";
-import { EfficiencyRatioChart } from "@/components/campaign-analytics/EfficiencyRatioChart";
-import { PromotionTypeChart } from "@/components/campaign-analytics/PromotionTypeChart";
 
 const ChannelDetailsPage = () => {
   const [searchParams] = useSearchParams();
@@ -338,20 +331,7 @@ const ChannelDetailsPage = () => {
       <PageHeader
         title="Campaign Analysis"
         description="Advanced campaign performance analysis with data-driven attribution"
-      >
-        <Tabs
-          defaultValue="30d"
-          value={timeframe}
-          onValueChange={setTimeframe}
-          className="w-[240px]"
-        >
-          <TabsList className="grid w-full grid-cols-3 shadow-sm">
-            <TabsTrigger value="7d">7D</TabsTrigger>
-            <TabsTrigger value="30d">30D</TabsTrigger>
-            <TabsTrigger value="90d">90D</TabsTrigger>
-          </TabsList>
-        </Tabs>
-      </PageHeader>
+      />
 
       <div className="mb-6">
         {loading ? (

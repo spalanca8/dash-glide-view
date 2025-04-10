@@ -31,7 +31,6 @@ const promotionEffectivenessData = [
     color: "#ff8042"
   }
 ].sort((a, b) => b.effectiveness - a.effectiveness); // Sort by descending effectiveness
-
 export const PromotionEffectivenessChart = () => {
   return (
     <div className="mt-8">
@@ -73,6 +72,9 @@ export const PromotionEffectivenessChart = () => {
                 <Bar 
                   dataKey="effectiveness" 
                   name="Revenue per $100 Spent"
+                  radius={[0, 4, 4, 0]}
+                  minPointSize={10}
+                  barSize={100} // Increased from 20 to 40 for wider bars
                 >
                   {promotionEffectivenessData.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={entry.color} />
