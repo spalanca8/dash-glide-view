@@ -17,31 +17,31 @@ import {
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { TrendingDown } from "lucide-react";
 
-// Generate mock data for promotion saturation curve with more pronounced curve shape
+// Generate mock data for promotion saturation curve with discount percentages instead of spend
 const generateSaturationData = () => {
   const data = [];
   
   // Constants for the S-curve shape
-  const minSpend = 10000;
-  const maxSpend = 100000;
-  const step = 2500;
-  const midpoint = 40000; // Where the curve inflection occurs
-  const steepness = 0.00008; // Controls the steepness of the curve
+  const minDiscount = 5; // 5% discount
+  const maxDiscount = 50; // 50% discount
+  const step = 1; // 1% step
+  const midpoint = 25; // Where the curve inflection occurs
+  const steepness = 0.2; // Controls the steepness of the curve
   const maxRevenue = 50000; // Maximum revenue at full saturation
   
-  for (let spend = minSpend; spend <= maxSpend; spend += step) {
+  for (let discount = minDiscount; discount <= maxDiscount; discount += step) {
     // S-curve formula (logistic function) with adjusted parameters
-    let revenue = maxRevenue / (1 + Math.exp(-steepness * (spend - midpoint)));
+    let revenue = maxRevenue / (1 + Math.exp(-steepness * (discount - midpoint)));
     
     // Add slight noise for data points (optional)
-    const noise = spend > 25000 && spend < 85000 ? (Math.random() * 0.05 - 0.025) * revenue : 0;
+    const noise = discount > 15 && discount < 40 ? (Math.random() * 0.05 - 0.025) * revenue : 0;
     revenue = revenue + noise;
     
-    // Calculate ROI
-    const roi = revenue / spend;
+    // Calculate ROI (different calculation for discount-based ROI)
+    const roi = revenue / (revenue * (discount / 100));
     
     data.push({
-      spend,
+      discount,
       revenue: Math.round(revenue),
       roi: +roi.toFixed(2)
     });
@@ -58,7 +58,7 @@ const findMarginalPoint = (data) => {
   let marginalIndex = 0;
   
   for (let i = 1; i < data.length; i++) {
-    const slope = (data[i].revenue - data[i-1].revenue) / (data[i].spend - data[i-1].spend);
+    const slope = (data[i].revenue - data[i-1].revenue) / (data[i].discount - data[i-1].discount);
     if (slope > maxSlope) {
       maxSlope = slope;
       marginalIndex = i;
@@ -90,11 +90,11 @@ const findDiminishingPoint = (data) => {
   
   // Calculate point where the curve starts to flatten
   for (let i = 2; i < data.length; i++) {
-    const firstDeriv1 = (data[i-1].revenue - data[i-2].revenue) / (data[i-1].spend - data[i-2].spend);
-    const firstDeriv2 = (data[i].revenue - data[i-1].revenue) / (data[i].spend - data[i-1].spend);
+    const firstDeriv1 = (data[i-1].revenue - data[i-2].revenue) / (data[i-1].discount - data[i-2].discount);
+    const firstDeriv2 = (data[i].revenue - data[i-1].revenue) / (data[i].discount - data[i-1].discount);
     
     // When the rate of change starts significantly decreasing
-    if (firstDeriv2 < firstDeriv1 * 0.7 && data[i].spend > 60000) {
+    if (firstDeriv2 < firstDeriv1 * 0.7 && data[i].discount > 30) {
       diminishingIndex = i;
       break;
     }
@@ -107,7 +107,7 @@ const findDiminishingPoint = (data) => {
 const findSaturationPoint = (data) => {
   // Find where the curve becomes very flat (very small slope)
   for (let i = data.length - 2; i >= 0; i--) {
-    const slope = (data[i+1].revenue - data[i].revenue) / (data[i+1].spend - data[i].spend);
+    const slope = (data[i+1].revenue - data[i].revenue) / (data[i+1].discount - data[i].discount);
     if (slope > 0.1) { // threshold for "flat enough"
       return data[i+1];
     }
@@ -137,7 +137,7 @@ export const PromotionSaturationChart = () => {
           Promotion Saturation Curve
         </CardTitle>
         <CardDescription>
-          Visualizing the point of diminishing returns for promotional spend
+          Visualizing the point of diminishing returns for promotional discounts
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -154,11 +154,11 @@ export const PromotionSaturationChart = () => {
             >
               <CartesianGrid strokeDasharray="3 3" opacity={0.3} />
               <XAxis 
-                dataKey="spend" 
-                tickFormatter={(value) => `$${(value/1000).toFixed(0)}k`}
+                dataKey="discount" 
+                tickFormatter={(value) => `${value}%`}
               >
                 <Label 
-                  value="Promotion Spend" 
+                  value="Promotion Discount" 
                   position="bottom" 
                   offset={-10}
                   style={{ textAnchor: 'middle', fontSize: 12, fill: '#666' }}
@@ -176,15 +176,18 @@ export const PromotionSaturationChart = () => {
                 />
               </YAxis>
               <Tooltip 
-                formatter={(value) => [`$${Number(value).toLocaleString()}`, '']}
-                labelFormatter={(label) => `Spend: $${Number(label).toLocaleString()}`}
+                formatter={(value, name) => {
+                  if (name === "revenue") return [`$${Number(value).toLocaleString()}`, "Incremental Revenue"];
+                  return [value, name];
+                }}
+                labelFormatter={(label) => `Discount: ${label}%`}
               />
               <Legend />
               
               {/* Highlight area of diminishing returns */}
               <ReferenceArea 
-                x1={diminishingPoint.spend} 
-                x2={saturationData[saturationData.length-1].spend}
+                x1={diminishingPoint.discount} 
+                x2={saturationData[saturationData.length-1].discount}
                 y1={0}
                 y2={saturationData[saturationData.length-1].revenue}
                 fill="#ffcccc"
@@ -193,7 +196,7 @@ export const PromotionSaturationChart = () => {
               
               {/* Reference lines for key points */}
               <ReferenceLine
-                x={efficientPoint.spend}
+                x={efficientPoint.discount}
                 stroke="#4361ee"
                 strokeWidth={1}
                 strokeDasharray="3 3"
@@ -206,7 +209,7 @@ export const PromotionSaturationChart = () => {
               />
               
               <ReferenceLine
-                x={diminishingPoint.spend}
+                x={diminishingPoint.discount}
                 stroke="#ff0000"
                 strokeWidth={1.5}
                 strokeDasharray="5 5"
@@ -253,14 +256,13 @@ export const PromotionSaturationChart = () => {
         <div className="mt-4 text-sm text-muted-foreground">
           <p><strong>Curve Interpretation:</strong></p>
           <ul className="mt-2 space-y-1 list-disc list-inside">
-            <li><strong>Most efficient point:</strong> ${efficientPoint.spend.toLocaleString()} (highest ROI at {efficientPoint.roi}x)</li>
-            <li><strong>Max marginal impact:</strong> ${marginalPoint.spend.toLocaleString()} (steepest part of the curve)</li>
-            <li><strong>Diminishing returns:</strong> ${diminishingPoint.spend.toLocaleString()} (incremental revenue growth begins to flatten)</li>
-            <li><strong>Saturation point:</strong> ${saturationPoint.spend.toLocaleString()} (additional spend generates minimal returns)</li>
+            <li><strong>Most efficient point:</strong> {efficientPoint.discount}% discount (highest ROI at {efficientPoint.roi}x)</li>
+            <li><strong>Max marginal impact:</strong> {marginalPoint.discount}% discount (steepest part of the curve)</li>
+            <li><strong>Diminishing returns:</strong> {diminishingPoint.discount}% discount (incremental revenue growth begins to flatten)</li>
+            <li><strong>Saturation point:</strong> {saturationPoint.discount}% discount (additional discount generates minimal returns)</li>
           </ul>
         </div>
       </CardContent>
     </Card>
   );
 };
-
